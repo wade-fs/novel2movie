@@ -575,13 +575,13 @@ async def main_async(args):
 
         cmd_video = (
             f'ffmpeg -f concat -safe 0 -i "{image_list_file}" -i "{combined_audio}" '
-            f'-vf "subtitles={temp_srt_local}:force_style=\'FontSize=20,Alignment=2,OutlineColour=&H80000000,BorderStyle=3\'" '
+            f'-vf "fps=25,subtitles={temp_srt_local}:force_style=\'FontSize=20,Alignment=2,OutlineColour=&H80000000,BorderStyle=3\'" '
             f'-c:v libx264 -c:a aac -b:a 192k -pix_fmt yuv420p -shortest "{output_video}" -y'
         )
     else:
         cmd_video = (
             f'ffmpeg -loop 1 -i "{image_files[0]}" -i "{combined_audio}" '
-            f'-vf "subtitles={temp_srt_local}:force_style=\'FontSize=20,Alignment=2,OutlineColour=&H80000000,BorderStyle=3\'" '
+            f'-vf "fps=25,subtitles={temp_srt_local}:force_style=\'FontSize=20,Alignment=2,OutlineColour=&H80000000,BorderStyle=3\'" '
             f'-c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest "{output_video}" -y'
         )
     
