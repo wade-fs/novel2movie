@@ -214,6 +214,52 @@ def create_dynamic_cover(novel_name, volume_title, chapter_title, output_path):
     img.save(output_path, "PNG")
     print(f"[+] Cover image generated at: {output_path}")
 
+def normalize_image(image_path, target_width=1920, target_height=1080):
+    """
+    Resizes and pads an image to target dimensions while maintaining aspect ratio.
+    Saves the normalized image in the same directory and returns its path.
+    """
+    if not os.path.exists(image_path):
+        return image_path
+    try:
+        with Image.open(image_path) as img:
+            if img.size == (target_width, target_height):
+                return image_path
+            
+            # Create a black background canvas
+            background = Image.new("RGB", (target_width, target_height), (0, 0, 0))
+            
+            # Calculate aspect ratio scaling
+            img_ratio = img.width / img.height
+            target_ratio = target_width / target_height
+            
+            if img_ratio > target_ratio:
+                # Image is wider than target ratio
+                new_width = target_width
+                new_height = int(target_width / img_ratio)
+            else:
+                # Image is taller than target ratio
+                new_height = target_height
+                new_width = int(target_height * img_ratio)
+                
+            # Resize image using high-quality resampling
+            resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            
+            # Center the resized image on the background
+            x_offset = (target_width - new_width) // 2
+            y_offset = (target_height - new_height) // 2
+            background.paste(resized_img, (x_offset, y_offset))
+            
+            # Save the normalized image as a new cached file
+            dir_name = os.path.dirname(image_path)
+            base_name = os.path.basename(image_path)
+            norm_path = os.path.join(dir_name, f"norm_{base_name}")
+            background.save(norm_path, "PNG")
+            return norm_path
+    except Exception as e:
+        print(f"[-] Warning: Failed to normalize image {image_path}: {e}")
+        return image_path
+
 # Global state to track quota status
 IMAGE_QUOTA_EXHAUSTED = False
 
@@ -450,6 +496,12 @@ async def main_async(args):
         completed_img = 0
         async def wrap_img(para, style, idx, c_dir, sem):
             nonlocal completed_img
+            # The first paragraph (index 0) always displays the book/chapter cover page
+            if idx == 0:
+                completed_img += 1
+                print(f"\r  - Image Progress: {completed_img}/{len(meta['paragraphs'])} segments completed [Cover]", end="", flush=True)
+                return fallback_cover
+            
             path, cached = await generate_paragraph_image(para, style, idx, c_dir, sem)
             completed_img += 1
             status = "[Cached]" if cached else "[Generated]"
@@ -501,6 +553,14 @@ async def main_async(args):
                     generated_cover = os.path.join(cache_dir, "generated_cover.png")
                     create_dynamic_cover(meta['novel_name'], meta['volume_title'], meta['chapter_title'], generated_cover)
                     image_files = [generated_cover]
+
+    # Normalize all background images to 1920x1080 to ensure FFmpeg concat compliance and correct subtitle rendering
+    print("[+] Normalizing image resolutions to 1920x1080...")
+    normalized_image_files = []
+    for img_path in image_files:
+        norm_path = normalize_image(img_path)
+        normalized_image_files.append(norm_path)
+    image_files = normalized_image_files
 
     is_multi_image = len(image_files) > 1
 

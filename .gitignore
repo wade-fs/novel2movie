@@ -7,3 +7,4 @@ Origins-of-Formosa
 redemption
 .cache
 .venv
+__pycache__/
