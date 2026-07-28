@@ -214,11 +214,16 @@ def create_dynamic_cover(novel_name, volume_title, chapter_title, output_path):
     img.save(output_path, "PNG")
     print(f"[+] Cover image generated at: {output_path}")
 
+# Global state to track quota status
+IMAGE_QUOTA_EXHAUSTED = False
+
 async def generate_paragraph_image(paragraph, style, idx, cache_dir, semaphore):
     """
     Generates a unique scene image for a paragraph using the agy CLI.
     Caches the image using an MD5 hash of the paragraph text and style.
     """
+    global IMAGE_QUOTA_EXHAUSTED
+
     # Create MD5 hash for cache verification
     hash_input = f"{paragraph}_{style}"
     para_hash = hashlib.md5(hash_input.encode("utf-8")).hexdigest()
@@ -231,8 +236,13 @@ async def generate_paragraph_image(paragraph, style, idx, cache_dir, semaphore):
         except Exception:
             pass
 
+    if IMAGE_QUOTA_EXHAUSTED:
+        return None, False
+
     async with semaphore:
         for attempt in range(3):
+            if IMAGE_QUOTA_EXHAUSTED:
+                return None, False
             try:
                 # Truncate paragraph to 400 chars to avoid command/prompt length limits
                 clean_para = paragraph[:400].replace('"', '\\"').replace("'", "\\'")
@@ -247,15 +257,26 @@ async def generate_paragraph_image(paragraph, style, idx, cache_dir, semaphore):
 
                 proc = await asyncio.create_subprocess_exec(
                     *cmd,
+                    stdin=asyncio.subprocess.DEVNULL,
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE
                 )
 
                 stdout, stderr = await proc.communicate()
+                out_str = (stdout or b"").decode("utf-8").strip()
+                err_str = (stderr or b"").decode("utf-8").strip()
+
+                # Check for quota exhaust indicators in stdout or stderr
+                combined_output = (out_str + " " + err_str).lower()
+                if "quota" in combined_output and ("exhaust" in combined_output or "exceed" in combined_output or "limit" in combined_output):
+                    print(f"\n[!] AI image generation quota is exhausted. Falling back to default cover for remaining segments.")
+                    IMAGE_QUOTA_EXHAUSTED = True
+                    return None, False
+
                 if proc.returncode == 0 and os.path.exists(cached_img) and os.path.getsize(cached_img) > 1024:
                     return cached_img, False
                 else:
-                    err_msg = (stderr or b"").decode("utf-8").strip() or (stdout or b"").decode("utf-8").strip()
+                    err_msg = err_str or out_str
                     print(f"\n[-] Attempt {attempt+1} failed to generate image for paragraph {idx}: {err_msg}")
             except Exception as e:
                 print(f"\n[-] Attempt {attempt+1} error generating image for paragraph {idx}: {e}")
