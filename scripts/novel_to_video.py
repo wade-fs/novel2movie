@@ -53,7 +53,9 @@ def parse_novel_markdown(file_path):
             elif level in (3, 4):
                 chapter_title = text
         else:
-            paragraphs.append(line_str)
+            # Skip lines that do not contain CJK characters or alphanumeric characters (e.g. only contains ◉, ★, ◆, or symbols)
+            if re.search(r'[\u4e00-\u9fffa-zA-Z0-9]', line_str):
+                paragraphs.append(line_str)
 
     # Fallbacks
     if not novel_name:
@@ -307,6 +309,14 @@ async def process_paragraph(paragraph, voice, idx, cache_dir, semaphore):
 
                 return cached_mp3, cached_srt, False
             except Exception as e:
+                if "NoAudioReceived" in type(e).__name__ or "No audio was received" in str(e):
+                    print(f"\n[!] Warning: No audio received for paragraph {idx} (possibly only symbols: {repr(paragraph)}). Generating silence fallback.")
+                    cmd_silence = f'ffmpeg -f lavfi -i anullsrc=r=24000:cl=mono -t 0.5 -q:a 9 "{cached_mp3}" -y'
+                    subprocess.run(cmd_silence, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    with open(cached_srt, "w", encoding="utf-8") as sf:
+                        sf.write("1\n00:00:00,000 --> 00:00:00,500\n \n\n")
+                    return cached_mp3, cached_srt, False
+
                 if attempt == 2:
                     print(f"\n[-] Error generating speech for paragraph {idx}: {e}")
                     raise e
