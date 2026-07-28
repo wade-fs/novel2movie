@@ -212,6 +212,56 @@ def create_dynamic_cover(novel_name, volume_title, chapter_title, output_path):
     img.save(output_path, "PNG")
     print(f"[+] Cover image generated at: {output_path}")
 
+async def generate_paragraph_image(paragraph, style, idx, cache_dir, semaphore):
+    """
+    Generates a unique scene image for a paragraph using the agy CLI.
+    Caches the image using an MD5 hash of the paragraph text and style.
+    """
+    # Create MD5 hash for cache verification
+    hash_input = f"{paragraph}_{style}"
+    para_hash = hashlib.md5(hash_input.encode("utf-8")).hexdigest()
+    cached_img = os.path.abspath(os.path.join(cache_dir, f"img_{idx:03d}_{para_hash}.png"))
+
+    if os.path.exists(cached_img):
+        try:
+            if os.path.getsize(cached_img) > 1024:
+                return cached_img, True
+        except Exception:
+            pass
+
+    async with semaphore:
+        for attempt in range(3):
+            try:
+                # Truncate paragraph to 400 chars to avoid command/prompt length limits
+                clean_para = paragraph[:400].replace('"', '\\"').replace("'", "\\'")
+                prompt = f"Style: {style}. Scene: {clean_para}"
+
+                cmd = [
+                    "agy",
+                    "--dangerously-skip-permissions",
+                    "--print",
+                    f"Generate an image for prompt: {prompt}. Save the generated image file to {cached_img}."
+                ]
+
+                proc = await asyncio.create_subprocess_exec(
+                    *cmd,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE
+                )
+
+                stdout, stderr = await proc.communicate()
+                if proc.returncode == 0 and os.path.exists(cached_img) and os.path.getsize(cached_img) > 1024:
+                    return cached_img, False
+                else:
+                    err_msg = (stderr or b"").decode("utf-8").strip() or (stdout or b"").decode("utf-8").strip()
+                    print(f"\n[-] Attempt {attempt+1} failed to generate image for paragraph {idx}: {err_msg}")
+            except Exception as e:
+                print(f"\n[-] Attempt {attempt+1} error generating image for paragraph {idx}: {e}")
+            
+            await asyncio.sleep(2 ** attempt)
+
+    return None, False
+
 # ==========================================
 # 4. ASYNC TTS PIPELINE
 # ==========================================
@@ -292,25 +342,20 @@ async def main_async(args):
     os.makedirs(cache_dir, exist_ok=True)
 
     # 2. Concurrently download paragraphs (limit to 5 connections to prevent blocking)
-    semaphore = asyncio.Semaphore(5)
-    tasks = []
-    for idx, para in enumerate(meta['paragraphs']):
-        tasks.append(process_paragraph(para, args.voice, idx, cache_dir, semaphore))
-
-    print("[+] Synthesizing speech segments...")
-    results = []
-    # Using gather to execute them and a counter to print progress
-    completed = 0
-    for task in asyncio.as_completed(tasks):
-        mp3, srt, cached = await task
-        results.append((mp3, srt))
-        completed += 1
+    tts_semaphore = asyncio.Semaphore(5)
+    completed_tts = 0
+    async def wrap_tts(para, voice, idx, c_dir, sem):
+        nonlocal completed_tts
+        mp3, srt, cached = await process_paragraph(para, voice, idx, c_dir, sem)
+        completed_tts += 1
         status = "[Cached]" if cached else "[Generated]"
-        print(f"\r  - Progress: {completed}/{len(tasks)} segments completed {status}", end="", flush=True)
-    print()
+        print(f"\r  - TTS Progress: {completed_tts}/{len(meta['paragraphs'])} segments completed {status}", end="", flush=True)
+        return mp3, srt
 
-    # Re-sort results to match original order
-    results.sort(key=lambda x: os.path.basename(x[0]))
+    tts_tasks = [wrap_tts(para, args.voice, idx, cache_dir, tts_semaphore) for idx, para in enumerate(meta['paragraphs'])]
+    print("[+] Synthesizing speech segments...")
+    results = await asyncio.gather(*tts_tasks)
+    print()
 
     # 3. Concatenate audio and merge subtitles
     print("[+] Merging audio and subtitles...")
@@ -350,48 +395,81 @@ async def main_async(args):
     with open(combined_srt_path, "w", encoding="utf-8") as f:
         f.write("\n\n".join(combined_srt_content))
 
-    # 4. Handle Cover Image
-    # 4. Handle Visual Background (Cover or Multiple Images)
+    # 4. Handle Visual Background (Cover, Slide folder, or AI Generated Images)
     image_files = []
     
-    # Check if a custom image/dir was passed
-    if args.image:
-        if os.path.isdir(args.image):
-            # It's a directory, look for images inside
-            image_files = sorted([os.path.join(args.image, f) for f in os.listdir(args.image) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
-        elif os.path.isfile(args.image):
-            image_files = [args.image]
-    else:
-        # Scan automatically
-        chapter_dir = os.path.dirname(os.path.abspath(args.chapter_file))
-        base_name = os.path.splitext(os.path.basename(args.chapter_file))[0]
-        
-        # Look for a directory matching chapter name, e.g., 001_images or 001 or images
-        possible_dirs = [
-            os.path.join(chapter_dir, f"{base_name}_images"),
-            os.path.join(chapter_dir, base_name),
-            os.path.join(chapter_dir, "images"),
-        ]
-        for d in possible_dirs:
-            if os.path.isdir(d):
-                image_files = sorted([os.path.join(d, f) for f in os.listdir(d) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
-                if image_files:
-                    print(f"[+] Found {len(image_files)} chapter images in: {d}")
-                    break
-        
-        # If no image folder found, look for local cover image files
-        if not image_files:
+    if args.ai_images:
+        # First, prepare fallback cover if any AI generation fails
+        fallback_cover = args.image
+        if not fallback_cover:
+            chapter_dir = os.path.dirname(os.path.abspath(args.chapter_file))
             local_covers = [os.path.join(chapter_dir, f) for f in os.listdir(chapter_dir) if "封面" in f or "cover" in f.lower()]
             parent_covers = [os.path.join(os.path.dirname(chapter_dir), f) for f in os.listdir(os.path.dirname(chapter_dir)) if "封面" in f or "cover" in f.lower()]
             all_covers = [c for c in (local_covers + parent_covers) if os.path.isfile(c) and c.lower().endswith((".png", ".jpeg", ".jpg"))]
             if all_covers:
-                image_files = [all_covers[0]]
-                print(f"[+] Found cover image locally: {all_covers[0]}")
+                fallback_cover = all_covers[0]
             else:
-                # Generate dynamically
-                generated_cover = os.path.join(cache_dir, "generated_cover.png")
-                create_dynamic_cover(meta['novel_name'], meta['volume_title'], meta['chapter_title'], generated_cover)
-                image_files = [generated_cover]
+                fallback_cover = os.path.join(cache_dir, "generated_cover.png")
+                if not os.path.exists(fallback_cover):
+                    create_dynamic_cover(meta['novel_name'], meta['volume_title'], meta['chapter_title'], fallback_cover)
+
+        # Concurrently generate images
+        print("[+] Generating AI images for each paragraph...")
+        img_semaphore = asyncio.Semaphore(2)  # Limit concurrent image jobs
+        completed_img = 0
+        async def wrap_img(para, style, idx, c_dir, sem):
+            nonlocal completed_img
+            path, cached = await generate_paragraph_image(para, style, idx, c_dir, sem)
+            completed_img += 1
+            status = "[Cached]" if cached else "[Generated]"
+            print(f"\r  - Image Progress: {completed_img}/{len(meta['paragraphs'])} segments completed {status}", end="", flush=True)
+            return path
+
+        img_tasks = [wrap_img(para, args.ai_style, idx, cache_dir, img_semaphore) for idx, para in enumerate(meta['paragraphs'])]
+        raw_images = await asyncio.gather(*img_tasks)
+        print()
+
+        # Fill any failures with the fallback cover
+        image_files = [path if path else fallback_cover for path in raw_images]
+    else:
+        # Check if a custom image/dir was passed
+        if args.image:
+            if os.path.isdir(args.image):
+                # It's a directory, look for images inside
+                image_files = sorted([os.path.join(args.image, f) for f in os.listdir(args.image) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
+            elif os.path.isfile(args.image):
+                image_files = [args.image]
+        else:
+            # Scan automatically
+            chapter_dir = os.path.dirname(os.path.abspath(args.chapter_file))
+            base_name = os.path.splitext(os.path.basename(args.chapter_file))[0]
+            
+            # Look for a directory matching chapter name, e.g., 001_images or 001 or images
+            possible_dirs = [
+                os.path.join(chapter_dir, f"{base_name}_images"),
+                os.path.join(chapter_dir, base_name),
+                os.path.join(chapter_dir, "images"),
+            ]
+            for d in possible_dirs:
+                if os.path.isdir(d):
+                    image_files = sorted([os.path.join(d, f) for f in os.listdir(d) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
+                    if image_files:
+                        print(f"[+] Found {len(image_files)} chapter images in: {d}")
+                        break
+            
+            # If no image folder found, look for local cover image files
+            if not image_files:
+                local_covers = [os.path.join(chapter_dir, f) for f in os.listdir(chapter_dir) if "封面" in f or "cover" in f.lower()]
+                parent_covers = [os.path.join(os.path.dirname(chapter_dir), f) for f in os.listdir(os.path.dirname(chapter_dir)) if "封面" in f or "cover" in f.lower()]
+                all_covers = [c for c in (local_covers + parent_covers) if os.path.isfile(c) and c.lower().endswith((".png", ".jpeg", ".jpg"))]
+                if all_covers:
+                    image_files = [all_covers[0]]
+                    print(f"[+] Found cover image locally: {all_covers[0]}")
+                else:
+                    # Generate dynamically
+                    generated_cover = os.path.join(cache_dir, "generated_cover.png")
+                    create_dynamic_cover(meta['novel_name'], meta['volume_title'], meta['chapter_title'], generated_cover)
+                    image_files = [generated_cover]
 
     is_multi_image = len(image_files) > 1
 
@@ -503,6 +581,8 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--image", help="Cover image path (optional). If not provided, it scans or generates a title card.")
     parser.add_argument("--cache-dir", help="TTS Cache directory (optional)")
     parser.add_argument("--clean", action="store_true", help="Delete cache after successful video generation")
+    parser.add_argument("--ai-images", action="store_true", help="Enable automatic paragraph-level AI image generation using the antigravity (agy) CLI. Each paragraph will show its own unique AI-generated scene.")
+    parser.add_argument("--ai-style", default="cyberpunk anime style, vibrant colors, detailed sci-fi illustration", help="The style description to prepend to each AI image generation prompt. Examples: 'traditional chinese ink wash painting, ethereal landscape' (Ink), 'cinematic, photorealistic sci-fi scene, 8k' (Realism), 'watercolor painting, soft colors' (Watercolor).")
 
     args = parser.parse_args()
     asyncio.run(main_async(args))
