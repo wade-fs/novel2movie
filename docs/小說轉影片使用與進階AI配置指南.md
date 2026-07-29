@@ -124,4 +124,36 @@
 | `--ai-style` | (預設科幻動漫) | AI 生成圖片的畫風提示詞字串。 |
 | `--step` | `all` | 指定執行的階段：`tts` (Step 1)、`image` (Step 2)、`video` (Step 3) 或 `all` (預設，完整全自動管線)。 |
 | `--image-index` | `None` | 指定單一畫面的索引 (0-based) 進行生成/重新生成。指定此參數時 `--step` 會預設為 `image`。 |
+| `--agy-model` | `None` (agy 預設) | 指定 `agy` CLI 使用的文字推理模型（用於生成圖片時解讀 prompt）。詳見下方說明。 |
 
+---
+
+## 🧠 AI 圖片生成模型選擇 (`--agy-model`)
+
+`novel_to_video.py` 在生成 AI 圖片時，是以**獨立子程序**的方式呼叫 `agy` CLI，而非直接使用您在 Antigravity IDE 所選的模型。因此，IDE 的 Model Selection 設定不會影響此工具的行為。
+
+### 如何指定 model
+
+```bash
+./novel_to_video.sh guixu/chapter/01/001.md --step image --ai-images \
+  --agy-model gemini-3.1-pro-high
+```
+
+### 可用的 Model ID
+
+執行 `agy models` 可查看即時清單，目前可用的 model 包含：
+
+| Model ID | 說明 | 建議場景 |
+| :--- | :--- | :--- |
+| `gemini-3.6-flash-high` | Gemini 3.6 Flash (High) | 速度快，適合大量圖片批次生成 |
+| `gemini-3.5-flash-high` | Gemini 3.5 Flash (High) | 穩定備援選項 |
+| `gemini-3.1-pro-high` | Gemini 3.1 Pro (High) | 品質最高，適合重要封面場景 |
+| `claude-sonnet-4-6` | Claude Sonnet 4.6 (Thinking) | 創意指令理解能力強 |
+| `claude-opus-4-6-thinking` | Claude Opus 4.6 (Thinking) | 最強推理，適合複雜情境描述 |
+| `gpt-oss-120b-medium` | GPT-OSS 120B (Medium) | 開源模型備援 |
+
+> [!NOTE]
+> `--agy-model` 只影響 `agy` 在**解讀 prompt、決定如何存檔等文字推理步驟**使用的 LLM。AI **圖片本身的生成**由 `agy` 底層的 image API 統一處理，與選用的文字模型無關。
+
+> [!TIP]
+> 若沒有指定 `--agy-model`，`agy` 會使用其本身的設定檔預設模型。若想永久修改 `agy` 的預設 model，可編輯 `agy` 的設定檔或在 Antigravity IDE 的 Model Selection 中切換（`agy` 在非子程序模式下會繼承此設定）。

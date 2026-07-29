@@ -263,10 +263,11 @@ def normalize_image(image_path, target_width=1920, target_height=1080):
 # Global state to track quota status
 IMAGE_QUOTA_EXHAUSTED = False
 
-async def generate_paragraph_image(paragraph, style, idx, cache_dir, semaphore):
+async def generate_paragraph_image(paragraph, style, idx, cache_dir, semaphore, agy_model=None):
     """
     Generates a unique scene image for a paragraph using the agy CLI.
     Caches the image using an MD5 hash of the paragraph text and style.
+    Optionally accepts an agy_model string to override the default agy model.
     """
     global IMAGE_QUOTA_EXHAUSTED
 
@@ -298,8 +299,10 @@ async def generate_paragraph_image(paragraph, style, idx, cache_dir, semaphore):
                     "agy",
                     "--dangerously-skip-permissions",
                     "--print",
-                    f"Generate an image for prompt: {prompt}. Save the generated image file to {cached_img}."
                 ]
+                if agy_model:
+                    cmd += ["--model", agy_model]
+                cmd.append(f"Generate an image for prompt: {prompt}. Save the generated image file to {cached_img}.")
 
                 proc = await asyncio.create_subprocess_exec(
                     *cmd,
@@ -569,7 +572,7 @@ async def main_async(args):
             # Generate the single image
             print(f"[+] Generating AI image for index {idx}...")
             img_semaphore = asyncio.Semaphore(1)
-            path, cached = await generate_paragraph_image(para_text, args.ai_style, idx, cache_dir, img_semaphore)
+            path, cached = await generate_paragraph_image(para_text, args.ai_style, idx, cache_dir, img_semaphore, agy_model=args.agy_model)
             if path:
                 print(f"[+] Image generated successfully: {path}")
                 normalize_image(path)
@@ -585,7 +588,7 @@ async def main_async(args):
                 print("[+] Generating AI images for each paragraph...")
                 img_semaphore = asyncio.Semaphore(2)  # Limit concurrent image jobs
                 completed_img = 0
-                async def wrap_img(para_text, style, idx, c_dir, sem):
+                async def wrap_img(para_text, style, idx, c_dir, sem, model=args.agy_model):
                     nonlocal completed_img
                     if idx == 0:
                         hasher = hashlib.md5()
@@ -602,7 +605,7 @@ async def main_async(args):
                         print(f"\r  - Image Progress: {completed_img}/{len(metadata['paragraphs'])} segments completed [Cover]", end="", flush=True)
                         return fallback_cover
                     
-                    path, cached = await generate_paragraph_image(para_text, style, idx, c_dir, sem)
+                    path, cached = await generate_paragraph_image(para_text, style, idx, c_dir, sem, agy_model=model)
                     completed_img += 1
                     status = "[Cached]" if cached else "[Generated]"
                     print(f"\r  - Image Progress: {completed_img}/{len(metadata['paragraphs'])} segments completed {status}", end="", flush=True)
@@ -842,6 +845,7 @@ if __name__ == "__main__":
     parser.add_argument("--ai-style", default="cyberpunk anime style, vibrant colors, detailed sci-fi illustration", help="The style description to prepend to each AI image generation prompt. Examples: 'traditional chinese ink wash painting, ethereal landscape' (Ink), 'cinematic, photorealistic sci-fi scene, 8k' (Realism), 'watercolor painting, soft colors' (Watercolor).")
     parser.add_argument("--step", choices=["tts", "image", "video", "all"], default="all", help="Step to execute: 'tts' (Step 1: generate TTS and metadata), 'image' (Step 2: generate scene images), 'video' (Step 3: assemble final video), 'all' (default: run all steps).")
     parser.add_argument("--image-index", type=int, default=None, help="Specify a single paragraph index (0-based) to generate/regenerate the image for. If specified, defaults --step to 'image'.")
+    parser.add_argument("--agy-model", default=None, help="Override the agy CLI model used for AI image generation (e.g. gemini-3.6-flash-high, gemini-3.1-pro-high, claude-sonnet-4-6). Run 'agy models' to see all available options. Defaults to agy's own default model.")
 
     args = parser.parse_args()
     asyncio.run(main_async(args))
