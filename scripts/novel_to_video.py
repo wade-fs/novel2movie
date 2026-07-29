@@ -390,8 +390,99 @@ async def process_paragraph(paragraph, voice, idx, cache_dir, semaphore):
                 await asyncio.sleep(2 ** attempt)
 
 # ==========================================
-# 5. MAIN ORCHESTRATOR
+# 5. MAIN ORCHESTRATOR & STEPS
 # ==========================================
+async def run_tts_step(meta, cache_dir, args):
+    # Concurrently download paragraphs (limit to 5 connections to prevent blocking)
+    tts_semaphore = asyncio.Semaphore(5)
+    completed_tts = 0
+    async def wrap_tts(para, voice, idx, c_dir, sem):
+        nonlocal completed_tts
+        mp3, srt, cached = await process_paragraph(para, voice, idx, c_dir, sem)
+        completed_tts += 1
+        status = "[Cached]" if cached else "[Generated]"
+        print(f"\r  - TTS Progress: {completed_tts}/{len(meta['paragraphs'])} segments completed {status}", end="", flush=True)
+        return mp3, srt
+
+    tts_tasks = [wrap_tts(para, args.voice, idx, cache_dir, tts_semaphore) for idx, para in enumerate(meta['paragraphs'])]
+    print("[+] Synthesizing speech segments...")
+    results = await asyncio.gather(*tts_tasks)
+    print()
+
+    # Concatenate audio and merge subtitles
+    print("[+] Merging audio and subtitles...")
+    audio_list_file = os.path.join(cache_dir, "audio_list.txt")
+    with open(audio_list_file, "w", encoding="utf-8") as f:
+        for mp3_path, _ in results:
+            f.write(f"file '{os.path.abspath(mp3_path)}'\n")
+
+    combined_audio = os.path.join(cache_dir, "combined_audio.mp3")
+    cmd_audio = f"ffmpeg -f concat -safe 0 -i \"{audio_list_file}\" -c copy \"{combined_audio}\" -y"
+    subprocess.run(cmd_audio, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    # Combine & Shift Subtitles
+    combined_srt_content = []
+    accumulated_duration = 0.0
+    srt_index = 1
+    paragraphs_meta = []
+
+    for idx, (mp3_path, srt_path) in enumerate(results):
+        # Load subtitle
+        with open(srt_path, "r", encoding="utf-8") as sf:
+            srt_content = sf.read()
+        
+        # Shift and append
+        shifted_content, next_idx = shift_srt_content(srt_content, accumulated_duration, srt_index)
+        if shifted_content.strip():
+            combined_srt_content.append(shifted_content)
+            srt_index = next_idx
+            
+        # Get duration of this segment
+        duration = 0.0
+        try:
+            audio = MP3(mp3_path)
+            duration = audio.info.length
+        except Exception as e:
+            print(f"[-] Warning: Failed to read duration for {mp3_path}: {e}")
+
+        # Compute hash
+        hasher = hashlib.md5()
+        hasher.update(meta['paragraphs'][idx].encode('utf-8'))
+        hasher.update(args.voice.encode('utf-8'))
+        para_hash = hasher.hexdigest()
+
+        paragraphs_meta.append({
+            "index": idx,
+            "text": meta['paragraphs'][idx],
+            "hash": para_hash,
+            "audio_path": os.path.abspath(mp3_path),
+            "srt_path": os.path.abspath(srt_path),
+            "duration": duration,
+            "start_time": accumulated_duration,
+            "end_time": accumulated_duration + duration
+        })
+
+        accumulated_duration += duration
+
+    combined_srt_path = os.path.join(cache_dir, "combined.srt")
+    with open(combined_srt_path, "w", encoding="utf-8") as f:
+        f.write("\n\n".join(combined_srt_content))
+
+    metadata = {
+        "novel_name": meta['novel_name'],
+        "volume_title": meta['volume_title'],
+        "chapter_title": meta['chapter_title'],
+        "voice": args.voice,
+        "paragraphs": paragraphs_meta
+    }
+
+    metadata_file = os.path.join(cache_dir, "metadata.json")
+    with open(metadata_file, "w", encoding="utf-8") as f:
+        json.dump(metadata, f, ensure_ascii=False, indent=2)
+
+    print(f"[+] TTS metadata saved to: {metadata_file}")
+    return metadata
+
 async def main_async(args):
     # Check FFmpeg
     if not shutil.which("ffmpeg"):
@@ -418,65 +509,31 @@ async def main_async(args):
         cache_dir = os.path.join(".cache", f"tts_{safe_novel}_{safe_chapter}")
     os.makedirs(cache_dir, exist_ok=True)
 
-    # 2. Concurrently download paragraphs (limit to 5 connections to prevent blocking)
-    tts_semaphore = asyncio.Semaphore(5)
-    completed_tts = 0
-    async def wrap_tts(para, voice, idx, c_dir, sem):
-        nonlocal completed_tts
-        mp3, srt, cached = await process_paragraph(para, voice, idx, c_dir, sem)
-        completed_tts += 1
-        status = "[Cached]" if cached else "[Generated]"
-        print(f"\r  - TTS Progress: {completed_tts}/{len(meta['paragraphs'])} segments completed {status}", end="", flush=True)
-        return mp3, srt
+    if args.image_index is not None:
+        args.step = "image"
 
-    tts_tasks = [wrap_tts(para, args.voice, idx, cache_dir, tts_semaphore) for idx, para in enumerate(meta['paragraphs'])]
-    print("[+] Synthesizing speech segments...")
-    results = await asyncio.gather(*tts_tasks)
-    print()
+    # Load or generate metadata
+    metadata_file = os.path.join(cache_dir, "metadata.json")
+    run_tts = (args.step in ("tts", "all")) or (not os.path.exists(metadata_file))
 
-    # 3. Concatenate audio and merge subtitles
-    print("[+] Merging audio and subtitles...")
-    audio_list_file = os.path.join(cache_dir, "audio_list.txt")
-    with open(audio_list_file, "w", encoding="utf-8") as f:
-        for mp3_path, _ in results:
-            f.write(f"file '{os.path.abspath(mp3_path)}'\n")
+    if run_tts:
+        metadata = await run_tts_step(meta, cache_dir, args)
+    else:
+        print(f"[+] Loading existing TTS metadata from: {metadata_file}")
+        with open(metadata_file, "r", encoding="utf-8") as f:
+            metadata = json.load(f)
 
-    combined_audio = os.path.join(cache_dir, "combined_audio.mp3")
-    cmd_audio = f"ffmpeg -f concat -safe 0 -i \"{audio_list_file}\" -c copy \"{combined_audio}\" -y"
-    subprocess.run(cmd_audio, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if len(metadata.get("paragraphs", [])) != len(meta["paragraphs"]):
+        print("[!] Warning: Paragraph count in metadata does not match Markdown file. Re-running TTS step...")
+        metadata = await run_tts_step(meta, cache_dir, args)
 
-    # Combine & Shift Subtitles
-    combined_srt_content = []
-    accumulated_duration = 0.0
-    srt_index = 1
+    if args.step == "tts":
+        print("[+] Step 'tts' completed successfully.")
+        return
 
-    for mp3_path, srt_path in results:
-        # Load subtitle
-        with open(srt_path, "r", encoding="utf-8") as sf:
-            srt_content = sf.read()
-        
-        # Shift and append
-        shifted_content, next_idx = shift_srt_content(srt_content, accumulated_duration, srt_index)
-        if shifted_content.strip():
-            combined_srt_content.append(shifted_content)
-            srt_index = next_idx
-            
-        # Get duration of this segment
-        try:
-            audio = MP3(mp3_path)
-            accumulated_duration += audio.info.length
-        except Exception as e:
-            print(f"[-] Warning: Failed to read duration for {mp3_path}: {e}")
-
-    combined_srt_path = os.path.join(cache_dir, "combined.srt")
-    with open(combined_srt_path, "w", encoding="utf-8") as f:
-        f.write("\n\n".join(combined_srt_content))
-
-    # 4. Handle Visual Background (Cover, Slide folder, or AI Generated Images)
-    image_files = []
-    
-    if args.ai_images:
-        # First, prepare fallback cover if any AI generation fails
+    # Image generation/collection step
+    if args.step in ("image", "all"):
+        # Prepare fallback cover
         fallback_cover = args.image
         if not fallback_cover:
             chapter_dir = os.path.dirname(os.path.abspath(args.chapter_file))
@@ -488,178 +545,287 @@ async def main_async(args):
             else:
                 fallback_cover = os.path.join(cache_dir, "generated_cover.png")
                 if not os.path.exists(fallback_cover):
-                    create_dynamic_cover(meta['novel_name'], meta['volume_title'], meta['chapter_title'], fallback_cover)
+                    create_dynamic_cover(metadata['novel_name'], metadata['volume_title'], metadata['chapter_title'], fallback_cover)
 
-        # Concurrently generate images
-        print("[+] Generating AI images for each paragraph...")
-        img_semaphore = asyncio.Semaphore(2)  # Limit concurrent image jobs
-        completed_img = 0
-        async def wrap_img(para, style, idx, c_dir, sem):
-            nonlocal completed_img
-            # The first paragraph (index 0) always displays the book/chapter cover page
-            if idx == 0:
-                completed_img += 1
-                print(f"\r  - Image Progress: {completed_img}/{len(meta['paragraphs'])} segments completed [Cover]", end="", flush=True)
-                return fallback_cover
+        if args.image_index is not None:
+            idx = args.image_index
+            if idx < 0 or idx >= len(metadata["paragraphs"]):
+                print(f"[-] Error: Image index {idx} is out of range (0 to {len(metadata['paragraphs'])-1})")
+                sys.exit(1)
             
-            path, cached = await generate_paragraph_image(para, style, idx, c_dir, sem)
-            completed_img += 1
-            status = "[Cached]" if cached else "[Generated]"
-            print(f"\r  - Image Progress: {completed_img}/{len(meta['paragraphs'])} segments completed {status}", end="", flush=True)
-            return path
-
-        img_tasks = [wrap_img(para, args.ai_style, idx, cache_dir, img_semaphore) for idx, para in enumerate(meta['paragraphs'])]
-        raw_images = await asyncio.gather(*img_tasks)
-        print()
-
-        # Fill any failures with the fallback cover
-        image_files = [path if path else fallback_cover for path in raw_images]
-    else:
-        # Check if a custom image/dir was passed
-        if args.image:
-            if os.path.isdir(args.image):
-                # It's a directory, look for images inside
-                image_files = sorted([os.path.join(args.image, f) for f in os.listdir(args.image) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
-            elif os.path.isfile(args.image):
-                image_files = [args.image]
+            para_meta = metadata["paragraphs"][idx]
+            para_text = para_meta["text"]
+            para_hash = para_meta["hash"]
+            cached_img = os.path.abspath(os.path.join(cache_dir, f"img_{idx:03d}_{para_hash}.png"))
+            
+            # Delete existing cached image to force regeneration
+            if os.path.exists(cached_img):
+                print(f"[+] Deleting existing image to force regeneration: {cached_img}")
+                try:
+                    os.remove(cached_img)
+                except Exception as e:
+                    print(f"[-] Warning: Failed to remove {cached_img}: {e}")
+            
+            # Generate the single image
+            print(f"[+] Generating AI image for index {idx}...")
+            img_semaphore = asyncio.Semaphore(1)
+            path, cached = await generate_paragraph_image(para_text, args.ai_style, idx, cache_dir, img_semaphore)
+            if path:
+                print(f"[+] Image generated successfully: {path}")
+                normalize_image(path)
+            else:
+                print(f"[-] Failed to generate image for index {idx}.")
+                sys.exit(1)
+            
+            print(f"[+] Step 'image' for index {idx} completed successfully.")
+            return
         else:
-            # Scan automatically
-            chapter_dir = os.path.dirname(os.path.abspath(args.chapter_file))
-            base_name = os.path.splitext(os.path.basename(args.chapter_file))[0]
+            # Generate all images
+            if args.ai_images:
+                print("[+] Generating AI images for each paragraph...")
+                img_semaphore = asyncio.Semaphore(2)  # Limit concurrent image jobs
+                completed_img = 0
+                async def wrap_img(para_text, style, idx, c_dir, sem):
+                    nonlocal completed_img
+                    if idx == 0:
+                        hasher = hashlib.md5()
+                        hasher.update(para_text.encode('utf-8'))
+                        hasher.update(style.encode('utf-8'))
+                        para_hash = hasher.hexdigest()
+                        cached_img = os.path.abspath(os.path.join(c_dir, f"img_{idx:03d}_{para_hash}.png"))
+                        if os.path.exists(cached_img) and os.path.getsize(cached_img) > 1024:
+                            completed_img += 1
+                            print(f"\r  - Image Progress: {completed_img}/{len(metadata['paragraphs'])} segments completed [Cached Cover Image]", end="", flush=True)
+                            return cached_img
+                        
+                        completed_img += 1
+                        print(f"\r  - Image Progress: {completed_img}/{len(metadata['paragraphs'])} segments completed [Cover]", end="", flush=True)
+                        return fallback_cover
+                    
+                    path, cached = await generate_paragraph_image(para_text, style, idx, c_dir, sem)
+                    completed_img += 1
+                    status = "[Cached]" if cached else "[Generated]"
+                    print(f"\r  - Image Progress: {completed_img}/{len(metadata['paragraphs'])} segments completed {status}", end="", flush=True)
+                    return path
+
+                img_tasks = [wrap_img(p["text"], args.ai_style, idx, cache_dir, img_semaphore) for idx, p in enumerate(metadata['paragraphs'])]
+                raw_images = await asyncio.gather(*img_tasks)
+                print()
+
+                image_files = [path if path else fallback_cover for path in raw_images]
+            else:
+                if args.image:
+                    if os.path.isdir(args.image):
+                        image_files = sorted([os.path.join(args.image, f) for f in os.listdir(args.image) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
+                    elif os.path.isfile(args.image):
+                        image_files = [args.image]
+                else:
+                    chapter_dir = os.path.dirname(os.path.abspath(args.chapter_file))
+                    base_name = os.path.splitext(os.path.basename(args.chapter_file))[0]
+                    possible_dirs = [
+                        os.path.join(chapter_dir, f"{base_name}_images"),
+                        os.path.join(chapter_dir, base_name),
+                        os.path.join(chapter_dir, "images"),
+                    ]
+                    for d in possible_dirs:
+                        if os.path.isdir(d):
+                            image_files = sorted([os.path.join(d, f) for f in os.listdir(d) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
+                            if image_files:
+                                print(f"[+] Found {len(image_files)} chapter images in: {d}")
+                                break
+                    if not image_files:
+                        image_files = [fallback_cover]
+
+            # Normalize all background images to 1920x1080
+            print("[+] Normalizing image resolutions to 1920x1080...")
+            normalized_image_files = []
+            for img_path in image_files:
+                norm_path = normalize_image(img_path)
+                normalized_image_files.append(norm_path)
+            image_files = normalized_image_files
             
-            # Look for a directory matching chapter name, e.g., 001_images or 001 or images
-            possible_dirs = [
-                os.path.join(chapter_dir, f"{base_name}_images"),
-                os.path.join(chapter_dir, base_name),
-                os.path.join(chapter_dir, "images"),
-            ]
-            for d in possible_dirs:
-                if os.path.isdir(d):
-                    image_files = sorted([os.path.join(d, f) for f in os.listdir(d) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
-                    if image_files:
-                        print(f"[+] Found {len(image_files)} chapter images in: {d}")
-                        break
-            
-            # If no image folder found, look for local cover image files
-            if not image_files:
+            if args.step == "image":
+                print("[+] Step 'image' completed successfully.")
+                return
+
+    # Video assembly step
+    if args.step in ("video", "all"):
+        if 'image_files' not in locals():
+            # Prepare fallback cover
+            fallback_cover = args.image
+            if not fallback_cover:
+                chapter_dir = os.path.dirname(os.path.abspath(args.chapter_file))
                 local_covers = [os.path.join(chapter_dir, f) for f in os.listdir(chapter_dir) if "封面" in f or "cover" in f.lower()]
                 parent_covers = [os.path.join(os.path.dirname(chapter_dir), f) for f in os.listdir(os.path.dirname(chapter_dir)) if "封面" in f or "cover" in f.lower()]
                 all_covers = [c for c in (local_covers + parent_covers) if os.path.isfile(c) and c.lower().endswith((".png", ".jpeg", ".jpg"))]
                 if all_covers:
-                    image_files = [all_covers[0]]
-                    print(f"[+] Found cover image locally: {all_covers[0]}")
+                    fallback_cover = all_covers[0]
                 else:
-                    # Generate dynamically
-                    generated_cover = os.path.join(cache_dir, "generated_cover.png")
-                    create_dynamic_cover(meta['novel_name'], meta['volume_title'], meta['chapter_title'], generated_cover)
-                    image_files = [generated_cover]
+                    fallback_cover = os.path.join(cache_dir, "generated_cover.png")
+                    if not os.path.exists(fallback_cover):
+                        create_dynamic_cover(metadata['novel_name'], metadata['volume_title'], metadata['chapter_title'], fallback_cover)
 
-    # Normalize all background images to 1920x1080 to ensure FFmpeg concat compliance and correct subtitle rendering
-    print("[+] Normalizing image resolutions to 1920x1080...")
-    normalized_image_files = []
-    for img_path in image_files:
-        norm_path = normalize_image(img_path)
-        normalized_image_files.append(norm_path)
-    image_files = normalized_image_files
+            image_files = []
+            if args.ai_images:
+                print("[+] Collecting scene images from cache...")
+                for idx, p in enumerate(metadata['paragraphs']):
+                    hasher = hashlib.md5()
+                    hasher.update(p["text"].encode('utf-8'))
+                    hasher.update(args.ai_style.encode('utf-8'))
+                    para_hash = hasher.hexdigest()
+                    cached_img = os.path.abspath(os.path.join(cache_dir, f"img_{idx:03d}_{para_hash}.png"))
+                    if os.path.exists(cached_img) and os.path.getsize(cached_img) > 1024:
+                        image_files.append(cached_img)
+                    else:
+                        image_files.append(fallback_cover)
+            else:
+                if args.image:
+                    if os.path.isdir(args.image):
+                        image_files = sorted([os.path.join(args.image, f) for f in os.listdir(args.image) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
+                    elif os.path.isfile(args.image):
+                        image_files = [args.image]
+                else:
+                    chapter_dir = os.path.dirname(os.path.abspath(args.chapter_file))
+                    base_name = os.path.splitext(os.path.basename(args.chapter_file))[0]
+                    possible_dirs = [
+                        os.path.join(chapter_dir, f"{base_name}_images"),
+                        os.path.join(chapter_dir, base_name),
+                        os.path.join(chapter_dir, "images"),
+                    ]
+                    for d in possible_dirs:
+                        if os.path.isdir(d):
+                            image_files = sorted([os.path.join(d, f) for f in os.listdir(d) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
+                            if image_files:
+                                print(f"[+] Found {len(image_files)} chapter images in: {d}")
+                                break
+                    if not image_files:
+                        image_files = [fallback_cover]
 
-    is_multi_image = len(image_files) > 1
+            # Normalize all background images to 1920x1080
+            print("[+] Normalizing image resolutions to 1920x1080...")
+            normalized_image_files = []
+            for img_path in image_files:
+                norm_path = normalize_image(img_path)
+                normalized_image_files.append(norm_path)
+            image_files = normalized_image_files
 
-    # 5. Assemble Video (FFmpeg)
-    output_video = args.output
-    if not output_video:
-        abs_input = os.path.abspath(args.chapter_file)
-        if "/chapter/" in abs_input:
-            # Replace /chapter/ with /video/ and change extension to .mp4
-            abs_output = abs_input.replace("/chapter/", "/video/").rsplit(".", 1)[0] + ".mp4"
-        else:
-            base_name = os.path.splitext(os.path.basename(args.chapter_file))[0]
-            abs_output = os.path.abspath(f"{base_name}.mp4")
-        output_video = abs_output
-
-    # Make sure output directory exists
-    output_dir = os.path.dirname(output_video)
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
-
-    print(f"[+] Assembling final video to: {output_video}...")
-    
-    # Copy SRT file locally to avoid escaping issues in FFmpeg path parser
-    temp_srt_local = "temp_subs.srt"
-    shutil.copyfile(combined_srt_path, temp_srt_local)
-
-    # Set up video input configuration
-    if is_multi_image:
-        N = len(results)
-        M = len(image_files)
-        if M > N:
-            print(f"[!] Warning: More images ({M}) than paragraphs ({N}). Using first {N} images.")
-            image_files = image_files[:N]
-            M = N
-
-        # Get duration for each paragraph
+        # Reconstruct results and durations from metadata
+        results = []
         paragraph_durations = []
-        for mp3_path, _ in results:
-            try:
-                audio = MP3(mp3_path)
-                paragraph_durations.append(audio.info.length)
-            except Exception:
-                paragraph_durations.append(0.0)
+        for p in metadata['paragraphs']:
+            audio_path = p["audio_path"]
+            if not os.path.isabs(audio_path):
+                audio_path = os.path.abspath(os.path.join(cache_dir, audio_path))
+            srt_path = p["srt_path"]
+            if not os.path.isabs(srt_path):
+                srt_path = os.path.abspath(os.path.join(cache_dir, srt_path))
+            results.append((audio_path, srt_path))
+            paragraph_durations.append(p["duration"])
 
-        # Distribute paragraphs to M image slots as evenly as possible
-        chunk_size = N / M
-        chunks = []
-        start_idx = 0
-        for i in range(M):
-            end_idx = int(round((i + 1) * chunk_size))
-            if end_idx == start_idx:
-                end_idx = start_idx + 1
-            if i == M - 1:
-                end_idx = N
-            chunks.append((start_idx, end_idx))
-            start_idx = end_idx
+        # Setup audio/subtitles for video assembly
+        combined_audio = os.path.join(cache_dir, "combined_audio.mp3")
+        combined_srt_path = os.path.join(cache_dir, "combined.srt")
+        
+        # Ensure they exist
+        if not os.path.exists(combined_audio) or not os.path.exists(combined_srt_path):
+            print("[!] Combined audio or subtitles missing. Re-running TTS/Merging step...")
+            metadata = await run_tts_step(meta, cache_dir, args)
+            results = []
+            paragraph_durations = []
+            for p in metadata['paragraphs']:
+                audio_path = p["audio_path"]
+                if not os.path.isabs(audio_path):
+                    audio_path = os.path.abspath(os.path.join(cache_dir, audio_path))
+                srt_path = p["srt_path"]
+                if not os.path.isabs(srt_path):
+                    srt_path = os.path.abspath(os.path.join(cache_dir, srt_path))
+                results.append((audio_path, srt_path))
+                paragraph_durations.append(p["duration"])
 
-        # Calculate exact duration for each image
-        image_durations = []
-        for start_idx, end_idx in chunks:
-            chunk_duration = sum(paragraph_durations[start_idx:end_idx])
-            image_durations.append(chunk_duration)
+        is_multi_image = len(image_files) > 1
 
-        # Write the image playlist for FFmpeg's concat demuxer
-        image_list_file = os.path.join(cache_dir, "image_list.txt")
-        with open(image_list_file, "w", encoding="utf-8") as f:
-            for img_path, dur in zip(image_files, image_durations):
-                f.write(f"file '{os.path.abspath(img_path)}'\n")
-                f.write(f"duration {dur:.3f}\n")
-            # Duplicate the last file to work around FFmpeg concat cut-off
-            f.write(f"file '{os.path.abspath(image_files[-1])}'\n")
+        # 5. Assemble Video (FFmpeg)
+        output_video = args.output
+        if not output_video:
+            abs_input = os.path.abspath(args.chapter_file)
+            if "/chapter/" in abs_input:
+                abs_output = abs_input.replace("/chapter/", "/video/").rsplit(".", 1)[0] + ".mp4"
+            else:
+                base_name = os.path.splitext(os.path.basename(args.chapter_file))[0]
+                abs_output = os.path.abspath(f"{base_name}.mp4")
+            output_video = abs_output
 
-        cmd_video = (
-            f'ffmpeg -f concat -safe 0 -i "{image_list_file}" -i "{combined_audio}" '
-            f'-vf "fps=25,subtitles={temp_srt_local}:force_style=\'FontSize=20,Alignment=2,OutlineColour=&H80000000,BorderStyle=3\'" '
-            f'-c:v libx264 -c:a aac -b:a 192k -pix_fmt yuv420p -shortest "{output_video}" -y'
-        )
-    else:
-        cmd_video = (
-            f'ffmpeg -loop 1 -i "{image_files[0]}" -i "{combined_audio}" '
-            f'-vf "fps=25,subtitles={temp_srt_local}:force_style=\'FontSize=20,Alignment=2,OutlineColour=&H80000000,BorderStyle=3\'" '
-            f'-c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest "{output_video}" -y'
-        )
-    
-    try:
-        res = subprocess.run(cmd_video, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        if res.returncode != 0:
-            print(f"[-] FFmpeg error: {res.stderr}")
-            sys.exit(1)
-        print(f"[+] Success! Video generated at: {os.path.abspath(output_video)}")
-    finally:
-        # Clean up local temporary srt
-        if os.path.exists(temp_srt_local):
-            os.remove(temp_srt_local)
+        output_dir = os.path.dirname(output_video)
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
 
-    # Cleanup cache if clean flag is set
-    if args.clean:
-        print("[+] Cleaning cache folder...")
-        shutil.rmtree(cache_dir)
+        print(f"[+] Assembling final video to: {output_video}...")
+        
+        # Copy SRT file locally to avoid escaping issues in FFmpeg path parser
+        temp_srt_local = "temp_subs.srt"
+        shutil.copyfile(combined_srt_path, temp_srt_local)
+
+        if is_multi_image:
+            N = len(results)
+            M = len(image_files)
+            if M > N:
+                print(f"[!] Warning: More images ({M}) than paragraphs ({N}). Using first {N} images.")
+                image_files = image_files[:N]
+                M = N
+
+            # Distribute paragraphs to M image slots as evenly as possible
+            chunk_size = N / M
+            chunks = []
+            start_idx = 0
+            for i in range(M):
+                end_idx = int(round((i + 1) * chunk_size))
+                if end_idx == start_idx:
+                    end_idx = start_idx + 1
+                if i == M - 1:
+                    end_idx = N
+                chunks.append((start_idx, end_idx))
+                start_idx = end_idx
+
+            # Calculate exact duration for each image
+            image_durations = []
+            for start_idx, end_idx in chunks:
+                chunk_duration = sum(paragraph_durations[start_idx:end_idx])
+                image_durations.append(chunk_duration)
+
+            # Write the image playlist for FFmpeg's concat demuxer
+            image_list_file = os.path.join(cache_dir, "image_list.txt")
+            with open(image_list_file, "w", encoding="utf-8") as f:
+                for img_path, dur in zip(image_files, image_durations):
+                    f.write(f"file '{os.path.abspath(img_path)}'\n")
+                    f.write(f"duration {dur:.3f}\n")
+                # Duplicate the last file to work around FFmpeg concat cut-off
+                f.write(f"file '{os.path.abspath(image_files[-1])}'\n")
+
+            cmd_video = (
+                f'ffmpeg -f concat -safe 0 -i "{image_list_file}" -i "{combined_audio}" '
+                f'-vf "fps=25,subtitles={temp_srt_local}:force_style=\'FontSize=20,Alignment=2,OutlineColour=&H80000000,BorderStyle=3\'" '
+                f'-c:v libx264 -c:a aac -b:a 192k -pix_fmt yuv420p -shortest "{output_video}" -y'
+            )
+        else:
+            cmd_video = (
+                f'ffmpeg -loop 1 -i "{image_files[0]}" -i "{combined_audio}" '
+                f'-vf "fps=25,subtitles={temp_srt_local}:force_style=\'FontSize=20,Alignment=2,OutlineColour=&H80000000,BorderStyle=3\'" '
+                f'-c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest "{output_video}" -y'
+            )
+        
+        try:
+            res = subprocess.run(cmd_video, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            if res.returncode != 0:
+                print(f"[-] FFmpeg error: {res.stderr}")
+                sys.exit(1)
+            print(f"[+] Success! Video generated at: {os.path.abspath(output_video)}")
+        finally:
+            if os.path.exists(temp_srt_local):
+                os.remove(temp_srt_local)
+
+        if args.clean:
+            print("[+] Cleaning cache folder...")
+            shutil.rmtree(cache_dir)
 
 # ==========================================
 # 6. ENTRY POINT
@@ -674,6 +840,8 @@ if __name__ == "__main__":
     parser.add_argument("--clean", action="store_true", help="Delete cache after successful video generation")
     parser.add_argument("--ai-images", action="store_true", help="Enable automatic paragraph-level AI image generation using the antigravity (agy) CLI. Each paragraph will show its own unique AI-generated scene.")
     parser.add_argument("--ai-style", default="cyberpunk anime style, vibrant colors, detailed sci-fi illustration", help="The style description to prepend to each AI image generation prompt. Examples: 'traditional chinese ink wash painting, ethereal landscape' (Ink), 'cinematic, photorealistic sci-fi scene, 8k' (Realism), 'watercolor painting, soft colors' (Watercolor).")
+    parser.add_argument("--step", choices=["tts", "image", "video", "all"], default="all", help="Step to execute: 'tts' (Step 1: generate TTS and metadata), 'image' (Step 2: generate scene images), 'video' (Step 3: assemble final video), 'all' (default: run all steps).")
+    parser.add_argument("--image-index", type=int, default=None, help="Specify a single paragraph index (0-based) to generate/regenerate the image for. If specified, defaults --step to 'image'.")
 
     args = parser.parse_args()
     asyncio.run(main_async(args))

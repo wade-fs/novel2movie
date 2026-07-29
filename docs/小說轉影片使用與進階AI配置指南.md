@@ -79,6 +79,35 @@
 
 ---
 
+## 🔄 階梯式漸進工作流 (Step-by-Step Workflow) 🌟
+
+當章節篇幅較長、AI 圖片生成需要微調或因配額限制需要單張微調時，您可以使用**分步執行**功能：
+
+### 第一步：一次性生成所有 TTS 語音與時間軸
+```bash
+./novel_to_video.sh guixu/chapter/01/001.md --step tts
+```
+* **作用**：解析 Markdown、為所有段落產生 TTS 語音檔及單獨字幕，計算發音時間與總時長，並生成音訊合併檔 `combined_audio.mp3`、合併字幕 `combined.srt` 以及管線繼承資訊檔 `metadata.json`。
+
+### 第二步：逐張/分步建立 AI 圖片 (支援單張重建)
+* **一次性生成/快取所有圖片**：
+  ```bash
+  ./novel_to_video.sh guixu/chapter/01/001.md --step image --ai-images
+  ```
+* **指定重建某個段落的畫面** (例如：重新生成第 4 個畫面)：
+  ```bash
+  ./novel_to_video.sh guixu/chapter/01/001.md --image-index 4 --ai-images
+  ```
+  *(註：此時腳本會自動刪除快取中該索引舊圖並重新調用 AI 繪圖產生新圖。)*
+
+### 第三步：一鍵組裝成最終影片
+```bash
+./novel_to_video.sh guixu/chapter/01/001.md --step video --ai-images
+```
+* **作用**：直接讀取 `metadata.json` 的時序資料與快取中的 AI 圖片（未產生圖片的段落則自動以預設封面墊底），快速使用 FFmpeg 組裝壓製出最終帶滾動字幕與音軌的 `.mp4` 影片。
+
+---
+
 ## 📋 命令行參數完整參考 (CLI Arguments)
 
 執行 `./novel_to_video.sh --help` 可查看英文幫助資訊，以下為詳細中文對照：
@@ -93,3 +122,6 @@
 | `--clean` | `False` | 影片生成成功後，是否自動清理快取目錄。一般建議保留以實現快速二次修改。 |
 | `--ai-images` | `False` | 是否開啟進階的 AI 逐段插圖生成模式。 |
 | `--ai-style` | (預設科幻動漫) | AI 生成圖片的畫風提示詞字串。 |
+| `--step` | `all` | 指定執行的階段：`tts` (Step 1)、`image` (Step 2)、`video` (Step 3) 或 `all` (預設，完整全自動管線)。 |
+| `--image-index` | `None` | 指定單一畫面的索引 (0-based) 進行生成/重新生成。指定此參數時 `--step` 會預設為 `image`。 |
+
