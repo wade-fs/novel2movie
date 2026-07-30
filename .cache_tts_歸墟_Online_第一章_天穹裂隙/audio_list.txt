@@ -1,0 +1,3 @@
+file '/home/wade/src/github/novel/.cache_tts_歸墟_Online_第一章_天穹裂隙/000_95d82ec7025afce33fa63746948dc15d.mp3'
+file '/home/wade/src/github/novel/.cache_tts_歸墟_Online_第一章_天穹裂隙/001_c62eeef4e9a8402c6e70973dabbeb011.mp3'
+file '/home/wade/src/github/novel/.cache_tts_歸墟_Online_第一章_天穹裂隙/002_0046e6e0cc186f514cf71b5f30d20ca2.mp3'
