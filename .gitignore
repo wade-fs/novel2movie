@@ -8,3 +8,5 @@ redemption
 .cache
 .venv
 __pycache__/
+boundless
+the-boundary-trace/
