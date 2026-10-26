@@ -6,11 +6,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.provider.OpenableColumns
 import android.speech.tts.Voice
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -44,6 +50,25 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
     private var availableVoices: List<Voice> = emptyList()
     private var pendingSavedProgress: SavedReadingProgress? = null
     private var isImmersiveFullScreen: Boolean = true
+
+    // 長按音量鍵控制章節
+    private val keyHandler = Handler(Looper.getMainLooper())
+    private var isVolumeUpLongPressed = false
+    private var isVolumeDownLongPressed = false
+
+    private val volumeUpLongPressRunnable = Runnable {
+        isVolumeUpLongPressed = true
+        vibrateFeedback()
+        ttsService?.playNextChapter()
+        Toast.makeText(this, "長按大聲：切換至下一章", Toast.LENGTH_SHORT).show()
+    }
+
+    private val volumeDownLongPressRunnable = Runnable {
+        isVolumeDownLongPressed = true
+        vibrateFeedback()
+        ttsService?.playPreviousChapter()
+        Toast.makeText(this, "長按小聲：切換至上一章", Toast.LENGTH_SHORT).show()
+    }
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -482,8 +507,74 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
         }
     }
 
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val keyCode = event.keyCode
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                if (event.repeatCount == 0) {
+                    isVolumeUpLongPressed = false
+                    keyHandler.removeCallbacks(volumeUpLongPressRunnable)
+                    keyHandler.postDelayed(volumeUpLongPressRunnable, 500)
+                }
+                return true
+            } else if (event.action == KeyEvent.ACTION_UP) {
+                keyHandler.removeCallbacks(volumeUpLongPressRunnable)
+                if (!isVolumeUpLongPressed) {
+                    // 短按：正常提高音量
+                    audioManager.adjustStreamVolume(
+                        AudioManager.STREAM_MUSIC,
+                        AudioManager.ADJUST_RAISE,
+                        AudioManager.FLAG_SHOW_UI
+                    )
+                }
+                isVolumeUpLongPressed = false
+                return true
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                if (event.repeatCount == 0) {
+                    isVolumeDownLongPressed = false
+                    keyHandler.removeCallbacks(volumeDownLongPressRunnable)
+                    keyHandler.postDelayed(volumeDownLongPressRunnable, 500)
+                }
+                return true
+            } else if (event.action == KeyEvent.ACTION_UP) {
+                keyHandler.removeCallbacks(volumeDownLongPressRunnable)
+                if (!isVolumeDownLongPressed) {
+                    // 短按：正常降低音量
+                    audioManager.adjustStreamVolume(
+                        AudioManager.STREAM_MUSIC,
+                        AudioManager.ADJUST_LOWER,
+                        AudioManager.FLAG_SHOW_UI
+                    )
+                }
+                isVolumeDownLongPressed = false
+                return true
+            }
+        }
+
+        return super.dispatchKeyEvent(event)
+    }
+
+    private fun vibrateFeedback() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val vibrator = getSystemService(Vibrator::class.java)
+                vibrator?.vibrate(VibrationEffect.createOneShot(60, VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                @Suppress("DEPRECATION")
+                val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+                vibrator?.vibrate(60)
+            }
+        } catch (_: Exception) {}
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        keyHandler.removeCallbacks(volumeUpLongPressRunnable)
+        keyHandler.removeCallbacks(volumeDownLongPressRunnable)
         if (isBound) {
             ttsService?.removeListener(this)
             unbindService(serviceConnection)

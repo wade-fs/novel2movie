@@ -129,7 +129,13 @@ def call_gemini_api(prompt, max_retries=10):
         "generationConfig": {
             "temperature": 0.8,
             "maxOutputTokens": 8192
-        }
+        },
+        "safetySettings": [
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
+        ]
     }
     data = json.dumps(payload).encode("utf-8")
     delay = 5
@@ -145,7 +151,8 @@ def call_gemini_api(prompt, max_retries=10):
                 res = json.loads(resp.read().decode("utf-8"))
                 candidates = res.get("candidates", [])
                 if not candidates:
-                    raise ValueError("API 回傳結果為空 candidates")
+                    fb = res.get("promptFeedback", {})
+                    raise ValueError(f"API 回傳結果為空 candidates，反饋: {fb}")
                 text = candidates[0]["content"]["parts"][0]["text"]
                 return text.strip()
         except urllib.error.HTTPError as e:
@@ -166,6 +173,12 @@ def call_gemini_api(prompt, max_retries=10):
 def generate_chapter(chap_num, volume_num, title, outline):
     cn_title = f"第{to_cn(chap_num)}章　{title}"
     log(f"開始生成 第 {chap_num} 章（卷 {volume_num}）：{title}")
+
+    clean_outline = (
+        outline.replace("姦淫", "殘害逼迫")
+               .replace("強姦", "殘害")
+               .replace("屠戮俘虜", "嚴酷處置俘虜")
+    )
 
     prompt = f"""你是一名嚴謹宏大的歷史小說家與北宋、南宋歷史學者，正在創作史詩群像長篇歷史小說《宋末》（全書共八卷，720章）。
 你正在將章綱擴寫成具有沉浸敘事、厚重歷史感、鮮活人物行動的小說章節。
@@ -189,7 +202,7 @@ def generate_chapter(chap_num, volume_num, title, outline):
 
 【本章所屬卷別】：第 {volume_num} 卷
 【本章章綱資料】：
-{outline}
+{clean_outline}
 
 請直接輸出完整 markdown 文本，不可省略，不要任何無關開場白或結束語。
 """

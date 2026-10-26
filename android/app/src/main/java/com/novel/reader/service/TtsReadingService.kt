@@ -5,15 +5,26 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.speech.tts.Voice
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
+import androidx.media.session.MediaButtonReceiver
 import com.novel.reader.R
 import com.novel.reader.model.*
 import com.novel.reader.parser.NovelChapterParser
@@ -57,6 +68,42 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         private set
     lateinit var progressManager: ReadingProgressManager
         private set
+    lateinit var audioManager: AudioManager
+        private set
+    lateinit var mediaSession: MediaSessionCompat
+        private set
+
+    private var audioFocusRequest: AudioFocusRequest? = null
+    private var isNoisyReceiverRegistered = false
+
+    private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_LOSS -> {
+                if (playbackState == PlaybackState.PLAYING) {
+                    pause()
+                }
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                if (playbackState == PlaybackState.PLAYING) {
+                    pause()
+                }
+            }
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                // 音訊焦點恢復
+            }
+        }
+    }
+
+    // 當耳機被拔出或藍牙耳機斷開時，自動暫停朗讀避免外放擴音
+    private val becomingNoisyReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
+                if (playbackState == PlaybackState.PLAYING) {
+                    pause()
+                }
+            }
+        }
+    }
 
     var chapters: List<Chapter> = emptyList()
         private set
@@ -111,9 +158,170 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         repository = NovelRepository(applicationContext)
         progressManager = ReadingProgressManager(applicationContext)
         settings = progressManager.loadSettings()
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
         createNotificationChannel()
+        setupMediaSession()
         tts = TextToSpeech(applicationContext, this)
+    }
+
+    private fun setupMediaSession() {
+        val mediaButtonReceiverComponent = ComponentName(applicationContext, MediaButtonReceiver::class.java)
+        val mediaButtonIntent = Intent(Intent.ACTION_MEDIA_BUTTON).apply {
+            component = mediaButtonReceiverComponent
+        }
+        val mediaButtonPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            0,
+            mediaButtonIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        mediaSession = MediaSessionCompat(
+            this,
+            "NovelReaderMediaSession",
+            mediaButtonReceiverComponent,
+            mediaButtonPendingIntent
+        ).apply {
+            setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
+                MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+            )
+            setCallback(object : MediaSessionCompat.Callback() {
+                override fun onPlay() {
+                    this@TtsReadingService.play()
+                }
+
+                override fun onPause() {
+                    this@TtsReadingService.pause()
+                }
+
+                override fun onSkipToNext() {
+                    this@TtsReadingService.playNextChapter()
+                }
+
+                override fun onSkipToPrevious() {
+                    this@TtsReadingService.playPreviousChapter()
+                }
+
+                override fun onStop() {
+                    this@TtsReadingService.stop()
+                }
+
+                override fun onMediaButtonEvent(mediaButtonEvent: Intent?): Boolean {
+                    val keyEvent = mediaButtonEvent?.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
+                    if (keyEvent != null && keyEvent.action == KeyEvent.ACTION_DOWN) {
+                        when (keyEvent.keyCode) {
+                            KeyEvent.KEYCODE_MEDIA_PLAY -> {
+                                play()
+                                return true
+                            }
+                            KeyEvent.KEYCODE_MEDIA_PAUSE -> {
+                                pause()
+                                return true
+                            }
+                            KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
+                            KeyEvent.KEYCODE_HEADSETHOOK -> {
+                                if (playbackState == PlaybackState.PLAYING) pause() else play()
+                                return true
+                            }
+                            KeyEvent.KEYCODE_MEDIA_NEXT -> {
+                                playNextChapter()
+                                return true
+                            }
+                            KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
+                                playPreviousChapter()
+                                return true
+                            }
+                            KeyEvent.KEYCODE_MEDIA_STOP -> {
+                                stop()
+                                return true
+                            }
+                        }
+                    }
+                    return super.onMediaButtonEvent(mediaButtonEvent)
+                }
+            })
+            isActive = true
+        }
+        updateMediaSessionPlaybackState()
+    }
+
+    fun updateMediaSessionPlaybackState() {
+        if (!::mediaSession.isInitialized) return
+        val state = when (playbackState) {
+            PlaybackState.PLAYING -> PlaybackStateCompat.STATE_PLAYING
+            PlaybackState.PAUSED -> PlaybackStateCompat.STATE_PAUSED
+            PlaybackState.IDLE -> PlaybackStateCompat.STATE_STOPPED
+        }
+        val playbackStateCompat = PlaybackStateCompat.Builder()
+            .setActions(
+                PlaybackStateCompat.ACTION_PLAY or
+                PlaybackStateCompat.ACTION_PAUSE or
+                PlaybackStateCompat.ACTION_PLAY_PAUSE or
+                PlaybackStateCompat.ACTION_SKIP_TO_NEXT or
+                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
+                PlaybackStateCompat.ACTION_STOP
+            )
+            .setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
+            .build()
+        mediaSession.setPlaybackState(playbackStateCompat)
+
+        val chapter = chapters.getOrNull(currentChapterIndex)
+        val metadata = MediaMetadataCompat.Builder()
+            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, chapter?.title ?: "小說閱讀")
+            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, repository.currentNovelTitle)
+            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "第 ${currentChapterIndex + 1} 章")
+            .build()
+        mediaSession.setMetadata(metadata)
+    }
+
+    private fun requestAudioFocus(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                        .build()
+                )
+                .setOnAudioFocusChangeListener(audioFocusChangeListener)
+                .build()
+            audioFocusRequest = request
+            audioManager.requestAudioFocus(request) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+        } else {
+            @Suppress("DEPRECATION")
+            audioManager.requestAudioFocus(
+                audioFocusChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            ) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+        }
+    }
+
+    private fun abandonAudioFocus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest?.let { audioManager.abandonAudioFocusRequest(it) }
+        } else {
+            @Suppress("DEPRECATION")
+            audioManager.abandonAudioFocus(audioFocusChangeListener)
+        }
+    }
+
+    private fun registerNoisyReceiver() {
+        if (!isNoisyReceiverRegistered) {
+            registerReceiver(becomingNoisyReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
+            isNoisyReceiverRegistered = true
+        }
+    }
+
+    private fun unregisterNoisyReceiver() {
+        if (isNoisyReceiverRegistered) {
+            try {
+                unregisterReceiver(becomingNoisyReceiver)
+            } catch (_: Exception) {}
+            isNoisyReceiverRegistered = false
+        }
     }
 
     override fun onInit(status: Int) {
@@ -151,6 +359,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        MediaButtonReceiver.handleIntent(mediaSession, intent)
         when (intent?.action) {
             ACTION_PLAY -> play()
             ACTION_PAUSE -> pause()
@@ -190,6 +399,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
 
             notifyChapterLoaded(chapter, content, currentSegments, currentSegmentIndex)
             saveCurrentProgress()
+            updateMediaSessionPlaybackState()
             updateNotification()
 
             if (autoPlay) {
@@ -220,9 +430,13 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         }
         if (currentSegments.isEmpty()) return
 
+        requestAudioFocus()
+        registerNoisyReceiver()
+
         playbackState = PlaybackState.PLAYING
         startForeground(NOTIFICATION_ID, buildNotification())
         notifyPlaybackState(playbackState)
+        updateMediaSessionPlaybackState()
         speakCurrentSegment()
     }
 
@@ -234,7 +448,9 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         tts?.stop()
         saveCurrentProgress()
         notifyPlaybackState(playbackState)
+        updateMediaSessionPlaybackState()
         updateNotification()
+        unregisterNoisyReceiver()
     }
 
     /**
@@ -246,6 +462,9 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         saveCurrentProgress()
         currentSegmentIndex = 0
         notifyPlaybackState(playbackState)
+        updateMediaSessionPlaybackState()
+        abandonAudioFocus()
+        unregisterNoisyReceiver()
         stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
@@ -558,6 +777,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
             .addAction(android.R.drawable.ic_media_next, "下一章", nextIntent)
             .setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()
+                    .setMediaSession(mediaSession.sessionToken)
                     .setShowActionsInCompactView(0, 1, 2)
             )
             .setOngoing(playbackState == PlaybackState.PLAYING)
@@ -595,5 +815,11 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         serviceScope.cancel()
         tts?.stop()
         tts?.shutdown()
+        abandonAudioFocus()
+        unregisterNoisyReceiver()
+        if (::mediaSession.isInitialized) {
+            mediaSession.isActive = false
+            mediaSession.release()
+        }
     }
 }
