@@ -33,3 +33,23 @@
 [2026-10-26 22:05:31] 開始生成 第 15 章（卷 1）：崇寧更化的算盤
 [2026-10-26 22:06:23] 完成第 15 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap015.md（長度：6984 字元）
 [2026-10-26 22:06:23] 執行 Git 提交與推播（章節 11 ~ 15）...
+[2026-10-26 22:06:27] Git 提交並推送成功: feat(song): add chapters 011 to 015
+[2026-10-26 22:06:29] 開始生成 第 16 章（卷 1）：當十錢出籠與物價騰躍
+[2026-10-26 22:07:22] 完成第 16 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap016.md（長度：7340 字元）
+[2026-10-26 22:07:24] 開始生成 第 17 章（卷 1）：端禮門前的元祐黨人碑
+[2026-10-26 22:08:10] 完成第 17 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap017.md（長度：6306 字元）
+[2026-10-26 22:08:12] 開始生成 第 18 章（卷 1）：銷毀禁籍與告密風潮
+[2026-10-26 22:09:02] 完成第 18 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap018.md（長度：7371 字元）
+[2026-10-26 22:09:04] 開始生成 第 19 章（卷 1）：熙河開邊的捷報
+[2026-10-26 22:09:54] HTTP 錯誤 (500) 第 1 次嘗試: {
+  "error": {
+    "code": 500,
+    "message": "An internal error has occurred. Please retry or report in https://developers.generativeai.google/guide/troubleshooting",
+    "status": "INTERNAL"
+  }
+}
+
+[2026-10-26 22:10:46] 完成第 19 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap019.md（長度：6830 字元）
+[2026-10-26 22:10:48] 開始生成 第 20 章（卷 1）：童貫入掌宣撫司
+[2026-10-26 22:11:39] 完成第 20 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap020.md（長度：7141 字元）
+[2026-10-26 22:11:39] 執行 Git 提交與推播（章節 16 ~ 20）...
