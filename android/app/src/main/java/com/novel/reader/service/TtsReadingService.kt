@@ -105,6 +105,56 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         }
     }
 
+    // 監聽藍牙耳機及系統音量按鈕動作（長按或連續觸發）
+    private var lastVolumeChangeTime = 0L
+    private var lastVolumeDirection = 0
+    private var volumeBurstCount = 0
+    private var lastChapterSwitchTime = 0L
+    private var isVolumeReceiverRegistered = false
+
+    private val volumeChangeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "android.media.VOLUME_CHANGED_ACTION") {
+                val streamType = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1)
+                if (streamType == AudioManager.STREAM_MUSIC) {
+                    val currentVol = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_VALUE", -1)
+                    val prevVol = intent.getIntExtra("android.media.EXTRA_PREV_VOLUME_STREAM_VALUE", -1)
+                    val maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                    val now = System.currentTimeMillis()
+                    val timeDiff = now - lastVolumeChangeTime
+
+                    val direction = when {
+                        currentVol > prevVol -> 1
+                        currentVol < prevVol -> -1
+                        currentVol == maxVol && prevVol == maxVol -> 1
+                        currentVol == 0 && prevVol == 0 -> -1
+                        else -> 0
+                    }
+
+                    if (direction != 0) {
+                        // 當在 500ms 內連續收到同方向的音量變更（藍牙耳機長按音量鍵或快速連擊）
+                        if (direction == lastVolumeDirection && timeDiff < 500) {
+                            volumeBurstCount++
+                            if (volumeBurstCount >= 2) {
+                                volumeBurstCount = 0
+                                lastVolumeChangeTime = 0L
+                                if (direction == 1) {
+                                    playNextChapter()
+                                } else {
+                                    playPreviousChapter()
+                                }
+                            }
+                        } else {
+                            lastVolumeDirection = direction
+                            volumeBurstCount = 1
+                        }
+                        lastVolumeChangeTime = now
+                    }
+                }
+            }
+        }
+    }
+
     var chapters: List<Chapter> = emptyList()
         private set
     var currentChapterIndex: Int = 0
@@ -163,6 +213,10 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         createNotificationChannel()
         setupMediaSession()
         tts = TextToSpeech(applicationContext, this)
+
+        val volumeFilter = IntentFilter("android.media.VOLUME_CHANGED_ACTION")
+        registerReceiver(volumeChangeReceiver, volumeFilter)
+        isVolumeReceiverRegistered = true
     }
 
     private fun setupMediaSession() {
@@ -204,6 +258,14 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
                     this@TtsReadingService.playPreviousChapter()
                 }
 
+                override fun onFastForward() {
+                    this@TtsReadingService.playNextChapter()
+                }
+
+                override fun onRewind() {
+                    this@TtsReadingService.playPreviousChapter()
+                }
+
                 override fun onStop() {
                     this@TtsReadingService.stop()
                 }
@@ -225,13 +287,29 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
                                 if (playbackState == PlaybackState.PLAYING) pause() else play()
                                 return true
                             }
-                            KeyEvent.KEYCODE_MEDIA_NEXT -> {
+                            KeyEvent.KEYCODE_MEDIA_NEXT,
+                            KeyEvent.KEYCODE_MEDIA_FAST_FORWARD,
+                            KeyEvent.KEYCODE_MEDIA_STEP_FORWARD -> {
                                 playNextChapter()
                                 return true
                             }
-                            KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
+                            KeyEvent.KEYCODE_MEDIA_PREVIOUS,
+                            KeyEvent.KEYCODE_MEDIA_REWIND,
+                            KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD -> {
                                 playPreviousChapter()
                                 return true
+                            }
+                            KeyEvent.KEYCODE_VOLUME_UP -> {
+                                if (keyEvent.isLongPress || keyEvent.repeatCount > 0) {
+                                    playNextChapter()
+                                    return true
+                                }
+                            }
+                            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                                if (keyEvent.isLongPress || keyEvent.repeatCount > 0) {
+                                    playPreviousChapter()
+                                    return true
+                                }
                             }
                             KeyEvent.KEYCODE_MEDIA_STOP -> {
                                 stop()
@@ -512,8 +590,11 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
      * 上一章
      */
     fun playPreviousChapter() {
+        val now = System.currentTimeMillis()
+        if (now - lastChapterSwitchTime < 1000) return
+        lastChapterSwitchTime = now
         if (currentChapterIndex > 0) {
-            loadChapter(currentChapterIndex - 1, autoPlay = (playbackState == PlaybackState.PLAYING))
+            loadChapter(currentChapterIndex - 1, autoPlay = true)
         }
     }
 
@@ -521,6 +602,9 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
      * 下一章 (要求必須自動換下一章)
      */
     fun playNextChapter() {
+        val now = System.currentTimeMillis()
+        if (now - lastChapterSwitchTime < 1000) return
+        lastChapterSwitchTime = now
         if (currentChapterIndex < chapters.size - 1) {
             loadChapter(currentChapterIndex + 1, autoPlay = true)
         } else {
@@ -817,6 +901,12 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         tts?.shutdown()
         abandonAudioFocus()
         unregisterNoisyReceiver()
+        if (isVolumeReceiverRegistered) {
+            try {
+                unregisterReceiver(volumeChangeReceiver)
+            } catch (_: Exception) {}
+            isVolumeReceiverRegistered = false
+        }
         if (::mediaSession.isInitialized) {
             mediaSession.isActive = false
             mediaSession.release()

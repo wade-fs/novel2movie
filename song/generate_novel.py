@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-《宋末》全書八卷（720章）全自動循序撰寫與提交流程指令碼
-依據 song/volume1.md ~ song/volume8.md 章綱與 chapter_writer_rules.md 規範
-逐章調用 Gemini API 生成，每 5 章自動 git commit & push，
-最後於第 720 章完成後自動推送到遠端並執行 sudo tee /sys/power/state 休眠。
+《宋末》全書八卷（720章）全自動循序撰寫指令碼
+使用本機 antigravity-cli (agy -p) 原生模型生成，完全不使用任何外部 GEMINI_API_KEY。
+不逐章 commit，待全部 720 章完成後，一次性執行 git commit & git push，
+最後執行 echo disk | sudo tee /sys/power/state 進入休眠。
 """
 
 import os
@@ -13,20 +13,12 @@ import re
 import time
 import json
 import subprocess
-import urllib.request
-import urllib.error
-
-API_KEY = os.environ.get("GEMINI_API_KEY")
-if not API_KEY:
-    print("錯誤: 未找到環境變數 GEMINI_API_KEY", flush=True)
-    sys.exit(1)
-
-API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={API_KEY}"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_DIR = os.path.dirname(BASE_DIR)
 PROGRESS_FILE = os.path.join(BASE_DIR, "chapters", "progress.json")
 LOG_FILE = os.path.join(BASE_DIR, "chapters", "generator.log")
+AGY_BIN = "/home/wade/.local/bin/agy"
 
 cn_nums = {"零":0, "一":1, "二":2, "三":3, "四":4, "五":5, "六":6, "七":7, "八":8, "九":9, "十":10, "百":100}
 
@@ -123,52 +115,30 @@ def load_outlines():
     log(f"成功解析全書章綱共 {len(chapters)} 章。")
     return chapters
 
-def call_gemini_api(prompt, max_retries=10):
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {
-            "temperature": 0.8,
-            "maxOutputTokens": 8192
-        },
-        "safetySettings": [
-            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
-        ]
-    }
-    data = json.dumps(payload).encode("utf-8")
-    delay = 5
+def call_agy_cli(prompt, max_retries=6):
+    env = dict(os.environ)
+    env.pop("GEMINI_API_KEY", None)
 
     for attempt in range(1, max_retries + 1):
         try:
-            req = urllib.request.Request(
-                API_URL,
-                data=data,
-                headers={"Content-Type": "application/json"}
-            )
-            with urllib.request.urlopen(req, timeout=180) as resp:
-                res = json.loads(resp.read().decode("utf-8"))
-                candidates = res.get("candidates", [])
-                if not candidates:
-                    fb = res.get("promptFeedback", {})
-                    raise ValueError(f"API 回傳結果為空 candidates，反饋: {fb}")
-                text = candidates[0]["content"]["parts"][0]["text"]
-                return text.strip()
-        except urllib.error.HTTPError as e:
-            err_msg = e.read().decode("utf-8", errors="ignore")
-            log(f"HTTP 錯誤 ({e.code}) 第 {attempt} 次嘗試: {err_msg[:200]}")
-            if e.code == 429:
-                time.sleep(delay)
-                delay = min(delay * 2, 60)
+            cmd = [
+                AGY_BIN,
+                "--disable-slash-commands",
+                "--output-format", "text",
+                "-p", prompt
+            ]
+            res = subprocess.run(cmd, capture_output=True, text=True, env=env)
+            output = res.stdout.strip()
+            if res.returncode == 0 and len(output) > 500:
+                return output
             else:
-                time.sleep(delay)
+                log(f"agy 返回非零或字數過短 (code {res.returncode}, 長度 {len(output)}) 第 {attempt} 次嘗試")
+                time.sleep(5)
         except Exception as e:
-            log(f"請求例外 第 {attempt} 次嘗試: {e}")
-            time.sleep(delay)
-            delay = min(delay * 2, 60)
+            log(f"agy 調用例外 第 {attempt} 次嘗試: {e}")
+            time.sleep(5)
 
-    raise RuntimeError(f"在 {max_retries} 次重試後 API 調用依然失敗。")
+    raise RuntimeError(f"在 {max_retries} 次重試後 agy 調用依然失敗。")
 
 def generate_chapter(chap_num, volume_num, title, outline):
     cn_title = f"第{to_cn(chap_num)}章　{title}"
@@ -181,13 +151,13 @@ def generate_chapter(chap_num, volume_num, title, outline):
     )
 
     prompt = f"""你是一名嚴謹宏大的歷史小說家與北宋、南宋歷史學者，正在創作史詩群像長篇歷史小說《宋末》（全書共八卷，720章）。
-你正在將章綱擴寫成具有沉浸敘事、厚重歷史感、鮮活人物行動的小說章節。
+請嚴格依據《逐章寫手規範》將章綱擴寫成具有沉浸敘事、厚重歷史感、鮮活人物行動的小說章節。
 
 【寫作強制規範】：
 1. 標題格式必須為第一行：`# {cn_title}`
 2. 正文篇幅：必須達到 3,000 ～ 5,000 字（絕不可摘要、速寫或跳過細節，務求飽滿詳實）。
 3. 敘事原則：
-   - 嚴格鎖定指定視角人物，去神化、拒絕上帝視角與現代術語（嚴禁「戰略佈局」、「KPI」、「心理學」、「降維打擊」等現代詞彙）。
+   - 嚴格鎖定指定視角人物，去神化、拒絕上帝視角與現代術語（嚴禁現代詞彙）。
    - 沉浸式感官細節：聲音、氣味、光線、風霜雨雪、服飾材質、泥濘道路、市井叫賣、兵刃甲冑質感。
    - 制度與名物嚴謹：官署官階、公文程式（公券、劄子、牙帖、度牒、交子、會子、引鈔）、兵制（禁軍、廂軍、鄉兵、義勇、簽軍、千戶、怯薛）、貨幣成色（銅錢、折二錢、當十錢、銀鋌、金鋌、貼水）。
    - 微觀衝突推動宏觀歷史：展現大時代風雲如何滲透並主宰市井小民、基層吏卒、商賈工匠、邊關斥候與前線士卒的命運抉擇。
@@ -206,7 +176,7 @@ def generate_chapter(chap_num, volume_num, title, outline):
 
 請直接輸出完整 markdown 文本，不可省略，不要任何無關開場白或結束語。
 """
-    content = call_gemini_api(prompt)
+    content = call_agy_cli(prompt)
 
     vol_dir = os.path.join(BASE_DIR, "chapters", f"volume{volume_num}")
     os.makedirs(vol_dir, exist_ok=True)
@@ -217,22 +187,6 @@ def generate_chapter(chap_num, volume_num, title, outline):
 
     log(f"完成第 {chap_num} 章寫入：{out_path}（長度：{len(content)} 字元）")
     return out_path
-
-def git_commit_and_push(chap_start, chap_end):
-    log(f"執行 Git 提交與推播（章節 {chap_start} ~ {chap_end}）...")
-    try:
-        subprocess.run(["git", "add", "song/chapters/", "song/generate_novel.py"], cwd=REPO_DIR, check=True)
-        # Check if there are staged changes
-        res = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=REPO_DIR)
-        if res.returncode != 0:
-            msg = f"feat(song): add chapters {chap_start:03d} to {chap_end:03d}"
-            subprocess.run(["git", "commit", "-m", msg], cwd=REPO_DIR, check=True)
-            subprocess.run(["git", "push", "origin", "main"], cwd=REPO_DIR, check=True)
-            log(f"Git 提交並推送成功: {msg}")
-        else:
-            log("Git 工作區無變更，跳過提交。")
-    except Exception as e:
-        log(f"Git 提交或推送失敗: {e}")
 
 def update_progress(chap_num, status="running"):
     try:
@@ -247,23 +201,21 @@ def update_progress(chap_num, status="running"):
         log(f"寫入進度失敗: {e}")
 
 def main():
-    log("=== 《宋末》自動寫書守護進程啟動 ===")
+    log("=== 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===")
     outlines = load_outlines()
     if len(outlines) != 720:
         log(f"錯誤: 讀取的章綱數量為 {len(outlines)}，非 720 章，請檢查。")
 
-    last_committed = 2
+    last_completed = 0
     for n in range(1, 721):
         vol = (n - 1) // 90 + 1
         expected_path = os.path.join(BASE_DIR, "chapters", f"volume{vol}", f"chap{n:03d}.md")
         if os.path.exists(expected_path) and os.path.getsize(expected_path) > 1000:
-            last_committed = n
+            last_completed = n
 
-    log(f"目前已存在章節進度至第 {last_committed} 章，即將從第 {last_committed + 1} 章開始撰寫至第 720 章。")
+    log(f"目前已存在章節進度至第 {last_completed} 章，即將從第 {last_completed + 1} 章開始撰寫至第 720 章。")
 
-    recent_batch_start = last_committed + 1
-
-    for chap_num in range(last_committed + 1, 721):
+    for chap_num in range(last_completed + 1, 721):
         if chap_num not in outlines:
             log(f"錯誤: 找不到第 {chap_num} 章章綱，中斷。")
             break
@@ -272,19 +224,21 @@ def main():
         generate_chapter(chap_num, vol_num, title, outline)
         update_progress(chap_num, status="running")
 
-        # 每 5 章自動提交並推送到 GitHub
-        if chap_num % 5 == 0:
-            git_commit_and_push(recent_batch_start, chap_num)
-            recent_batch_start = chap_num + 1
-
-        # 適度間隔避免短時間爆發
+        # 不逐章 commit，連續生成，章節間保持微小延遲
         time.sleep(2)
 
     # 檢查是否全部完成至 720 章
     final_chap_path = os.path.join(BASE_DIR, "chapters", "volume8", "chap720.md")
     if os.path.exists(final_chap_path):
-        log("=== 狂賀！全書 720 章已全部撰寫完成！ ===")
-        git_commit_and_push(recent_batch_start, 720)
+        log("=== 狂賀！全書 720 章已全部撰寫完成！進行一次性 Git 提交與推播 ===")
+        try:
+            subprocess.run(["git", "add", "song/chapters/"], cwd=REPO_DIR, check=True)
+            subprocess.run(["git", "commit", "-m", "feat(song): complete all 720 chapters of Song novel"], cwd=REPO_DIR, check=True)
+            subprocess.run(["git", "push", "origin", "main"], cwd=REPO_DIR, check=True)
+            log("全書 720 章 Git 提交與推播成功！")
+        except Exception as e:
+            log(f"Git 最終提交或推送失敗: {e}")
+
         update_progress(720, status="completed")
         log("最後執行磁碟休眠命令: echo disk | sudo tee /sys/power/state")
         time.sleep(5)
