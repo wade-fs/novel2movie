@@ -35,4 +35,6 @@
     <string name="mode_custom">自訂範圍</string>
     <string name="select_folder">開啟外部小說目錄</string>
     <string name="builtin_novel">內建：元末明初小說 (540章)</string>
+    <string name="desc_enter_fullscreen">切換沉浸全螢幕 (隱藏狀態列與導航列)</string>
+    <string name="desc_exit_fullscreen">退出全螢幕 (顯示狀態列與導航列)</string>
 </resources>

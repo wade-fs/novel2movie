@@ -12,10 +12,15 @@ import android.os.IBinder
 import android.provider.OpenableColumns
 import android.speech.tts.Voice
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.novel.reader.R
@@ -38,6 +43,7 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
     private var isBound = false
     private var availableVoices: List<Voice> = emptyList()
     private var pendingSavedProgress: SavedReadingProgress? = null
+    private var isImmersiveFullScreen: Boolean = true
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -109,8 +115,15 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 啟用 Edge-to-Edge 全螢幕佈局，隱藏頂部 status bar 與底部 navigation bar
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setupWindowInsets()
+        applyImmersiveSystemBars(hide = true)
 
         repository = NovelRepository(this)
         progressManager = ReadingProgressManager(this)
@@ -120,6 +133,53 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
         setupListeners()
         bindTtsService()
         checkResumeProgress()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && isImmersiveFullScreen) {
+            applyImmersiveSystemBars(hide = true)
+        }
+    }
+
+    private fun setupWindowInsets() {
+        // 處理頂部 AppBarLayout 內邊距，避免與暫時呼出的狀態列或螢幕挖孔/瀏海重疊
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout) { v, insets ->
+            val statusBar = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout()).top
+            val topPadding = maxOf(statusBar, cutout)
+            v.setPadding(v.paddingLeft, topPadding, v.paddingRight, v.paddingBottom)
+            insets
+        }
+
+        // 處理底部播放卡片外邊距，當暫時呼出導航列時自動浮起避免遮蔽
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomPlayerCard) { v, insets ->
+            val navBar = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            val baseMargin = (12 * resources.displayMetrics.density).toInt()
+            val lp = v.layoutParams as? ViewGroup.MarginLayoutParams
+            if (lp != null) {
+                lp.setMargins(baseMargin, baseMargin, baseMargin, baseMargin + navBar)
+                v.layoutParams = lp
+            }
+            insets
+        }
+    }
+
+    private fun applyImmersiveSystemBars(hide: Boolean) {
+        isImmersiveFullScreen = hide
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+        if (hide) {
+            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+            binding.btnToggleFullScreen.setIconResource(R.drawable.ic_fullscreen)
+            binding.btnToggleFullScreen.contentDescription = getString(R.string.desc_exit_fullscreen)
+        } else {
+            windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+            binding.btnToggleFullScreen.setIconResource(R.drawable.ic_fullscreen_exit)
+            binding.btnToggleFullScreen.contentDescription = getString(R.string.desc_enter_fullscreen)
+        }
     }
 
     private fun checkNotificationPermission() {
@@ -237,6 +297,11 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
                 updateSettingsBadges()
             }
             sheet.show(supportFragmentManager, "SettingsSheet")
+        }
+
+        // 切換沉浸全螢幕 (隱藏 / 顯示頂部 status bar 與底部 navigation bar)
+        binding.btnToggleFullScreen.setOnClickListener {
+            applyImmersiveSystemBars(hide = !isImmersiveFullScreen)
         }
 
         // 續讀橫條按鈕

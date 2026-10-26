@@ -62,6 +62,16 @@
                     android:contentDescription="@string/settings"
                     app:icon="@android:drawable/ic_menu_preferences"
                     app:iconTint="@color/text_primary" />
+
+                <!-- 切換沉浸全螢幕 (隱藏/顯示狀態列與導航列) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToggleFullScreen"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:contentDescription="切換沉浸全螢幕"
+                    app:icon="@drawable/ic_fullscreen_exit"
+                    app:iconTint="@color/text_primary" />
             </LinearLayout>
 
         </com.google.android.material.appbar.MaterialToolbar>
