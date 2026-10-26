@@ -113,3 +113,370 @@
 [2026-10-26 22:33:06] 開始生成 第 45 章（卷 1）：天象示警與彗星劃過宣和之夜
 [2026-10-26 22:33:50] 完成第 45 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap045.md（長度：6408 字元）
 [2026-10-26 22:33:50] 執行 Git 提交與推播（章節 41 ~ 45）...
+[2026-10-26 22:33:55] Git 提交並推送成功: feat(song): add chapters 041 to 045
+[2026-10-26 22:33:57] 開始生成 第 46 章（卷 1）：生女真的鷹路與海東青
+[2026-10-26 22:33:57] 請求例外 第 1 次嘗試: API 回傳結果為空 candidates
+[2026-10-26 22:34:03] 請求例外 第 2 次嘗試: API 回傳結果為空 candidates
+[2026-10-26 22:34:14] 請求例外 第 3 次嘗試: API 回傳結果為空 candidates
+[2026-10-26 22:34:34] 請求例外 第 4 次嘗試: API 回傳結果為空 candidates
+[2026-10-26 22:35:15] 請求例外 第 5 次嘗試: API 回傳結果為空 candidates
+[2026-10-26 22:35:32] 成功解析全書章綱共 720 章。
+[2026-10-26 22:36:15] 請求例外 第 6 次嘗試: API 回傳結果為空 candidates
+[2026-10-26 22:36:20] 成功解析全書章綱共 720 章。
+[2026-10-26 22:37:42] === 《宋末》自動寫書守護進程啟動 ===
+[2026-10-26 22:37:42] 成功解析全書章綱共 720 章。
+[2026-10-26 22:37:42] 目前已存在章節進度至第 45 章，即將從第 46 章開始撰寫至第 720 章。
+[2026-10-26 22:37:42] 開始生成 第 46 章（卷 1）：生女真的鷹路與海東青
+[2026-10-26 22:38:27] 完成第 46 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap046.md（長度：6731 字元）
+[2026-10-26 22:38:29] 開始生成 第 47 章（卷 1）：出河店之戰的破冰衝鋒
+[2026-10-26 22:39:16] 完成第 47 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap047.md（長度：7052 字元）
+[2026-10-26 22:39:18] 開始生成 第 48 章（卷 1）：會寧府稱帝與大金建國
+[2026-10-26 22:40:05] 完成第 48 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap048.md（長度：6163 字元）
+[2026-10-26 22:40:07] 開始生成 第 49 章（卷 1）：黃龍府之陷與遼帝東狩
+[2026-10-26 22:47:06] 成功解析全書章綱共 720 章。
+[2026-10-26 22:47:06] 開始生成 第 50 章（卷 1）：高永昌東京造反與大渤海國
+[2026-10-26 22:50:46] 完成第 50 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap050.md（長度：11687 字元）
+[2026-10-26 22:51:02] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-26 22:51:02] 成功解析全書章綱共 720 章。
+[2026-10-26 22:51:02] 目前已存在章節進度至第 50 章，即將從第 51 章開始撰寫至第 720 章。
+[2026-10-26 22:51:02] 開始生成 第 51 章（卷 1）：金軍席捲遼東五十四州
+[2026-10-26 22:53:31] 完成第 51 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap051.md（長度：7545 字元）
+[2026-10-26 22:53:33] 開始生成 第 52 章（卷 1）：馬植渡海南奔登州
+[2026-10-26 22:56:02] 完成第 52 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap052.md（長度：7236 字元）
+[2026-10-26 22:56:04] 開始生成 第 53 章（卷 1）：童貫秘見「趙良嗣」
+[2026-10-26 22:58:42] 完成第 53 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap053.md（長度：7317 字元）
+[2026-10-26 22:58:44] 開始生成 第 54 章（卷 1）：宣和殿內的「平燕策」
+[2026-10-26 23:01:29] 完成第 54 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap054.md（長度：7980 字元）
+[2026-10-26 23:01:31] 開始生成 第 55 章（卷 1）：買馬名義下的海渡出使
+[2026-10-26 23:04:01] 完成第 55 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap055.md（長度：7914 字元）
+[2026-10-26 23:04:03] 開始生成 第 56 章（卷 1）：完顏阿骨打大帳的互探
+[2026-10-26 23:06:38] 完成第 56 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap056.md（長度：8485 字元）
+[2026-10-26 23:06:40] 開始生成 第 57 章（卷 1）：趙良嗣的燕雲條款底牌
+[2026-10-26 23:09:07] 完成第 57 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap057.md（長度：8384 字元）
+[2026-10-26 23:09:09] 開始生成 第 58 章（卷 1）：金使李靖南渡開封
+[2026-10-26 23:11:50] 完成第 58 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap058.md（長度：8950 字元）
+[2026-10-26 23:11:52] 開始生成 第 59 章（卷 1）：歲幣移交與「空城」暗礁
+[2026-10-26 23:14:16] 完成第 59 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap059.md（長度：7752 字元）
+[2026-10-26 23:14:18] 開始生成 第 60 章（卷 1）：海上風浪與使舟沉溺
+[2026-10-26 23:16:52] 完成第 60 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap060.md（長度：7997 字元）
+[2026-10-26 23:16:54] 開始生成 第 61 章（卷 1）：約定夾攻之期的密約底定
+[2026-10-26 23:19:19] 完成第 61 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap061.md（長度：8724 字元）
+[2026-10-26 23:19:21] 開始生成 第 62 章（卷 1）：樞密院兵部籌算北伐錢糧
+[2026-10-26 23:22:02] 完成第 62 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap062.md（長度：8648 字元）
+[2026-10-26 23:22:04] 開始生成 第 63 章（卷 1）：東南急報打斷北伐戰鼓
+[2026-10-26 23:24:44] 完成第 63 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap063.md（長度：8976 字元）
+[2026-10-26 23:24:46] 開始生成 第 64 章（卷 1）：青溪起義與焚燒應奉局
+[2026-10-26 23:27:41] 完成第 64 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap064.md（長度：9209 字元）
+[2026-10-26 23:27:43] 開始生成 第 65 章（卷 1）：童貫南征與西軍調撥
+[2026-10-26 23:30:49] 完成第 65 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap065.md（長度：11240 字元）
+[2026-10-26 23:30:51] 開始生成 第 66 章（卷 1）：幫源洞擒凶與東南焦土
+[2026-10-26 23:33:14] 完成第 66 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap066.md（長度：8236 字元）
+[2026-10-26 23:33:16] 開始生成 第 67 章（卷 1）：種師道北上白溝河
+[2026-10-26 23:35:54] 完成第 67 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap067.md（長度：8403 字元）
+[2026-10-26 23:35:56] 開始生成 第 68 章（卷 1）：白溝河血戰與不宣之退
+[2026-10-26 23:38:24] 完成第 68 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap068.md（長度：8307 字元）
+[2026-10-26 23:38:26] 開始生成 第 69 章（卷 1）：常勝軍反水與郭藥師降宋
+[2026-10-26 23:41:12] 完成第 69 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap069.md（長度：10185 字元）
+[2026-10-26 23:41:14] 開始生成 第 70 章（卷 1）：夜襲燕京城與巷戰驚魂
+[2026-10-26 23:43:23] 完成第 70 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap070.md（長度：6441 字元）
+[2026-10-26 23:43:25] 開始生成 第 71 章（卷 1）：盧溝河大潰與自燒營寨
+[2026-10-26 23:46:09] 完成第 71 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap071.md（長度：8479 字元）
+[2026-10-26 23:46:11] 開始生成 第 72 章（卷 1）：金太祖破居庸關入燕京
+[2026-10-26 23:48:56] 完成第 72 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap072.md（長度：8296 字元）
+[2026-10-26 23:48:58] 開始生成 第 73 章（卷 1）：燕山府受降的空街寒風
+[2026-10-26 23:51:31] 完成第 73 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap073.md（長度：8764 字元）
+[2026-10-26 23:51:33] 開始生成 第 74 章（卷 1）：一百萬貫燕京代稅錢的攤派
+[2026-10-26 23:54:31] 完成第 74 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap074.md（長度：10192 字元）
+[2026-10-26 23:54:33] 開始生成 第 75 章（卷 1）：平州留守張覺舉城反正
+[2026-10-26 23:56:59] 完成第 75 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap075.md（長度：7357 字元）
+[2026-10-26 23:57:01] 開始生成 第 76 章（卷 1）：王黼納張覺的朝堂豪賭
+[2026-10-26 23:59:06] 完成第 76 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap076.md（長度：7573 字元）
+[2026-10-26 23:59:08] 開始生成 第 77 章（卷 1）：金太祖之死與完顏吳乞買即位
+[2026-10-27 00:01:57] 完成第 77 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap077.md（長度：7856 字元）
+[2026-10-27 00:01:59] 開始生成 第 78 章（卷 1）：宗望破平州與張覺奔燕山
+[2026-10-27 00:04:49] 完成第 78 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap078.md（長度：8819 字元）
+[2026-10-27 00:04:51] 開始生成 第 79 章（卷 1）：燕山斬張覺與函首送金
+[2026-10-27 00:07:19] 完成第 79 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap079.md（長度：8262 字元）
+[2026-10-27 00:07:21] 開始生成 第 80 章（卷 1）：常勝軍軍心的徹底冰封
+[2026-10-27 00:09:43] 完成第 80 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap080.md（長度：8001 字元）
+[2026-10-27 00:09:45] 開始生成 第 81 章（卷 1）：馬擴使金被留與絕望窺伺
+[2026-10-27 00:12:20] 完成第 81 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap081.md（長度：9468 字元）
+[2026-10-27 00:12:22] 開始生成 第 82 章（卷 1）：應州獲天祚帝與遼祚斷絕
+[2026-10-27 00:14:40] 完成第 82 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap082.md（長度：7538 字元）
+[2026-10-27 00:14:42] 開始生成 第 83 章（卷 1）：金國南侵密謀與宗翰宗望大誓師
+[2026-10-27 00:16:48] 完成第 83 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap083.md（長度：7533 字元）
+[2026-10-27 00:16:50] 開始生成 第 84 章（卷 1）：金兵兩路齊發與平州烽火
+[2026-10-27 00:19:24] 完成第 84 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap084.md（長度：8695 字元）
+[2026-10-27 00:19:26] 開始生成 第 85 章（卷 1）：白河之戰與郭藥師迎降宗望
+[2026-10-27 00:22:33] 完成第 85 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap085.md（長度：8988 字元）
+[2026-10-27 00:22:35] 開始生成 第 86 章（卷 1）：童貫太原棄軍南奔
+[2026-10-27 00:25:16] 完成第 86 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap086.md（長度：8579 字元）
+[2026-10-27 00:25:18] 開始生成 第 87 章（卷 1）：真定府的閉門與河北潰散
+[2026-10-27 00:28:05] 完成第 87 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap087.md（長度：9309 字元）
+[2026-10-27 00:28:07] 開始生成 第 88 章（卷 1）：警報飛馳汴京與宣德門雪崩
+[2026-10-27 00:30:38] 完成第 88 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap088.md（長度：8958 字元）
+[2026-10-27 00:30:40] 開始生成 第 89 章（卷 1）：延福宮中風與道君內禪
+[2026-10-27 00:33:06] 完成第 89 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap089.md（長度：7941 字元）
+[2026-10-27 00:33:08] 開始生成 第 90 章（卷 1）：靖康之始與黃河第一道烽火
+[2026-10-27 00:36:58] 完成第 90 章寫入：/home/wade/src/github/novel/song/chapters/volume1/chap090.md（長度：10108 字元）
+[2026-10-27 00:37:00] 開始生成 第 91 章（卷 2）：北境烽燧
+[2026-10-27 00:39:37] 完成第 91 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap091.md（長度：9202 字元）
+[2026-10-27 00:39:39] 開始生成 第 92 章（卷 2）：白河之潰
+[2026-10-27 00:42:09] 完成第 92 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap092.md（長度：7092 字元）
+[2026-10-27 00:42:11] 開始生成 第 93 章（卷 2）：常勝軍叛降
+[2026-10-27 00:44:54] 完成第 93 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap093.md（長度：9362 字元）
+[2026-10-27 00:44:56] 開始生成 第 94 章（卷 2）：太原初圍
+[2026-10-27 00:47:32] 完成第 94 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap094.md（長度：8469 字元）
+[2026-10-27 00:47:34] 開始生成 第 95 章（卷 2）：急遞入宮闈
+[2026-10-27 00:50:21] 完成第 95 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap095.md（長度：8291 字元）
+[2026-10-27 00:50:23] 開始生成 第 96 章（卷 2）：童貫奔歸
+[2026-10-27 00:52:31] 完成第 96 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap096.md（長度：7042 字元）
+[2026-10-27 00:52:33] 開始生成 第 97 章（卷 2）：內禪風波
+[2026-10-27 00:55:05] 完成第 97 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap097.md（長度：8141 字元）
+[2026-10-27 00:55:07] 開始生成 第 98 章（卷 2）：倉皇出奔
+[2026-10-27 00:58:32] 完成第 98 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap098.md（長度：10084 字元）
+[2026-10-27 00:58:34] 開始生成 第 99 章（卷 2）：孤城即位
+[2026-10-27 01:01:16] 完成第 99 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap099.md（長度：8537 字元）
+[2026-10-27 01:01:18] 開始生成 第 100 章（卷 2）：黃河浮橋之失
+[2026-10-27 01:03:53] 完成第 100 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap100.md（長度：8138 字元）
+[2026-10-27 01:03:55] 開始生成 第 101 章（卷 2）：四壁閉門
+[2026-10-27 01:06:42] 完成第 101 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap101.md（長度：9225 字元）
+[2026-10-27 01:06:44] 開始生成 第 102 章（卷 2）：宗望臨城
+[2026-10-27 01:09:08] 完成第 102 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap102.md（長度：7538 字元）
+[2026-10-27 01:09:10] 開始生成 第 103 章（卷 2）：李綱整頓城防
+[2026-10-27 01:11:57] 完成第 103 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap103.md（長度：9714 字元）
+[2026-10-27 01:11:59] 開始生成 第 104 章（卷 2）：宣化門之戰
+[2026-10-27 01:14:42] 完成第 104 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap104.md（長度：9408 字元）
+[2026-10-27 01:14:44] 開始生成 第 105 章（卷 2）：坊廂之亂
+[2026-10-27 01:17:08] 完成第 105 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap105.md（長度：6759 字元）
+[2026-10-27 01:17:10] 開始生成 第 106 章（卷 2）：西軍之訊
+[2026-10-27 01:19:37] 完成第 106 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap106.md（長度：8277 字元）
+[2026-10-27 01:19:39] 開始生成 第 107 章（卷 2）：主和派的密謀
+[2026-10-27 01:22:03] 完成第 107 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap107.md（長度：7754 字元）
+[2026-10-27 01:22:05] 開始生成 第 108 章（卷 2）：大營威懾
+[2026-10-27 01:24:10] 完成第 108 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap108.md（長度：6556 字元）
+[2026-10-27 01:24:12] 開始生成 第 109 章（卷 2）：康王為質
+[2026-10-27 01:26:40] 完成第 109 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap109.md（長度：10504 字元）
+[2026-10-27 01:26:42] 開始生成 第 110 章（卷 2）：三鎮盟約
+[2026-10-27 01:28:53] 完成第 110 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap110.md（長度：8127 字元）
+[2026-10-27 01:28:55] 開始生成 第 111 章（卷 2）：大索金銀
+[2026-10-27 01:31:50] 完成第 111 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap111.md（長度：10113 字元）
+[2026-10-27 01:31:52] 開始生成 第 112 章（卷 2）：老將入京
+[2026-10-27 01:34:12] 完成第 112 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap112.md（長度：7945 字元）
+[2026-10-27 01:34:14] 開始生成 第 113 章（卷 2）：姚平仲夜襲
+[2026-10-27 01:36:43] 完成第 113 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap113.md（長度：7918 字元）
+[2026-10-27 01:36:45] 開始生成 第 114 章（卷 2）：罷相與民憤
+[2026-10-27 01:39:00] 完成第 114 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap114.md（長度：8057 字元）
+[2026-10-27 01:39:02] 開始生成 第 115 章（卷 2）：太學生伏闕
+[2026-10-27 01:41:35] 完成第 115 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap115.md（長度：7959 字元）
+[2026-10-27 01:41:37] 開始生成 第 116 章（卷 2）：宗望解圍北撤
+[2026-10-27 01:43:53] 完成第 116 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap116.md（長度：7222 字元）
+[2026-10-27 01:43:55] 開始生成 第 117 章（卷 2）：喘息與裂痕
+[2026-10-27 01:46:45] 完成第 117 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap117.md（長度：9558 字元）
+[2026-10-27 01:46:47] 開始生成 第 118 章（卷 2）：太上皇還京
+[2026-10-27 01:49:47] 完成第 118 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap118.md（長度：9411 字元）
+[2026-10-27 01:49:49] 開始生成 第 119 章（卷 2）：密詔守三鎮
+[2026-10-27 01:52:27] 完成第 119 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap119.md（長度：8254 字元）
+[2026-10-27 01:52:29] 開始生成 第 120 章（卷 2）：太原血戰二百日
+[2026-10-27 01:54:49] 完成第 120 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap120.md（長度：7963 字元）
+[2026-10-27 01:54:51] 開始生成 第 121 章（卷 2）：榆次孤軍
+[2026-10-27 01:57:19] 完成第 121 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap121.md（長度：8054 字元）
+[2026-10-27 01:57:21] 開始生成 第 122 章（卷 2）：李綱督軍之挫
+[2026-10-27 01:59:40] 完成第 122 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap122.md（長度：7706 字元）
+[2026-10-27 01:59:42] 開始生成 第 123 章（卷 2）：太原陷落
+[2026-10-27 02:02:08] 完成第 123 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap123.md（長度：8380 字元）
+[2026-10-27 02:02:10] 開始生成 第 124 章（卷 2）：兩路合流之勢
+[2026-10-27 02:05:08] 完成第 124 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap124.md（長度：7431 字元）
+[2026-10-27 02:05:10] 開始生成 第 125 章（卷 2）：真定之殤
+[2026-10-27 02:08:00] 完成第 125 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap125.md（長度：8853 字元）
+[2026-10-27 02:08:02] 開始生成 第 126 章（卷 2）：黃河防線的崩塌
+[2026-10-27 02:09:39] 完成第 126 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap126.md（長度：7411 字元）
+[2026-10-27 02:09:41] 開始生成 第 127 章（卷 2）：大帥開府相州
+[2026-10-27 02:12:01] 完成第 127 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap127.md（長度：7482 字元）
+[2026-10-27 02:12:03] 開始生成 第 128 章（卷 2）：重圍再鎖
+[2026-10-27 02:14:53] 完成第 128 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap128.md（長度：8842 字元）
+[2026-10-27 02:14:55] 開始生成 第 129 章（卷 2）：凍餒滿城
+[2026-10-27 02:17:24] 完成第 129 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap129.md（長度：7952 字元）
+[2026-10-27 02:17:26] 開始生成 第 130 章（卷 2）：神棍郭京
+[2026-10-27 02:19:20] 完成第 130 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap130.md（長度：5907 字元）
+[2026-10-27 02:19:22] 開始生成 第 131 章（卷 2）：六甲神兵鬧劇
+[2026-10-27 02:22:01] 完成第 131 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap131.md（長度：8303 字元）
+[2026-10-27 02:22:03] 開始生成 第 132 章（卷 2）：天崩地裂之日
+[2026-10-27 02:24:41] 完成第 132 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap132.md（長度：8697 字元）
+[2026-10-27 02:24:43] 開始生成 第 133 章（卷 2）：四壁失陷
+[2026-10-27 02:26:33] 完成第 133 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap133.md（長度：7498 字元）
+[2026-10-27 02:26:35] 開始生成 第 134 章（卷 2）：巷戰與浩劫
+[2026-10-27 02:29:29] 完成第 134 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap134.md（長度：9371 字元）
+[2026-10-27 02:29:31] 開始生成 第 135 章（卷 2）：內城死局
+[2026-10-27 02:31:57] 完成第 135 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap135.md（長度：8336 字元）
+[2026-10-27 02:31:59] 開始生成 第 136 章（卷 2）：青城肉袒
+[2026-10-27 02:34:19] 完成第 136 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap136.md（長度：8412 字元）
+[2026-10-27 02:34:21] 開始生成 第 137 章（卷 2）：大索金銀抵債
+[2026-10-27 02:36:37] 完成第 137 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap137.md（長度：8288 字元）
+[2026-10-27 02:36:39] 開始生成 第 138 章（卷 2）：二帝被廢
+[2026-10-27 02:39:23] 完成第 138 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap138.md（長度：9301 字元）
+[2026-10-27 02:39:25] 開始生成 第 139 章（卷 2）：以婦折金之恥
+[2026-10-27 02:41:49] 完成第 139 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap139.md（長度：7832 字元）
+[2026-10-27 02:41:51] 開始生成 第 140 章（卷 2）：百工圖籍北運
+[2026-10-27 02:44:40] 完成第 140 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap140.md（長度：10088 字元）
+[2026-10-27 02:44:42] 開始生成 第 141 章（卷 2）：青城辭別
+[2026-10-27 02:47:07] 完成第 141 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap141.md（長度：8111 字元）
+[2026-10-27 02:47:09] 開始生成 第 142 章（卷 2）：東路出發
+[2026-10-27 02:49:56] 完成第 142 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap142.md（長度：8904 字元）
+[2026-10-27 02:49:58] 開始生成 第 143 章（卷 2）：西路押解
+[2026-10-27 02:52:10] 完成第 143 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap143.md（長度：8144 字元）
+[2026-10-27 02:52:12] 開始生成 第 144 章（卷 2）：黃河風骨
+[2026-10-27 02:54:47] 完成第 144 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap144.md（長度：8854 字元）
+[2026-10-27 02:54:49] 開始生成 第 145 章（卷 2）：大楚鬧劇
+[2026-10-27 02:57:07] 完成第 145 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap145.md（長度：7046 字元）
+[2026-10-27 02:57:09] 開始生成 第 146 章（卷 2）：金刀之誓
+[2026-10-27 02:59:47] 完成第 146 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap146.md（長度：8463 字元）
+[2026-10-27 02:59:49] 開始生成 第 147 章（卷 2）：河北塢堡自保
+[2026-10-27 03:03:06] 完成第 147 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap147.md（長度：10682 字元）
+[2026-10-27 03:03:08] 開始生成 第 148 章（卷 2）：八字軍誓血
+[2026-10-27 03:06:00] 完成第 148 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap148.md（長度：9107 字元）
+[2026-10-27 03:06:02] 開始生成 第 149 章（卷 2）：相州之隙
+[2026-10-27 03:08:55] 完成第 149 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap149.md（長度：9898 字元）
+[2026-10-27 03:08:57] 開始生成 第 150 章（卷 2）：兩河焦土
+[2026-10-27 03:11:39] 完成第 150 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap150.md（長度：9267 字元）
+[2026-10-27 03:11:41] 開始生成 第 151 章（卷 2）：宗澤經略兩河
+[2026-10-27 03:14:30] 完成第 151 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap151.md（長度：9488 字元）
+[2026-10-27 03:14:32] 開始生成 第 152 章（卷 2）：書吏的存亡
+[2026-10-27 03:17:02] 完成第 152 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap152.md（長度：8312 字元）
+[2026-10-27 03:17:04] 開始生成 第 153 章（卷 2）：空城遺恨
+[2026-10-27 03:19:21] 完成第 153 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap153.md（長度：7107 字元）
+[2026-10-27 03:19:23] 開始生成 第 154 章（卷 2）：逃出京畿
+[2026-10-27 03:21:56] 完成第 154 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap154.md（長度：9350 字元）
+[2026-10-27 03:21:58] 開始生成 第 155 章（卷 2）：渡口敲詐
+[2026-10-27 03:24:47] 完成第 155 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap155.md（長度：13061 字元）
+[2026-10-27 03:24:49] 開始生成 第 156 章（卷 2）：李清照的青州之劫
+[2026-10-27 03:27:19] 完成第 156 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap156.md（長度：8038 字元）
+[2026-10-27 03:27:21] 開始生成 第 157 章（卷 2）：江淮大疫
+[2026-10-27 03:30:03] 完成第 157 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap157.md（長度：9534 字元）
+[2026-10-27 03:30:05] 開始生成 第 158 章（卷 2）：失散的骨肉
+[2026-10-27 03:32:41] 完成第 158 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap158.md（長度：8837 字元）
+[2026-10-27 03:32:43] 開始生成 第 159 章（卷 2）：漕船的輜重
+[2026-10-27 03:35:07] 完成第 159 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap159.md（長度：8476 字元）
+[2026-10-27 03:35:09] 開始生成 第 160 章（卷 2）：維揚初集
+[2026-10-27 03:37:47] 完成第 160 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap160.md（長度：9117 字元）
+[2026-10-27 03:37:49] 開始生成 第 161 章（卷 2）：江南土客之怨
+[2026-10-27 03:40:25] 完成第 161 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap161.md（長度：9861 字元）
+[2026-10-27 03:40:27] 開始生成 第 162 章（卷 2）：衣冠南渡之殤
+[2026-10-27 03:42:48] 完成第 162 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap162.md（長度：7742 字元）
+[2026-10-27 03:42:50] 開始生成 第 163 章（卷 2）：磁州扣馬
+[2026-10-27 03:44:29] 完成第 163 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap163.md（長度：7643 字元）
+[2026-10-27 03:44:31] 開始生成 第 164 章（卷 2）：大元帥府建置
+[2026-10-27 03:46:41] 完成第 164 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap164.md（長度：6768 字元）
+[2026-10-27 03:46:43] 開始生成 第 165 章（卷 2）：東走東平
+[2026-10-27 03:49:19] 完成第 165 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap165.md（長度：8430 字元）
+[2026-10-27 03:49:21] 開始生成 第 166 章（卷 2）：孟太后手詔
+[2026-10-27 03:52:09] 完成第 166 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap166.md（長度：9447 字元）
+[2026-10-27 03:52:11] 開始生成 第 167 章（卷 2）：商丘聚議
+[2026-10-27 03:54:43] 完成第 167 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap167.md（長度：8104 字元）
+[2026-10-27 03:54:45] 開始生成 第 168 章（卷 2）：建炎登極
+[2026-10-27 03:57:19] 完成第 168 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap168.md（長度：8518 字元）
+[2026-10-27 03:57:21] 開始生成 第 169 章（卷 2）：拜相李綱
+[2026-10-27 03:59:29] 完成第 169 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap169.md（長度：7097 字元）
+[2026-10-27 03:59:31] 開始生成 第 170 章（卷 2）：新舊法度的撞擊
+[2026-10-27 04:02:01] 完成第 170 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap170.md（長度：7791 字元）
+[2026-10-27 04:02:03] 開始生成 第 171 章（卷 2）：南渡路線的暗湧
+[2026-10-27 04:04:33] 完成第 171 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap171.md（長度：8101 字元）
+[2026-10-27 04:04:35] 開始生成 第 172 章（卷 2）：七十五日之相
+[2026-10-27 04:07:08] 完成第 172 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap172.md（長度：8918 字元）
+[2026-10-27 04:07:10] 開始生成 第 173 章（卷 2）：陳東與歐陽澈之血
+[2026-10-27 04:09:30] 完成第 173 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap173.md（長度：8047 字元）
+[2026-10-27 04:09:32] 開始生成 第 174 章（卷 2）：汴京孤翁的悲鳴
+[2026-10-27 04:11:35] 完成第 174 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap174.md（長度：6653 字元）
+[2026-10-27 04:11:37] 開始生成 第 175 章（卷 2）：杜充決河之災
+[2026-10-27 04:14:21] 完成第 175 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap175.md（長度：8977 字元）
+[2026-10-27 04:14:23] 開始生成 第 176 章（卷 2）：維揚驚變
+[2026-10-27 04:16:41] 完成第 176 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap176.md（長度：7986 字元）
+[2026-10-27 04:16:43] 開始生成 第 177 章（卷 2）：苗劉兵變
+[2026-10-27 04:19:14] 完成第 177 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap177.md（長度：8813 字元）
+[2026-10-27 04:19:16] 開始生成 第 178 章（卷 2）：勤王復辟
+[2026-10-27 04:21:36] 完成第 178 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap178.md（長度：7248 字元）
+[2026-10-27 04:21:38] 開始生成 第 179 章（卷 2）：宋室存亡之問
+[2026-10-27 04:24:24] 完成第 179 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap179.md（長度：8943 字元）
+[2026-10-27 04:24:26] 開始生成 第 180 章（卷 2）：浮海南下前夜
+[2026-10-27 04:26:55] 完成第 180 章寫入：/home/wade/src/github/novel/song/chapters/volume2/chap180.md（長度：9243 字元）
+[2026-10-27 04:26:57] 開始生成 第 181 章（卷 3）：〈商丘烈風〉
+[2026-10-27 04:29:23] 完成第 181 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap181.md（長度：8638 字元）
+[2026-10-27 04:29:25] 開始生成 第 182 章（卷 3）：〈偽楚餘孽與還都之爭〉
+[2026-10-27 04:31:43] 完成第 182 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap182.md（長度：7601 字元）
+[2026-10-27 04:31:45] 開始生成 第 183 章（卷 3）：〈老帥拜命留守司〉
+[2026-10-27 04:33:55] 完成第 183 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap183.md（長度：8261 字元）
+[2026-10-27 04:33:57] 開始生成 第 184 章（卷 3）：〈汴河枯涸與漂泊舟戶〉
+[2026-10-27 04:36:53] 完成第 184 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap184.md（長度：10353 字元）
+[2026-10-27 04:36:55] 開始生成 第 185 章（卷 3）：〈七十五日維新之殤〉
+[2026-10-27 04:38:52] 完成第 185 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap185.md（長度：8264 字元）
+[2026-10-27 04:38:54] 開始生成 第 186 章（卷 3）：〈伏闕泣血：陳東與歐陽澈〉
+[2026-10-27 04:41:41] 完成第 186 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap186.md（長度：10058 字元）
+[2026-10-27 04:41:43] 開始生成 第 187 章（卷 3）：〈倉惶渡淮：尚書省的泥澇〉
+[2026-10-27 04:44:30] 完成第 187 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap187.md（長度：9442 字元）
+[2026-10-27 04:44:32] 開始生成 第 188 章（卷 3）：〈維揚行宮的安樂夢〉
+[2026-10-27 04:47:04] 完成第 188 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap188.md（長度：8521 字元）
+[2026-10-27 04:47:06] 開始生成 第 189 章（卷 3）：〈甲仗庫的飢鐵〉
+[2026-10-27 04:49:38] 完成第 189 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap189.md（長度：8766 字元）
+[2026-10-27 04:49:40] 開始生成 第 190 章（卷 3）：〈天長飛騎與被扣的警信〉
+[2026-10-27 04:51:55] 完成第 190 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap190.md（長度：8184 字元）
+[2026-10-27 04:51:57] 開始生成 第 191 章（卷 3）：〈維揚之變：蒼黃奪門〉
+[2026-10-27 04:54:12] 完成第 191 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap191.md（長度：7594 字元）
+[2026-10-27 04:54:14] 開始生成 第 192 章（卷 3）：〈瓜洲泣血與江上浮屍〉
+[2026-10-27 04:56:34] 完成第 192 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap192.md（長度：8092 字元）
+[2026-10-27 04:56:36] 開始生成 第 193 章（卷 3）：〈鎮江殘壘與退避杭州〉
+[2026-10-27 04:58:55] 完成第 193 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap193.md（長度：8092 字元）
+[2026-10-27 04:58:57] 開始生成 第 194 章（卷 3）：〈積怨如山：明德門前夕〉
+[2026-10-27 05:00:56] 完成第 194 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap194.md（長度：7618 字元）
+[2026-10-27 05:00:58] 開始生成 第 195 章（卷 3）：〈苗劉逼宮：高宗禪位顯忠寺〉
+[2026-10-27 05:03:25] 完成第 195 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap195.md（長度：8171 字元）
+[2026-10-27 05:03:27] 開始生成 第 196 章（卷 3）：〈平江矯詔：張浚與紅玉馳奔〉
+[2026-10-27 05:05:58] 完成第 196 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap196.md（長度：8781 字元）
+[2026-10-27 05:06:00] 開始生成 第 197 章（卷 3）：〈血洗臨安與幼主驚殤〉
+[2026-10-27 05:08:28] 完成第 197 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap197.md（長度：8401 字元）
+[2026-10-27 05:08:30] 開始生成 第 198 章（卷 3）：〈移蹕建康與杜充之網〉
+[2026-10-27 05:11:08] 完成第 198 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap198.md（長度：9256 字元）
+[2026-10-27 05:11:10] 開始生成 第 199 章（卷 3）：〈越州土客之爭與義倉之火〉
+[2026-10-27 05:13:58] 完成第 199 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap199.md（長度：8854 字元）
+[2026-10-27 05:14:00] 開始生成 第 200 章（卷 3）：〈米貴如玉：清河坊的斷炊客〉
+[2026-10-27 05:16:44] 完成第 200 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap200.md（長度：9360 字元）
+[2026-10-27 05:16:46] 開始生成 第 201 章（卷 3）：〈靈隱度牒與塚間病卒〉
+[2026-10-27 05:19:08] 完成第 201 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap201.md（長度：8795 字元）
+[2026-10-27 05:19:10] 開始生成 第 202 章（卷 3）：〈姑息成患：江淮流寇的盛宴〉
+[2026-10-27 05:21:57] 完成第 202 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap202.md（長度：9530 字元）
+[2026-10-27 05:21:59] 開始生成 第 203 章（卷 3）：〈川陝經略：張浚的半朝底牌〉
+[2026-10-27 05:24:35] 完成第 203 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap203.md（長度：8971 字元）
+[2026-10-27 05:24:37] 開始生成 第 204 章（卷 3）：〈漢中山月：西軍諸將的猜疑〉
+[2026-10-27 05:27:04] 完成第 204 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap204.md（長度：9515 字元）
+[2026-10-27 05:27:06] 開始生成 第 205 章（卷 3）：〈蜀道鹽茶與川錢引之重〉
+[2026-10-27 05:29:26] 完成第 205 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap205.md（長度：8903 字元）
+[2026-10-27 05:29:28] 開始生成 第 206 章（卷 3）：〈淮陰雪夜清匪烽〉
+[2026-10-27 05:31:46] 完成第 206 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap206.md（長度：7660 字元）
+[2026-10-27 05:31:48] 開始生成 第 207 章（卷 3）：〈越州退避與「臣當退避」詔〉
+[2026-10-27 05:34:05] 完成第 207 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap207.md（長度：7432 字元）
+[2026-10-27 05:34:07] 開始生成 第 208 章（卷 3）：〈石門血誓：刺面八字軍〉
+[2026-10-27 05:36:47] 完成第 208 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap208.md（長度：8675 字元）
+[2026-10-27 05:36:49] 開始生成 第 209 章（卷 3）：〈單騎奔開封：老帥帳前的死囚〉
+[2026-10-27 05:39:27] 完成第 209 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap209.md（長度：9704 字元）
+[2026-10-27 05:39:29] 開始生成 第 210 章（卷 3）：〈汜水奇策：陣而後戰存乎一心〉
+[2026-10-27 05:41:58] 完成第 210 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap210.md（長度：9089 字元）
+[2026-10-27 05:42:00] 開始生成 第 211 章（卷 3）：〈英雄折翼：屈身杜充帳下〉
+[2026-10-27 05:44:33] 完成第 211 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap211.md（長度：8707 字元）
+[2026-10-27 05:44:35] 開始生成 第 212 章（卷 3）：〈廣德六捷：雪野截鐵騎〉
+[2026-10-27 05:47:03] 完成第 212 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap212.md（長度：8576 字元）
+[2026-10-27 05:47:05] 開始生成 第 213 章（卷 3）：〈留都泣血：杜充降虜誓不隨〉
+[2026-10-27 05:49:13] 完成第 213 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap213.md（長度：8740 字元）
+[2026-10-27 05:49:15] 開始生成 第 214 章（卷 3）：〈張公洞結義：凍死不拆屋〉
+[2026-10-27 05:51:24] 完成第 214 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap214.md（長度：7366 字元）
+[2026-10-27 05:51:26] 開始生成 第 215 章（卷 3）：〈牛頭破曉：大斫金兀朮〉
+[2026-10-27 05:53:48] 完成第 215 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap215.md（長度：7996 字元）
+[2026-10-27 05:53:50] 開始生成 第 216 章（卷 3）：〈御前得旗：精忠之譽與防微之刺〉
+[2026-10-27 05:56:06] 完成第 216 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap216.md（長度：7154 字元）
+[2026-10-27 05:56:08] 開始生成 第 217 章（卷 3）：〈東京留守司的殘膏剩馥〉
+[2026-10-27 05:58:28] 完成第 217 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap217.md（長度：9108 字元）
+[2026-10-27 05:58:30] 開始生成 第 218 章（卷 3）：〈招撫群盜：太行赤心連鎖〉
+[2026-10-27 06:00:47] 完成第 218 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap218.md（長度：7541 字元）
+[2026-10-27 06:00:49] 開始生成 第 219 章（卷 3）：〈南薰門雪夜烈火〉
+[2026-10-27 06:03:39] 完成第 219 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap219.md（長度：9043 字元）
+[2026-10-27 06:03:41] 開始生成 第 220 章（卷 3）：〈二十四上表：回鑾之願化焦土〉
+[2026-10-27 06:07:10] 完成第 220 章寫入：/home/wade/src/github/novel/song/chapters/volume3/chap220.md（長度：8499 字元）
+[2026-10-27 06:07:12] 開始生成 第 221 章（卷 3）：〈三呼過河：最後的孤臣〉
