@@ -140,6 +140,7 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        volumeControlStream = AudioManager.STREAM_MUSIC
 
         // 啟用 Edge-to-Edge 全螢幕佈局，隱藏頂部 status bar 與底部 navigation bar
         WindowCompat.setDecorFitsSystemWindows(window, false)

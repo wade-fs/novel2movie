@@ -12,7 +12,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
+import android.media.AudioFormat
 import android.media.AudioManager
+import android.media.AudioTrack
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -22,6 +24,7 @@ import android.speech.tts.Voice
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
 import androidx.media.session.MediaButtonReceiver
@@ -131,13 +134,16 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
                         else -> 0
                     }
 
+                    Log.d("NovelTts", "VOLUME_CHANGED: curr=$currentVol, prev=$prevVol, dir=$direction, dt=$timeDiff, burst=$volumeBurstCount")
+
                     if (direction != 0) {
-                        // 當在 500ms 內連續收到同方向的音量變更（藍牙耳機長按音量鍵或快速連擊）
-                        if (direction == lastVolumeDirection && timeDiff < 500) {
+                        // 當在 650ms 內連續收到同方向的音量變更（藍牙耳機長按音量鍵或快速連擊）
+                        if (direction == lastVolumeDirection && timeDiff < 650) {
                             volumeBurstCount++
                             if (volumeBurstCount >= 2) {
                                 volumeBurstCount = 0
                                 lastVolumeChangeTime = 0L
+                                Log.d("NovelTts", "Volume Burst Triggered: direction=$direction -> switch chapter")
                                 if (direction == 1) {
                                     playNextChapter()
                                 } else {
@@ -219,6 +225,74 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         isVolumeReceiverRegistered = true
     }
 
+    private var silentAudioTrack: AudioTrack? = null
+
+    @Synchronized
+    private fun startSilentAudio() {
+        if (silentAudioTrack != null && silentAudioTrack?.playState == AudioTrack.PLAYSTATE_PLAYING) {
+            return
+        }
+        try {
+            if (silentAudioTrack == null) {
+                val sampleRate = 44100
+                val minBufferSize = AudioTrack.getMinBufferSize(
+                    sampleRate,
+                    AudioFormat.CHANNEL_OUT_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT
+                )
+                val bufSize = maxOf(minBufferSize, 4096)
+                val buffer = ByteArray(bufSize) // 全部填 0，純靜音
+                val attributes = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build()
+                val format = AudioFormat.Builder()
+                    .setSampleRate(sampleRate)
+                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                    .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+                    .build()
+                val track = AudioTrack.Builder()
+                    .setAudioAttributes(attributes)
+                    .setAudioFormat(format)
+                    .setBufferSizeInBytes(bufSize)
+                    .setTransferMode(AudioTrack.MODE_STATIC)
+                    .build()
+                track.write(buffer, 0, buffer.size)
+                track.setLoopPoints(0, buffer.size / 2, -1) // 無限循環靜音 PCM
+                silentAudioTrack = track
+            }
+            silentAudioTrack?.play()
+            Log.d("NovelTts", "startSilentAudio: Silent AudioTrack is PLAYING (UID ${android.os.Process.myUid()})")
+        } catch (e: Exception) {
+            Log.e("NovelTts", "startSilentAudio error", e)
+        }
+    }
+
+    @Synchronized
+    private fun pauseSilentAudio() {
+        try {
+            silentAudioTrack?.pause()
+            Log.d("NovelTts", "pauseSilentAudio: Silent AudioTrack PAUSED")
+        } catch (e: Exception) {
+            Log.e("NovelTts", "pauseSilentAudio error", e)
+        }
+    }
+
+    @Synchronized
+    private fun stopSilentAudio() {
+        try {
+            silentAudioTrack?.pause()
+            silentAudioTrack?.flush()
+            silentAudioTrack?.stop()
+            silentAudioTrack?.release()
+            Log.d("NovelTts", "stopSilentAudio: Silent AudioTrack released")
+        } catch (e: Exception) {
+            Log.e("NovelTts", "stopSilentAudio error", e)
+        } finally {
+            silentAudioTrack = null
+        }
+    }
+
     private fun setupMediaSession() {
         val mediaButtonReceiverComponent = ComponentName(applicationContext, MediaButtonReceiver::class.java)
         val mediaButtonIntent = Intent(Intent.ACTION_MEDIA_BUTTON).apply {
@@ -228,7 +302,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
             applicationContext,
             0,
             mediaButtonIntent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         mediaSession = MediaSessionCompat(
@@ -241,77 +315,94 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
                 MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
             )
+            setMediaButtonReceiver(mediaButtonPendingIntent)
             setCallback(object : MediaSessionCompat.Callback() {
                 override fun onPlay() {
+                    Log.d("NovelTts", "MediaSession: onPlay() called")
                     this@TtsReadingService.play()
                 }
 
                 override fun onPause() {
+                    Log.d("NovelTts", "MediaSession: onPause() called")
                     this@TtsReadingService.pause()
                 }
 
                 override fun onSkipToNext() {
+                    Log.d("NovelTts", "MediaSession: onSkipToNext() called")
                     this@TtsReadingService.playNextChapter()
                 }
 
                 override fun onSkipToPrevious() {
+                    Log.d("NovelTts", "MediaSession: onSkipToPrevious() called")
                     this@TtsReadingService.playPreviousChapter()
                 }
 
                 override fun onFastForward() {
+                    Log.d("NovelTts", "MediaSession: onFastForward() called")
                     this@TtsReadingService.playNextChapter()
                 }
 
                 override fun onRewind() {
+                    Log.d("NovelTts", "MediaSession: onRewind() called")
                     this@TtsReadingService.playPreviousChapter()
                 }
 
                 override fun onStop() {
+                    Log.d("NovelTts", "MediaSession: onStop() called")
                     this@TtsReadingService.stop()
                 }
 
                 override fun onMediaButtonEvent(mediaButtonEvent: Intent?): Boolean {
                     val keyEvent = mediaButtonEvent?.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
+                    Log.d("NovelTts", "MediaSession: onMediaButtonEvent keyEvent=$keyEvent")
                     if (keyEvent != null && keyEvent.action == KeyEvent.ACTION_DOWN) {
                         when (keyEvent.keyCode) {
                             KeyEvent.KEYCODE_MEDIA_PLAY -> {
+                                Log.d("NovelTts", "MediaSession: KEYCODE_MEDIA_PLAY")
                                 play()
                                 return true
                             }
                             KeyEvent.KEYCODE_MEDIA_PAUSE -> {
+                                Log.d("NovelTts", "MediaSession: KEYCODE_MEDIA_PAUSE")
                                 pause()
                                 return true
                             }
                             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
                             KeyEvent.KEYCODE_HEADSETHOOK -> {
+                                Log.d("NovelTts", "MediaSession: KEYCODE_MEDIA_PLAY_PAUSE / HEADSETHOOK")
                                 if (playbackState == PlaybackState.PLAYING) pause() else play()
                                 return true
                             }
                             KeyEvent.KEYCODE_MEDIA_NEXT,
                             KeyEvent.KEYCODE_MEDIA_FAST_FORWARD,
                             KeyEvent.KEYCODE_MEDIA_STEP_FORWARD -> {
+                                Log.d("NovelTts", "MediaSession: KEYCODE_MEDIA_NEXT")
                                 playNextChapter()
                                 return true
                             }
                             KeyEvent.KEYCODE_MEDIA_PREVIOUS,
                             KeyEvent.KEYCODE_MEDIA_REWIND,
                             KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD -> {
+                                Log.d("NovelTts", "MediaSession: KEYCODE_MEDIA_PREVIOUS")
                                 playPreviousChapter()
                                 return true
                             }
                             KeyEvent.KEYCODE_VOLUME_UP -> {
                                 if (keyEvent.isLongPress || keyEvent.repeatCount > 0) {
+                                    Log.d("NovelTts", "MediaSession: KEYCODE_VOLUME_UP long-press")
                                     playNextChapter()
                                     return true
                                 }
                             }
                             KeyEvent.KEYCODE_VOLUME_DOWN -> {
                                 if (keyEvent.isLongPress || keyEvent.repeatCount > 0) {
+                                    Log.d("NovelTts", "MediaSession: KEYCODE_VOLUME_DOWN long-press")
                                     playPreviousChapter()
                                     return true
                                 }
                             }
                             KeyEvent.KEYCODE_MEDIA_STOP -> {
+                                Log.d("NovelTts", "MediaSession: KEYCODE_MEDIA_STOP")
                                 stop()
                                 return true
                             }
@@ -404,6 +495,13 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
+            // 設定 TTS AudioAttributes
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build()
+            tts?.setAudioAttributes(audioAttributes)
+
             // 預設強制使用台灣繁體中文 (zh-TW)
             val langResult = tts?.setLanguage(TAIWAN_LOCALE)
             if (langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -437,7 +535,14 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        MediaButtonReceiver.handleIntent(mediaSession, intent)
+        Log.d("NovelTts", "onStartCommand: action=${intent?.action}, intent=$intent")
+        if (intent != null) {
+            val keyEvent = intent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
+            if (keyEvent != null) {
+                Log.d("NovelTts", "onStartCommand: MediaButton KeyEvent=$keyEvent")
+            }
+            MediaButtonReceiver.handleIntent(mediaSession, intent)
+        }
         when (intent?.action) {
             ACTION_PLAY -> play()
             ACTION_PAUSE -> pause()
@@ -509,7 +614,11 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         if (currentSegments.isEmpty()) return
 
         requestAudioFocus()
+        startSilentAudio()
         registerNoisyReceiver()
+        if (::mediaSession.isInitialized) {
+            mediaSession.isActive = true
+        }
 
         playbackState = PlaybackState.PLAYING
         startForeground(NOTIFICATION_ID, buildNotification())
@@ -524,6 +633,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
     fun pause() {
         playbackState = PlaybackState.PAUSED
         tts?.stop()
+        pauseSilentAudio()
         saveCurrentProgress()
         notifyPlaybackState(playbackState)
         updateMediaSessionPlaybackState()
@@ -537,6 +647,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
     fun stop() {
         playbackState = PlaybackState.IDLE
         tts?.stop()
+        stopSilentAudio()
         saveCurrentProgress()
         currentSegmentIndex = 0
         notifyPlaybackState(playbackState)
@@ -554,9 +665,16 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         if (targetIdx != -1) {
             currentSegmentIndex = targetIdx
             if (playbackState != PlaybackState.PLAYING) {
+                requestAudioFocus()
+                startSilentAudio()
+                registerNoisyReceiver()
+                if (::mediaSession.isInitialized) {
+                    mediaSession.isActive = true
+                }
                 playbackState = PlaybackState.PLAYING
                 startForeground(NOTIFICATION_ID, buildNotification())
                 notifyPlaybackState(playbackState)
+                updateMediaSessionPlaybackState()
             }
             speakCurrentSegment()
         }
@@ -899,6 +1017,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         serviceScope.cancel()
         tts?.stop()
         tts?.shutdown()
+        stopSilentAudio()
         abandonAudioFocus()
         unregisterNoisyReceiver()
         if (isVolumeReceiverRegistered) {
