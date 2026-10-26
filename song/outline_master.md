@@ -49,11 +49,11 @@
 
 ## 四、分卷檔案索引
 
-- 第一卷：[`volume1.md`](file:///home/wade/src/github/novel/song/output_chapters/volume1.md)（第 001–090 章）
-- 第二卷：[`volume2.md`](file:///home/wade/src/github/novel/song/output_chapters/volume2.md)（第 091–180 章）
-- 第三卷：[`volume3.md`](file:///home/wade/src/github/novel/song/output_chapters/volume3.md)（第 181–270 章）
-- 第四卷：[`volume4.md`](file:///home/wade/src/github/novel/song/output_chapters/volume4.md)（第 271–360 章）
-- 第五卷：[`volume5.md`](file:///home/wade/src/github/novel/song/output_chapters/volume5.md)（第 361–450 章）
-- 第六卷：[`volume6.md`](file:///home/wade/src/github/novel/song/output_chapters/volume6.md)（第 451–540 章）
-- 第七卷：[`volume7.md`](file:///home/wade/src/github/novel/song/output_chapters/volume7.md)（第 541–630 章）
-- 第八卷：[`volume8.md`](file:///home/wade/src/github/novel/song/output_chapters/volume8.md)（第 631–720 章）
+- 第一卷：[`volume1.md`](file:///home/wade/src/github/novel/song/chapters/volume1.md)（第 001–090 章）
+- 第二卷：[`volume2.md`](file:///home/wade/src/github/novel/song/chapters/volume2.md)（第 091–180 章）
+- 第三卷：[`volume3.md`](file:///home/wade/src/github/novel/song/chapters/volume3.md)（第 181–270 章）
+- 第四卷：[`volume4.md`](file:///home/wade/src/github/novel/song/chapters/volume4.md)（第 271–360 章）
+- 第五卷：[`volume5.md`](file:///home/wade/src/github/novel/song/chapters/volume5.md)（第 361–450 章）
+- 第六卷：[`volume6.md`](file:///home/wade/src/github/novel/song/chapters/volume6.md)（第 451–540 章）
+- 第七卷：[`volume7.md`](file:///home/wade/src/github/novel/song/chapters/volume7.md)（第 541–630 章）
+- 第八卷：[`volume8.md`](file:///home/wade/src/github/novel/song/chapters/volume8.md)（第 631–720 章）
