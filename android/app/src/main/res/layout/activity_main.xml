@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_paper">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_paper"
+        app:elevation="2dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/bg_paper"
+            app:title="@string/title_novel"
+            app:titleTextColor="@color/text_primary"
+            app:subtitleTextColor="@color/text_secondary"
+            app:subtitle="動態載入 / GitHub 連動">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingEnd="8dp"
+                tools:ignore="RtlSymmetry">
+
+                <!-- 匯入小說 (支援 GitHub 網址、本機上傳 ZIP/TAR、本機目錄) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnImportNovel"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:contentDescription="匯入小說 (GitHub/ZIP/目錄)"
+                    app:icon="@android:drawable/stat_sys_download"
+                    app:iconTint="@color/primary" />
+
+                <!-- 章節目錄 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnChapterList"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:contentDescription="@string/chapters"
+                    app:icon="@android:drawable/ic_menu_sort_by_size"
+                    app:iconTint="@color/text_primary" />
+
+                <!-- 設定 (語速、語調、男生女生、過濾) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSettings"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:contentDescription="@string/settings"
+                    app:icon="@android:drawable/ic_menu_preferences"
+                    app:iconTint="@color/text_primary" />
+            </LinearLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <!-- 續讀歷史進度橫條 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardResumeBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/primary_container"
+            app:strokeColor="@color/primary"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/ic_media_play"
+                    app:tint="@color/primary"
+                    android:contentDescription="續讀" />
+
+                <TextView
+                    android:id="@+id/tvResumeProgressText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="上次讀到：第 1 章 · 第 1 段"
+                    android:textColor="@color/on_primary_container"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnResumePlay"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="繼續朗讀"
+                    android:textSize="11sp"
+                    android:paddingHorizontal="12dp"
+                    app:cornerRadius="16dp" />
+
+                <ImageButton
+                    android:id="@+id/btnCloseResumeBanner"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    android:contentDescription="關閉" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 當前章節資訊橫條 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvCurrentChapterInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="載入中..."
+                android:textColor="@color/primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFilterBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="@string/mode_full"
+                android:textSize="11sp"
+                android:textColor="@color/badge_work_record_text"
+                app:chipBackgroundColor="@color/badge_work_record"
+                app:chipCornerRadius="16dp"
+                app:chipStrokeWidth="0dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- 章節內文清單 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="140dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- 底部懸浮播放控制列 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/bottomPlayerCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="12dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="@color/bg_card"
+        app:strokeColor="@color/divider"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- 狀態提示小字 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="4dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/tvSpeakingStatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="準備就緒，點擊播放或點擊段落開始朗讀"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/tvVoiceInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1.0x · 預設"
+                    android:textColor="@color/primary"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- 播放控制按鈕群 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="5">
+
+                <!-- 上一章 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPrevChapter"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/prev_chapter"
+                    app:icon="@android:drawable/ic_media_previous"
+                    app:iconTint="@color/text_primary" />
+
+                <!-- 上一段 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPrevParagraph"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/prev_paragraph"
+                    app:icon="@android:drawable/ic_media_rew"
+                    app:iconTint="@color/text_primary" />
+
+                <!-- 朗讀 / 暫停 大按鈕 -->
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabPlayPause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/play"
+                    app:fabSize="normal"
+                    app:backgroundTint="@color/primary"
+                    app:tint="@android:color/white"
+                    app:srcCompat="@android:drawable/ic_media_play"
+                    app:elevation="4dp" />
+
+                <!-- 下一段 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnNextParagraph"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/next_paragraph"
+                    app:icon="@android:drawable/ic_media_ff"
+                    app:iconTint="@color/text_primary" />
+
+                <!-- 下一章 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnNextChapter"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/next_chapter"
+                    app:icon="@android:drawable/ic_media_next"
+                    app:iconTint="@color/text_primary" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

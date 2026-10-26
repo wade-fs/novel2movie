@@ -1,0 +1,599 @@
+package com.novel.reader.service
+
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.os.Binder
+import android.os.Build
+import android.os.IBinder
+import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
+import android.speech.tts.Voice
+import androidx.core.app.NotificationCompat
+import com.novel.reader.R
+import com.novel.reader.model.*
+import com.novel.reader.parser.NovelChapterParser
+import com.novel.reader.repository.NovelRepository
+import com.novel.reader.ui.MainActivity
+import com.novel.reader.util.ReadingProgressManager
+import kotlinx.coroutines.*
+import java.util.*
+
+class TtsReadingService : Service(), TextToSpeech.OnInitListener {
+
+    companion object {
+        const val CHANNEL_ID = "novel_tts_channel"
+        const val NOTIFICATION_ID = 1001
+
+        const val ACTION_PLAY = "com.novel.reader.ACTION_PLAY"
+        const val ACTION_PAUSE = "com.novel.reader.ACTION_PAUSE"
+        const val ACTION_PREV_CHAPTER = "com.novel.reader.ACTION_PREV_CHAPTER"
+        const val ACTION_NEXT_CHAPTER = "com.novel.reader.ACTION_NEXT_CHAPTER"
+        const val ACTION_STOP = "com.novel.reader.ACTION_STOP"
+
+        val TAIWAN_LOCALE = Locale("zh", "TW")
+    }
+
+    enum class PlaybackState {
+        IDLE, PLAYING, PAUSED
+    }
+
+    inner class LocalBinder : Binder() {
+        fun getService(): TtsReadingService = this@TtsReadingService
+    }
+
+    private val binder = LocalBinder()
+    private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
+
+    private var tts: TextToSpeech? = null
+    var isTtsReady = false
+        private set
+
+    lateinit var repository: NovelRepository
+        private set
+    lateinit var progressManager: ReadingProgressManager
+        private set
+
+    var chapters: List<Chapter> = emptyList()
+        private set
+    var currentChapterIndex: Int = 0
+        private set
+    var currentContent: ChapterContent? = null
+        private set
+    var currentSegments: List<TtsSegment> = emptyList()
+        private set
+    var currentSegmentIndex: Int = 0
+        private set
+
+    var playbackState: PlaybackState = PlaybackState.IDLE
+        private set
+
+    var settings: ReadingSettings = ReadingSettings()
+        private set
+
+    // 回呼介面供 UI 即時更新狀態
+    interface PlaybackListener {
+        fun onPlaybackStateChanged(state: PlaybackState)
+        fun onChapterLoaded(chapter: Chapter, content: ChapterContent, segments: List<TtsSegment>, initialSegmentIndex: Int)
+        fun onSegmentChanged(segmentIndex: Int, segment: TtsSegment?)
+        fun onTtsReady(availableVoices: List<Voice>)
+    }
+
+    private val listeners = mutableListOf<PlaybackListener>()
+
+    fun addListener(listener: PlaybackListener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener)
+            if (isTtsReady) {
+                listener.onTtsReady(getAvailableChineseVoices())
+            }
+            val content = currentContent
+            if (content != null && currentChapterIndex in chapters.indices) {
+                listener.onChapterLoaded(chapters[currentChapterIndex], content, currentSegments, currentSegmentIndex)
+            }
+            listener.onPlaybackStateChanged(playbackState)
+            if (currentSegmentIndex in currentSegments.indices) {
+                listener.onSegmentChanged(currentSegmentIndex, currentSegments[currentSegmentIndex])
+            }
+        }
+    }
+
+    fun removeListener(listener: PlaybackListener) {
+        listeners.remove(listener)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        repository = NovelRepository(applicationContext)
+        progressManager = ReadingProgressManager(applicationContext)
+        settings = progressManager.loadSettings()
+
+        createNotificationChannel()
+        tts = TextToSpeech(applicationContext, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            // 預設強制使用台灣繁體中文 (zh-TW)
+            val langResult = tts?.setLanguage(TAIWAN_LOCALE)
+            if (langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                tts?.setLanguage(Locale.TRADITIONAL_CHINESE)
+            }
+
+            tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                override fun onStart(utteranceId: String?) {}
+
+                override fun onDone(utteranceId: String?) {
+                    serviceScope.launch {
+                        handleUtteranceDone()
+                    }
+                }
+
+                override fun onError(utteranceId: String?) {
+                    serviceScope.launch {
+                        handleUtteranceDone()
+                    }
+                }
+            })
+            isTtsReady = true
+
+            // 預設自動綁定台灣發音人
+            selectDefaultTaiwanVoice()
+            applyTtsParameters()
+            notifyTtsReady()
+        }
+    }
+
+    override fun onBind(intent: Intent?): IBinder = binder
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        when (intent?.action) {
+            ACTION_PLAY -> play()
+            ACTION_PAUSE -> pause()
+            ACTION_PREV_CHAPTER -> playPreviousChapter()
+            ACTION_NEXT_CHAPTER -> playNextChapter()
+            ACTION_STOP -> stop()
+        }
+        return START_NOT_STICKY
+    }
+
+    /**
+     * 載入並設定章節清單，並可指定初始章節與段落
+     */
+    fun setChapterList(
+        list: List<Chapter>,
+        initialIndex: Int = 0,
+        initialSegmentIndex: Int = 0,
+        startPlay: Boolean = false
+    ) {
+        chapters = list
+        loadChapter(initialIndex, startPlay, initialSegmentIndex)
+    }
+
+    /**
+     * 載入特定章節
+     */
+    fun loadChapter(index: Int, autoPlay: Boolean = false, targetSegmentIndex: Int = 0) {
+        if (index !in chapters.indices) return
+        currentChapterIndex = index
+        val chapter = chapters[index]
+
+        serviceScope.launch {
+            val content = repository.loadChapterContent(chapter)
+            currentContent = content
+            regenerateSegments()
+            currentSegmentIndex = targetSegmentIndex.coerceIn(0, maxOf(0, currentSegments.size - 1))
+
+            notifyChapterLoaded(chapter, content, currentSegments, currentSegmentIndex)
+            saveCurrentProgress()
+            updateNotification()
+
+            if (autoPlay) {
+                play()
+            } else if (playbackState == PlaybackState.PLAYING) {
+                speakCurrentSegment()
+            }
+        }
+    }
+
+    /**
+     * 重新根據 FilterConfig 計算要朗讀的 segments
+     */
+    fun regenerateSegments() {
+        val content = currentContent ?: return
+        currentSegments = NovelChapterParser.buildTtsSegments(content, settings.filterConfig)
+        if (currentSegmentIndex >= currentSegments.size) {
+            currentSegmentIndex = 0
+        }
+    }
+
+    /**
+     * 開始 / 繼續朗讀
+     */
+    fun play() {
+        if (currentSegments.isEmpty()) {
+            regenerateSegments()
+        }
+        if (currentSegments.isEmpty()) return
+
+        playbackState = PlaybackState.PLAYING
+        startForeground(NOTIFICATION_ID, buildNotification())
+        notifyPlaybackState(playbackState)
+        speakCurrentSegment()
+    }
+
+    /**
+     * 暫停朗讀 (儲存進度)
+     */
+    fun pause() {
+        playbackState = PlaybackState.PAUSED
+        tts?.stop()
+        saveCurrentProgress()
+        notifyPlaybackState(playbackState)
+        updateNotification()
+    }
+
+    /**
+     * 停止朗讀
+     */
+    fun stop() {
+        playbackState = PlaybackState.IDLE
+        tts?.stop()
+        saveCurrentProgress()
+        currentSegmentIndex = 0
+        notifyPlaybackState(playbackState)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+    }
+
+    /**
+     * 跳至指定 UI 位置 (點擊段落直接開始朗讀)
+     */
+    fun seekToUiPosition(uiPos: Int) {
+        val targetIdx = currentSegments.indexOfFirst { it.uiPosition == uiPos }
+        if (targetIdx != -1) {
+            currentSegmentIndex = targetIdx
+            if (playbackState != PlaybackState.PLAYING) {
+                playbackState = PlaybackState.PLAYING
+                startForeground(NOTIFICATION_ID, buildNotification())
+                notifyPlaybackState(playbackState)
+            }
+            speakCurrentSegment()
+        }
+    }
+
+    /**
+     * 上一段
+     */
+    fun previousSegment() {
+        if (currentSegmentIndex > 0) {
+            currentSegmentIndex--
+            speakCurrentSegment()
+        } else {
+            playPreviousChapter()
+        }
+    }
+
+    /**
+     * 下一段
+     */
+    fun nextSegment() {
+        if (currentSegmentIndex < currentSegments.size - 1) {
+            currentSegmentIndex++
+            speakCurrentSegment()
+        } else {
+            playNextChapter()
+        }
+    }
+
+    /**
+     * 上一章
+     */
+    fun playPreviousChapter() {
+        if (currentChapterIndex > 0) {
+            loadChapter(currentChapterIndex - 1, autoPlay = (playbackState == PlaybackState.PLAYING))
+        }
+    }
+
+    /**
+     * 下一章 (要求必須自動換下一章)
+     */
+    fun playNextChapter() {
+        if (currentChapterIndex < chapters.size - 1) {
+            loadChapter(currentChapterIndex + 1, autoPlay = true)
+        } else {
+            stop()
+        }
+    }
+
+    /**
+     * 更新語速、語調、性別及過濾設定，並持久化至 SharedPreferences
+     */
+    fun updateSettings(newSettings: ReadingSettings) {
+        this.settings = newSettings
+        progressManager.saveSettings(newSettings)
+
+        applyTtsParameters()
+        val curSeg = currentSegments.getOrNull(currentSegmentIndex)
+        regenerateSegments()
+        if (curSeg != null) {
+            val newIdx = currentSegments.indexOfFirst { it.id == curSeg.id || it.uiPosition == curSeg.uiPosition }
+            currentSegmentIndex = if (newIdx != -1) newIdx else 0
+        }
+        val chapter = chapters.getOrNull(currentChapterIndex)
+        val content = currentContent
+        if (chapter != null && content != null) {
+            notifyChapterLoaded(chapter, content, currentSegments, currentSegmentIndex)
+        }
+    }
+
+    private fun applyTtsParameters() {
+        val t = tts ?: return
+        if (!isTtsReady) return
+
+        t.setSpeechRate(settings.speechRate)
+
+        var effectivePitch = settings.pitch
+        when (settings.gender) {
+            VoiceGender.MALE -> {
+                effectivePitch = settings.pitch * 0.88f
+                selectVoiceByGender(isFemale = false)
+            }
+            VoiceGender.FEMALE -> {
+                effectivePitch = settings.pitch * 1.12f
+                selectVoiceByGender(isFemale = true)
+            }
+            VoiceGender.DEFAULT -> {
+                if (settings.selectedVoiceName != null) {
+                    selectVoiceByName(settings.selectedVoiceName!!)
+                } else {
+                    selectDefaultTaiwanVoice()
+                }
+            }
+        }
+        t.setPitch(effectivePitch)
+    }
+
+    /**
+     * 優先選取台灣 (zh-TW / cmn-tw) 口音的男聲或女聲
+     */
+    private fun selectVoiceByGender(isFemale: Boolean) {
+        val voices = getAvailableChineseVoices()
+
+        val targetVoice = if (isFemale) {
+            // 1. 優先找台灣女聲 (cmn-tw-x-ctd, female, etc.)
+            voices.find { v ->
+                val n = v.name.lowercase()
+                val isTw = isTaiwanVoice(v)
+                val isFem = n.contains("female") || n.contains("woman") || n.contains("ctd") || n.contains("cta")
+                isTw && isFem
+            } ?: voices.find { v -> isTaiwanVoice(v) } // 2. 任何台灣語音
+            ?: voices.find { v ->
+                val n = v.name.lowercase()
+                n.contains("female") || n.contains("woman") || n.contains("ctd")
+            } ?: voices.firstOrNull()
+        } else {
+            // 1. 優先找台灣男聲 (cmn-tw-x-ctc, male, etc.)
+            voices.find { v ->
+                val n = v.name.lowercase()
+                val isTw = isTaiwanVoice(v)
+                val isMale = n.contains("male") || n.contains("man") || n.contains("ctc") || n.contains("ctb")
+                isTw && isMale
+            } ?: voices.find { v -> isTaiwanVoice(v) } // 2. 任何台灣語音
+            ?: voices.find { v ->
+                val n = v.name.lowercase()
+                n.contains("male") || n.contains("man") || n.contains("ctc")
+            } ?: voices.firstOrNull()
+        }
+
+        if (targetVoice != null) {
+            tts?.voice = targetVoice
+        }
+    }
+
+    /**
+     * 預設選用台灣標準語音 (以台灣女聲 cmn-tw-x-ctd 或繁體中文優先)
+     */
+    fun selectDefaultTaiwanVoice() {
+        val voices = getAvailableChineseVoices()
+        val twVoice = voices.find { v ->
+            val n = v.name.lowercase()
+            isTaiwanVoice(v) && (n.contains("ctd") || n.contains("female") || n.contains("cta"))
+        } ?: voices.find { v -> isTaiwanVoice(v) }
+
+        if (twVoice != null) {
+            tts?.voice = twVoice
+        }
+    }
+
+    private fun isTaiwanVoice(v: Voice): Boolean {
+        val n = v.name.lowercase()
+        return v.locale == TAIWAN_LOCALE ||
+                v.locale.country.equals("TW", true) ||
+                v.locale.toLanguageTag().contains("TW", true) ||
+                n.contains("tw") || n.contains("taiwan")
+    }
+
+    fun selectVoiceByName(name: String) {
+        val voices = getAvailableChineseVoices()
+        val v = voices.find { it.name == name }
+        if (v != null) {
+            tts?.voice = v
+            settings.selectedVoiceName = name
+            progressManager.saveSettings(settings)
+        }
+    }
+
+    /**
+     * 取得所有中文語音，並將 🇹🇼 台灣語音排在最前面
+     */
+    fun getAvailableChineseVoices(): List<Voice> {
+        val t = tts ?: return emptyList()
+        return try {
+            val all = t.voices?.filter { v ->
+                val lang = v.locale.language.lowercase()
+                lang.startsWith("zh") || lang.startsWith("cmn") || v.locale == Locale.CHINESE || v.locale == TAIWAN_LOCALE
+            } ?: emptyList()
+
+            // 台灣口音排在最前面，其餘依序排列
+            all.sortedWith(compareByDescending<Voice> { isTaiwanVoice(it) }.thenBy { it.name })
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    private fun speakCurrentSegment() {
+        if (!isTtsReady || currentSegments.isEmpty()) return
+        if (currentSegmentIndex !in currentSegments.indices) {
+            if (settings.autoNextChapter && currentChapterIndex < chapters.size - 1) {
+                playNextChapter()
+            } else {
+                stop()
+            }
+            return
+        }
+
+        val segment = currentSegments[currentSegmentIndex]
+        saveCurrentProgress()
+        notifySegmentChanged(currentSegmentIndex, segment)
+        updateNotification()
+
+        val utteranceId = "seg_${currentChapterIndex}_$currentSegmentIndex"
+        tts?.speak(segment.speechText, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
+    }
+
+    private fun handleUtteranceDone() {
+        if (playbackState != PlaybackState.PLAYING) return
+
+        if (currentSegmentIndex < currentSegments.size - 1) {
+            currentSegmentIndex++
+            speakCurrentSegment()
+        } else {
+            if (settings.autoNextChapter && currentChapterIndex < chapters.size - 1) {
+                playNextChapter()
+            } else {
+                stop()
+            }
+        }
+    }
+
+    fun saveCurrentProgress() {
+        val chapter = chapters.getOrNull(currentChapterIndex) ?: return
+        val segment = currentSegments.getOrNull(currentSegmentIndex)
+        progressManager.saveProgress(
+            novelId = repository.currentNovelId,
+            novelTitle = repository.currentNovelTitle,
+            chapterIndex = currentChapterIndex,
+            chapterNumber = chapter.chapterNumber,
+            chapterTitle = chapter.title,
+            segmentIndex = currentSegmentIndex,
+            uiPosition = segment?.uiPosition ?: 0
+        )
+    }
+
+    // --- 通知列相關 ---
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "小說有聲朗讀",
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "提供背景朗讀與通知列播放控制"
+            }
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun buildNotification(): Notification {
+        val chapterTitle = chapters.getOrNull(currentChapterIndex)?.title ?: "小說閱讀"
+        val segmentText = currentSegments.getOrNull(currentSegmentIndex)?.displayText ?: "朗讀中..."
+
+        val openAppIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        val openAppPendingIntent = PendingIntent.getActivity(
+            this, 0, openAppIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val prevIntent = PendingIntent.getService(
+            this, 1, Intent(this, TtsReadingService::class.java).apply { action = ACTION_PREV_CHAPTER },
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        val playPauseActionIntent = if (playbackState == PlaybackState.PLAYING) {
+            PendingIntent.getService(
+                this, 2, Intent(this, TtsReadingService::class.java).apply { action = ACTION_PAUSE },
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            PendingIntent.getService(
+                this, 2, Intent(this, TtsReadingService::class.java).apply { action = ACTION_PLAY },
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        }
+        val nextIntent = PendingIntent.getService(
+            this, 3, Intent(this, TtsReadingService::class.java).apply { action = ACTION_NEXT_CHAPTER },
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val playPauseIcon = if (playbackState == PlaybackState.PLAYING) {
+            android.R.drawable.ic_media_pause
+        } else {
+            android.R.drawable.ic_media_play
+        }
+        val playPauseTitle = if (playbackState == PlaybackState.PLAYING) "暫停" else "朗讀"
+
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(chapterTitle)
+            .setContentText(segmentText)
+            .setContentIntent(openAppPendingIntent)
+            .addAction(android.R.drawable.ic_media_previous, "上一章", prevIntent)
+            .addAction(playPauseIcon, playPauseTitle, playPauseActionIntent)
+            .addAction(android.R.drawable.ic_media_next, "下一章", nextIntent)
+            .setStyle(
+                androidx.media.app.NotificationCompat.MediaStyle()
+                    .setShowActionsInCompactView(0, 1, 2)
+            )
+            .setOngoing(playbackState == PlaybackState.PLAYING)
+            .setSilent(true)
+            .build()
+    }
+
+    private fun updateNotification() {
+        if (playbackState != PlaybackState.IDLE) {
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.notify(NOTIFICATION_ID, buildNotification())
+        }
+    }
+
+    private fun notifyPlaybackState(state: PlaybackState) {
+        listeners.forEach { it.onPlaybackStateChanged(state) }
+    }
+
+    private fun notifyChapterLoaded(chapter: Chapter, content: ChapterContent, segments: List<TtsSegment>, initialSegmentIndex: Int) {
+        listeners.forEach { it.onChapterLoaded(chapter, content, segments, initialSegmentIndex) }
+    }
+
+    private fun notifySegmentChanged(segmentIndex: Int, segment: TtsSegment?) {
+        listeners.forEach { it.onSegmentChanged(segmentIndex, segment) }
+    }
+
+    private fun notifyTtsReady() {
+        val voices = getAvailableChineseVoices()
+        listeners.forEach { it.onTtsReady(voices) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        saveCurrentProgress()
+        serviceScope.cancel()
+        tts?.stop()
+        tts?.shutdown()
+    }
+}
