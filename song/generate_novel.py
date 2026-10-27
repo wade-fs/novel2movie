@@ -12,13 +12,15 @@ import sys
 import re
 import time
 import json
+import shutil
+import argparse
 import subprocess
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_DIR = os.path.dirname(BASE_DIR)
 PROGRESS_FILE = os.path.join(BASE_DIR, "chapters", "progress.json")
 LOG_FILE = os.path.join(BASE_DIR, "chapters", "generator.log")
-AGY_BIN = "/home/wade/.local/bin/agy"
+AGY_BIN = shutil.which("agy") or "/home/wade/.local/bin/agy"
 
 cn_nums = {"零":0, "一":1, "二":2, "三":3, "四":4, "五":5, "六":6, "七":7, "八":8, "九":9, "十":10, "百":100}
 
@@ -200,28 +202,75 @@ def update_progress(chap_num, status="running"):
     except Exception as e:
         log(f"寫入進度失敗: {e}")
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="《宋末》全書循序撰寫守護進程")
+    parser.add_argument("start_chapter", nargs="?", type=int, default=None, help="起始章節編號（例如 221）")
+    parser.add_argument("--start", "-s", type=int, default=None, help="指定起始章節編號")
+    parser.add_argument("--end", "-e", type=int, default=720, help="指定結束章節編號（預設 720）")
+    parser.add_argument("--force", "-f", action="store_true", help="強制重新生成已存在且完整（>1000位元組）的章節")
+    parser.add_argument("--dry-run", action="store_true", help="僅檢查當前各卷章節與缺失狀況，不執行生成")
+    parser.add_argument("--no-hibernate", action="store_true", help="全書完成後不執行休眠")
+    return parser.parse_args()
+
+def scan_chapters():
+    existing = set()
+    missing = []
+    for n in range(1, 721):
+        vol = (n - 1) // 90 + 1
+        expected_path = os.path.join(BASE_DIR, "chapters", f"volume{vol}", f"chap{n:03d}.md")
+        if os.path.exists(expected_path) and os.path.getsize(expected_path) > 1000:
+            existing.add(n)
+        else:
+            missing.append(n)
+    return existing, missing
+
 def main():
+    args = parse_args()
     log("=== 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===")
     outlines = load_outlines()
     if len(outlines) != 720:
         log(f"錯誤: 讀取的章綱數量為 {len(outlines)}，非 720 章，請檢查。")
 
-    last_completed = 0
-    for n in range(1, 721):
-        vol = (n - 1) // 90 + 1
-        expected_path = os.path.join(BASE_DIR, "chapters", f"volume{vol}", f"chap{n:03d}.md")
-        if os.path.exists(expected_path) and os.path.getsize(expected_path) > 1000:
-            last_completed = n
+    existing_chapters, missing_chapters = scan_chapters()
+    log(f"目前已存在完整章節數：{len(existing_chapters)} / 720，缺失章節數：{len(missing_chapters)}")
 
-    log(f"目前已存在章節進度至第 {last_completed} 章，即將從第 {last_completed + 1} 章開始撰寫至第 720 章。")
+    # 決定起始章節
+    specified_start = args.start or args.start_chapter
+    if specified_start is not None:
+        start_chap = specified_start
+        log(f"依使用者指令指定，從第 {start_chap} 章開始執行。")
+    elif missing_chapters:
+        start_chap = missing_chapters[0]
+        log(f"自動偵測首個缺失章節：從第 {start_chap} 章開始執行補寫。")
+    else:
+        start_chap = 721
+        log("全書 720 章皆已存在且完整！")
 
-    for chap_num in range(last_completed + 1, 721):
+    end_chap = min(args.end, 720)
+
+    if args.dry_run:
+        log("--- [Dry Run 模式] ---")
+        log(f"執行範圍: 第 {start_chap} 章 ～ 第 {end_chap} 章 (force={args.force})")
+        if missing_chapters:
+            preview = missing_chapters[:15]
+            log(f"缺失章節前 15 項: {preview}" + ("..." if len(missing_chapters) > 15 else ""))
+        log("Dry run 結束。")
+        return
+
+    for chap_num in range(start_chap, end_chap + 1):
         if chap_num not in outlines:
             log(f"錯誤: 找不到第 {chap_num} 章章綱，中斷。")
             break
 
         vol_num, title, outline = outlines[chap_num]
+        expected_path = os.path.join(BASE_DIR, "chapters", f"volume{vol_num}", f"chap{chap_num:03d}.md")
+
+        if not args.force and chap_num in existing_chapters:
+            log(f"第 {chap_num} 章已存在且完整（{os.path.getsize(expected_path)} bytes），略過。")
+            continue
+
         generate_chapter(chap_num, vol_num, title, outline)
+        existing_chapters.add(chap_num)
         update_progress(chap_num, status="running")
 
         # 不逐章 commit，連續生成，章節間保持微小延遲
@@ -229,7 +278,9 @@ def main():
 
     # 檢查是否全部完成至 720 章
     final_chap_path = os.path.join(BASE_DIR, "chapters", "volume8", "chap720.md")
-    if os.path.exists(final_chap_path):
+    all_done = (len(existing_chapters) == 720) and os.path.exists(final_chap_path)
+
+    if all_done:
         log("=== 狂賀！全書 720 章已全部撰寫完成！進行一次性 Git 提交與推播 ===")
         try:
             subprocess.run(["git", "add", "song/chapters/"], cwd=REPO_DIR, check=True)
@@ -240,11 +291,14 @@ def main():
             log(f"Git 最終提交或推送失敗: {e}")
 
         update_progress(720, status="completed")
-        log("最後執行磁碟休眠命令: echo disk | sudo tee /sys/power/state")
-        time.sleep(5)
-        os.system("sync && echo disk | sudo tee /sys/power/state")
+        if not args.no_hibernate:
+            log("最後執行磁碟休眠命令: echo disk | sudo tee /sys/power/state")
+            time.sleep(5)
+            os.system("sync && echo disk | sudo tee /sys/power/state")
+        else:
+            log("已指定 --no-hibernate，略過磁碟休眠。")
     else:
-        log("未完成至第 720 章，進程結束。")
+        log(f"目前執行至第 {end_chap} 章（全書完成 {len(existing_chapters)}/720），進程結束。")
 
 if __name__ == "__main__":
     main()
