@@ -1182,3 +1182,176 @@ AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reach
 [2026-10-28 08:11:03] 開始生成 第 466 章（卷 6）：兩線煎熬
 [2026-10-28 08:14:10] 完成第 466 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap466.md（長度：8370 字元）
 [2026-10-28 08:14:20] 目前執行至第 466 章（全書完成 466/720），進程結束。
+[2026-10-28 08:17:41] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-28 08:17:41] 執行帳號: 預設隔離帳號（wade.fs@gmail.com 優先）
+[2026-10-28 08:17:41] 指定呼叫模型: gemini-3.8-flash-high
+[2026-10-28 08:17:41] 成功解析全書章綱共 720 章。
+[2026-10-28 08:17:41] 目前已存在完整章節數：466 / 720，缺失章節數：254
+[2026-10-28 08:17:41] 自動偵測首個缺失章節：從第 467 章開始執行補寫。
+[2026-10-28 08:17:41] 開始生成 第 467 章（卷 6）：紹定宮變
+[2026-10-28 08:20:12] 完成第 467 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap467.md（長度：9715 字元）
+[2026-10-28 08:20:22] 開始生成 第 468 章（卷 6）：楚州亂局
+[2026-10-28 08:23:55] 完成第 468 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap468.md（長度：10053 字元）
+[2026-10-28 08:24:05] 開始生成 第 469 章（卷 6）：六盤遺策
+[2026-10-28 08:26:12] 完成第 469 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap469.md（長度：8772 字元）
+[2026-10-28 08:26:22] 開始生成 第 470 章（卷 6）：庫里爾台
+[2026-10-28 08:28:39] 完成第 470 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap470.md（長度：9018 字元）
+[2026-10-28 08:28:49] 開始生成 第 471 章（卷 6）：借道暗潮
+[2026-10-28 08:30:59] 完成第 471 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap471.md（長度：8309 字元）
+[2026-10-28 08:31:09] 開始生成 第 472 章（卷 6）：漢中喋血
+[2026-10-28 08:33:33] 完成第 472 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap472.md（長度：9955 字元）
+[2026-10-28 08:33:43] 開始生成 第 473 章（卷 6）：饒風血隘
+[2026-10-28 08:35:57] 完成第 473 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap473.md（長度：8434 字元）
+[2026-10-28 08:36:07] 開始生成 第 474 章（卷 6）：禹州雪夜
+[2026-10-28 08:38:13] 完成第 474 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap474.md（長度：7655 字元）
+[2026-10-28 08:38:23] 開始生成 第 475 章（卷 6）：三峰崩潰
+[2026-10-28 08:40:47] 完成第 475 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap475.md（長度：8680 字元）
+[2026-10-28 08:40:57] 開始生成 第 476 章（卷 6）：脣齒之辯
+[2026-10-28 08:43:32] 完成第 476 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap476.md（長度：8998 字元）
+[2026-10-28 08:43:42] 開始生成 第 477 章（卷 6）：王檝密使
+[2026-10-28 08:45:58] 完成第 477 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap477.md（長度：7814 字元）
+[2026-10-28 08:46:08] 開始生成 第 478 章（卷 6）：汴京降幡
+[2026-10-28 08:48:38] 完成第 478 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap478.md（長度：7511 字元）
+[2026-10-28 08:48:48] 開始生成 第 479 章（卷 6）：哀宗泣使
+[2026-10-28 08:51:07] 完成第 479 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap479.md（長度：7880 字元）
+[2026-10-28 08:51:17] 開始生成 第 480 章（卷 6）：糧出荊襄
+[2026-10-28 08:54:09] 完成第 480 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap480.md（長度：9223 字元）
+[2026-10-28 08:54:19] 開始生成 第 481 章（卷 6）：決水柴潭
+[2026-10-28 08:56:26] 完成第 481 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap481.md（長度：8367 字元）
+[2026-10-28 08:56:36] 開始生成 第 482 章（卷 6）：蔡州火滅
+[2026-10-28 08:59:15] 完成第 482 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap482.md（長度：10517 字元）
+[2026-10-28 08:59:25] 開始生成 第 483 章（卷 6）：獻俘太廟
+[2026-10-28 09:01:40] 完成第 483 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap483.md（長度：7847 字元）
+[2026-10-28 09:01:50] 開始生成 第 484 章（卷 6）：入洛之策
+[2026-10-28 09:04:07] 完成第 484 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap484.md（長度：7468 字元）
+[2026-10-28 09:04:17] 開始生成 第 485 章（卷 6）：空城開封
+[2026-10-28 09:06:15] 完成第 485 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap485.md（長度：8797 字元）
+[2026-10-28 09:06:25] 開始生成 第 486 章（卷 6）：龍門潰奔
+[2026-10-28 09:08:53] 完成第 486 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap486.md（長度：7302 字元）
+[2026-10-28 09:09:03] 開始生成 第 487 章（卷 6）：南侵之詔
+[2026-10-28 09:11:15] 完成第 487 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap487.md（長度：7440 字元）
+[2026-10-28 09:11:25] 開始生成 第 488 章（卷 6）：大安壁壘
+[2026-10-28 09:13:54] 完成第 488 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap488.md（長度：9102 字元）
+[2026-10-28 09:14:04] 開始生成 第 489 章（卷 6）：陽平血雨
+[2026-10-28 09:16:06] 完成第 489 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap489.md（長度：8186 字元）
+[2026-10-28 09:16:16] 開始生成 第 490 章（卷 6）：蜀錦焦土
+[2026-10-28 09:18:47] 完成第 490 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap490.md（長度：9862 字元）
+[2026-10-28 09:18:57] 開始生成 第 491 章（卷 6）：淮西受敵
+[2026-10-28 09:21:07] 完成第 491 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap491.md（長度：8140 字元）
+[2026-10-28 09:21:17] 開始生成 第 492 章（卷 6）：安豐神火
+[2026-10-28 09:23:44] 完成第 492 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap492.md（長度：9148 字元）
+[2026-10-28 09:23:54] 開始生成 第 493 章（卷 6）：黃州橫波
+[2026-10-28 09:25:54] 完成第 493 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap493.md（長度：7915 字元）
+[2026-10-28 09:26:04] 開始生成 第 494 章（卷 6）：荊襄收復
+[2026-10-28 09:29:17] 完成第 494 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap494.md（長度：11595 字元）
+[2026-10-28 09:29:27] 開始生成 第 495 章（卷 6）：汗崩暫喘
+[2026-10-28 09:31:39] 完成第 495 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap495.md（長度：8237 字元）
+[2026-10-28 09:31:49] 開始生成 第 496 章（卷 6）：余玠受命
+[2026-10-28 09:33:35] 完成第 496 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap496.md（長度：7514 字元）
+[2026-10-28 09:33:45] 開始生成 第 497 章（卷 6）：招賢廣策
+[2026-10-28 09:35:47] 完成第 497 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap497.md（長度：8557 字元）
+[2026-10-28 09:35:57] 開始生成 第 498 章（卷 6）：釣魚立壘
+[2026-10-28 09:37:55] 完成第 498 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap498.md（長度：8650 字元）
+[2026-10-28 09:38:05] 開始生成 第 499 章（卷 6）：三江天塹
+[2026-10-28 09:40:26] 完成第 499 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap499.md（長度：9568 字元）
+[2026-10-28 09:40:36] 開始生成 第 500 章（卷 6）：群山列障
+[2026-10-28 09:42:36] 完成第 500 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap500.md（長度：8021 字元）
+[2026-10-28 09:42:46] 開始生成 第 501 章（卷 6）：嘉陵揚戈
+[2026-10-28 09:45:09] 完成第 501 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap501.md（長度：9340 字元）
+[2026-10-28 09:45:19] 開始生成 第 502 章（卷 6）：漠北改元
+[2026-10-28 09:47:24] 完成第 502 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap502.md（長度：7355 字元）
+[2026-10-28 09:47:34] 開始生成 第 503 章（卷 6）：權相讒言
+[2026-10-28 09:49:50] 完成第 503 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap503.md（長度：7630 字元）
+[2026-10-28 09:50:00] 開始生成 第 504 章（卷 6）：蜀帥飲恨
+[2026-10-28 09:51:59] 完成第 504 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap504.md（長度：7689 字元）
+[2026-10-28 09:52:09] 開始生成 第 505 章（卷 6）：督師江陵
+[2026-10-28 09:54:12] 完成第 505 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap505.md（長度：9459 字元）
+[2026-10-28 09:54:22] 開始生成 第 506 章（卷 6）：屯田百里
+[2026-10-28 09:56:39] 完成第 506 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap506.md（長度：8437 字元）
+[2026-10-28 09:56:49] 開始生成 第 507 章（卷 6）：內河龍驤
+[2026-10-28 09:58:54] 完成第 507 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap507.md（長度：7424 字元）
+[2026-10-28 09:59:04] 開始生成 第 508 章（卷 6）：峴山設伏
+[2026-10-28 10:01:20] 完成第 508 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap508.md（長度：7743 字元）
+[2026-10-28 10:01:30] 開始生成 第 509 章（卷 6）：臨安外戚
+[2026-10-28 10:04:11] 完成第 509 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap509.md（長度：9872 字元）
+[2026-10-28 10:04:21] 開始生成 第 510 章（卷 6）：孤忠托孤
+[2026-10-28 10:06:40] 完成第 510 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap510.md（長度：8210 字元）
+[2026-10-28 10:06:50] 開始生成 第 511 章（卷 6）：巨星隕落
+[2026-10-28 10:09:05] 完成第 511 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap511.md（長度：8205 字元）
+[2026-10-28 10:09:15] 開始生成 第 512 章（卷 6）：宿將分麾
+[2026-10-28 10:11:25] 完成第 512 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap512.md（長度：7393 字元）
+[2026-10-28 10:11:35] 開始生成 第 513 章（卷 6）：役苦民勞
+[2026-10-28 10:13:52] 完成第 513 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap513.md（長度：8841 字元）
+[2026-10-28 10:14:02] 開始生成 第 514 章（卷 6）：革囊渡江
+[2026-10-28 10:16:14] 完成第 514 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap514.md（長度：8411 字元）
+[2026-10-28 10:16:24] 開始生成 第 515 章（卷 6）：滇雲易幟
+[2026-10-28 10:18:55] 完成第 515 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap515.md（長度：9319 字元）
+[2026-10-28 10:19:05] 開始生成 第 516 章（卷 6）：金榜少年
+[2026-10-28 10:21:22] 完成第 516 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap516.md（長度：8001 字元）
+[2026-10-28 10:21:32] 開始生成 第 517 章（卷 6）：滅宋誓言
+[2026-10-28 10:23:56] 完成第 517 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap517.md（長度：8549 字元）
+[2026-10-28 10:24:06] 開始生成 第 518 章（卷 6）：烽煙裂蜀
+[2026-10-28 10:26:51] 完成第 518 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap518.md（長度：9006 字元）
+[2026-10-28 10:27:01] 開始生成 第 519 章（卷 6）：堅城扼險
+[2026-10-28 10:29:18] 完成第 519 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap519.md（長度：9158 字元）
+[2026-10-28 10:29:28] 開始生成 第 520 章（卷 6）：忽必烈南下
+[2026-10-28 10:31:40] 完成第 520 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap520.md（長度：7564 字元）
+[2026-10-28 10:31:50] 開始生成 第 521 章（卷 6）：象陣奔襲
+[2026-10-28 10:33:55] 完成第 521 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap521.md（長度：7527 字元）
+[2026-10-28 10:34:05] 開始生成 第 522 章（卷 6）：天下三圍
+[2026-10-28 10:36:23] 完成第 522 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap522.md（長度：9139 字元）
+[2026-10-28 10:36:33] 開始生成 第 523 章（卷 6）：東新門血戰
+[2026-10-28 10:39:10] 完成第 523 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap523.md（長度：9295 字元）
+[2026-10-28 10:39:20] 開始生成 第 524 章（卷 6）：暴雨泥城
+[2026-10-28 10:41:41] 完成第 524 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap524.md（長度：9807 字元）
+[2026-10-28 10:41:51] 開始生成 第 525 章（卷 6）：飛石折將
+[2026-10-28 10:47:08] 完成第 525 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap525.md（長度：9779 字元）
+[2026-10-28 10:47:18] 開始生成 第 526 章（卷 6）：鮮魚退敵
+[2026-10-28 10:50:09] 完成第 526 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap526.md（長度：11099 字元）
+[2026-10-28 10:50:19] 開始生成 第 527 章（卷 6）：汗落溫湯
+[2026-10-28 10:52:15] 完成第 527 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap527.md（長度：8201 字元）
+[2026-10-28 10:52:25] 開始生成 第 528 章（卷 6）：驚濤鄂渚
+[2026-10-28 10:54:30] 完成第 528 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap528.md（長度：7605 字元）
+[2026-10-28 10:54:40] 開始生成 第 529 章（卷 6）：似道督師
+[2026-10-28 10:57:10] 完成第 529 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap529.md（長度：9506 字元）
+[2026-10-28 10:57:20] 開始生成 第 530 章（卷 6）：湘江狂瀾
+[2026-10-28 10:59:35] 完成第 530 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap530.md（長度：8462 字元）
+[2026-10-28 10:59:45] 開始生成 第 531 章（卷 6）：北返爭位
+[2026-10-28 11:01:54] 完成第 531 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap531.md（長度：7518 字元）
+[2026-10-28 11:02:04] 開始生成 第 532 章（卷 6）：虛報大捷
+[2026-10-28 11:04:18] 完成第 532 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap532.md（長度：7944 字元）
+[2026-10-28 11:04:28] 開始生成 第 533 章（卷 6）：師臣弄權
+[2026-10-28 11:06:40] 完成第 533 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap533.md（長度：8055 字元）
+[2026-10-28 11:06:50] 開始生成 第 534 章（卷 6）：開平稱汗
+[2026-10-28 11:09:09] 完成第 534 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap534.md（長度：8431 字元）
+[2026-10-28 11:09:19] 開始生成 第 535 章（卷 6）：拘使真州
+[2026-10-28 11:11:29] 完成第 535 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap535.md（長度：8179 字元）
+[2026-10-28 11:11:39] 開始生成 第 536 章（卷 6）：打算法度
+[2026-10-28 11:14:08] 完成第 536 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap536.md（長度：8647 字元）
+[2026-10-28 11:14:18] 開始生成 第 537 章（卷 6）：猛將受辱
+[2026-10-28 11:16:50] 完成第 537 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap537.md（長度：8407 字元）
+[2026-10-28 11:17:00] 開始生成 第 538 章（卷 6）：瀘南歧路
+[2026-10-28 11:19:16] 完成第 538 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap538.md（長度：8342 字元）
+[2026-10-28 11:19:26] 開始生成 第 539 章（卷 6）：昔木土之捷
+[2026-10-28 11:21:38] 完成第 539 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap539.md（長度：7429 字元）
+[2026-10-28 11:21:48] 開始生成 第 540 章（卷 6）：巨變前夜
+[2026-10-28 11:24:04] 完成第 540 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap540.md（長度：9186 字元）
+[2026-10-28 11:24:14] 開始生成 第 541 章（卷 7）：開平建元
+[2026-10-28 11:26:47] 完成第 541 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap541.md（長度：9586 字元）
+[2026-10-28 11:26:57] 開始生成 第 542 章（卷 7）：真州羈留
+[2026-10-28 11:29:15] 完成第 542 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap542.md（長度：9567 字元）
+[2026-10-28 11:29:25] 開始生成 第 543 章（卷 7）：算盤與刀芒
+[2026-10-28 11:31:27] 完成第 543 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap543.md（長度：6446 字元）
+[2026-10-28 11:31:37] 開始生成 第 544 章（卷 7）：瀘州易幟
+[2026-10-28 11:34:07] 完成第 544 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap544.md（長度：8403 字元）
+[2026-10-28 11:34:17] 開始生成 第 545 章（卷 7）：襄陽滅宋策
+[2026-10-28 11:36:25] 完成第 545 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap545.md（長度：6739 字元）
+[2026-10-28 11:36:35] 開始生成 第 546 章（卷 7）：公田激變
+[2026-10-28 11:38:37] 完成第 546 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap546.md（長度：6859 字元）
+[2026-10-28 11:38:47] 開始生成 第 547 章（卷 7）：關子化飛灰
+[2026-10-28 11:41:26] 完成第 547 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap547.md（長度：9221 字元）
+[2026-10-28 11:41:36] 開始生成 第 548 章（卷 7）：理宗龍馭
+[2026-10-28 11:43:58] 完成第 548 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap548.md（長度：7141 字元）
+[2026-10-28 11:44:08] 開始生成 第 549 章（卷 7）：互市藏鋒
+[2026-10-28 11:46:53] 完成第 549 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap549.md（長度：9117 字元）
+[2026-10-28 11:47:03] 開始生成 第 550 章（卷 7）：白河鎖鑰
