@@ -1355,3 +1355,197 @@ AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reach
 [2026-10-28 11:44:08] 開始生成 第 549 章（卷 7）：互市藏鋒
 [2026-10-28 11:46:53] 完成第 549 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap549.md（長度：9117 字元）
 [2026-10-28 11:47:03] 開始生成 第 550 章（卷 7）：白河鎖鑰
+[2026-10-28 11:49:17] 完成第 550 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap550.md（長度：7857 字元）
+[2026-10-28 11:49:27] 開始生成 第 551 章（卷 7）：鹿門鐵壁
+[2026-10-28 11:51:32] 完成第 551 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap551.md（長度：8041 字元）
+[2026-10-28 11:51:42] 開始生成 第 552 章（卷 7）：孤城呂帥
+[2026-10-28 11:53:54] 完成第 552 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap552.md（長度：7766 字元）
+[2026-10-28 11:54:18] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-28 11:54:18] 指定執行帳號: chen
+[2026-10-28 11:54:18] 指定呼叫模型: gemini-3.8-flash-high
+[2026-10-28 11:54:18] 成功解析全書章綱共 720 章。
+[2026-10-28 11:54:18] 目前已存在完整章節數：552 / 720，缺失章節數：168
+[2026-10-28 11:54:18] 自動偵測首個缺失章節：從第 553 章開始執行補寫。
+[2026-10-28 11:54:18] 開始生成 第 553 章（卷 7）：造舟萬艘
+[2026-10-28 11:56:36] 完成第 553 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap553.md（長度：8013 字元）
+[2026-10-28 11:56:46] 開始生成 第 554 章（卷 7）：蠟丸突圍
+[2026-10-28 11:58:58] 完成第 554 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap554.md（長度：7920 字元）
+[2026-10-28 11:59:08] 開始生成 第 555 章（卷 7）：江陵帥薨
+[2026-10-28 12:00:58] 完成第 555 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap555.md（長度：7604 字元）
+[2026-10-28 12:01:08] 開始生成 第 556 章（卷 7）：樊城夾攻
+[2026-10-28 12:03:29] 完成第 556 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap556.md（長度：9913 字元）
+[2026-10-28 12:03:39] 開始生成 第 557 章（卷 7）：食土之危
+[2026-10-28 12:06:26] 完成第 557 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap557.md（長度：10134 字元）
+[2026-10-28 12:06:36] 開始生成 第 558 章（卷 7）：大元建號
+[2026-10-28 12:08:27] 完成第 558 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap558.md（長度：7110 字元）
+[2026-10-28 12:08:37] 開始生成 第 559 章（卷 7）：雙城浮橋
+[2026-10-28 12:10:52] 完成第 559 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap559.md（長度：8543 字元）
+[2026-10-28 12:11:02] 開始生成 第 560 章（卷 7）：淮西點將
+[2026-10-28 12:13:12] 完成第 560 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap560.md（長度：7693 字元）
+[2026-10-28 12:13:22] 開始生成 第 561 章（卷 7）：赤心三千
+[2026-10-28 12:15:44] 完成第 561 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap561.md（長度：10379 字元）
+[2026-10-28 12:15:54] 開始生成 第 562 章（卷 7）：漢水夜破
+[2026-10-28 12:17:53] 完成第 562 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap562.md（長度：8415 字元）
+[2026-10-28 12:18:03] 開始生成 第 563 章（卷 7）：浮屍怒目
+[2026-10-28 12:20:27] 完成第 563 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap563.md（長度：8998 字元）
+[2026-10-28 12:20:37] 開始生成 第 564 章（卷 7）：鹽布活城
+[2026-10-28 12:22:50] 完成第 564 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap564.md（長度：9556 字元）
+[2026-10-28 12:23:00] 開始生成 第 565 章（卷 7）：郢州點火
+[2026-10-28 12:25:05] 完成第 565 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap565.md（長度：8356 字元）
+[2026-10-28 12:25:15] 開始生成 第 566 章（卷 7）：龍尾血戰
+[2026-10-28 12:27:23] 完成第 566 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap566.md（長度：7509 字元）
+[2026-10-28 12:27:33] 開始生成 第 567 章（卷 7）：矮張氣絕
+[2026-10-28 12:29:43] 完成第 567 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap567.md（長度：7483 字元）
+[2026-10-28 12:29:53] 開始生成 第 568 章（卷 7）：西域奇匠
+[2026-10-28 12:31:58] 完成第 568 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap568.md（長度：7766 字元）
+[2026-10-28 12:32:08] 開始生成 第 569 章（卷 7）：斷橋焚索
+[2026-10-28 12:33:54] 完成第 569 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap569.md（長度：7476 字元）
+[2026-10-28 12:34:04] 開始生成 第 570 章（卷 7）：飛石破城
+[2026-10-28 12:35:57] 完成第 570 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap570.md（長度：6851 字元）
+[2026-10-28 12:36:07] 開始生成 第 571 章（卷 7）：烈火牛富
+[2026-10-28 12:38:01] 完成第 571 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap571.md（長度：6899 字元）
+[2026-10-28 12:38:11] 開始生成 第 572 章（卷 7）：范順自縊
+[2026-10-28 12:40:29] 完成第 572 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap572.md（長度：8186 字元）
+[2026-10-28 12:40:39] 開始生成 第 573 章（卷 7）：震駭襄陽
+[2026-10-28 12:43:15] 完成第 573 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap573.md（長度：10050 字元）
+[2026-10-28 12:43:25] 開始生成 第 574 章（卷 7）：阿里海牙折箭
+[2026-10-28 12:45:46] 完成第 574 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap574.md（長度：7273 字元）
+[2026-10-28 12:45:56] 開始生成 第 575 章（卷 7）：呂煥出降
+[2026-10-28 12:48:06] 完成第 575 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap575.md（長度：7128 字元）
+[2026-10-28 12:48:16] 開始生成 第 576 章（卷 7）：腰膂盡失
+[2026-10-28 12:50:45] 完成第 576 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap576.md（長度：8483 字元）
+[2026-10-28 12:50:55] 開始生成 第 577 章（卷 7）：伯顏拜帥
+[2026-10-28 12:53:39] 完成第 577 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap577.md（長度：7650 字元）
+[2026-10-28 12:53:49] 開始生成 第 578 章（卷 7）：順流而下
+[2026-10-28 12:55:43] 完成第 578 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap578.md（長度：7049 字元）
+[2026-10-28 12:55:53] 開始生成 第 579 章（卷 7）：反戈為導
+[2026-10-28 12:58:02] 完成第 579 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap579.md（長度：7449 字元）
+[2026-10-28 12:58:12] 開始生成 第 580 章（卷 7）：沙陽血戰
+[2026-10-28 13:00:42] 完成第 580 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap580.md（長度：8392 字元）
+[2026-10-28 13:00:52] 開始生成 第 581 章（卷 7）：新城死節
+[2026-10-28 13:03:25] 完成第 581 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap581.md（長度：9053 字元）
+[2026-10-28 13:03:35] 開始生成 第 582 章（卷 7）：夏貴保軍
+[2026-10-28 13:05:58] 完成第 582 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap582.md（長度：7633 字元）
+[2026-10-28 13:06:08] 開始生成 第 583 章（卷 7）：夜渡武磯
+[2026-10-28 13:08:31] 完成第 583 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap583.md（長度：8679 字元）
+[2026-10-28 13:08:41] 開始生成 第 584 章（卷 7）：陽邏堡潰
+[2026-10-28 13:10:54] 完成第 584 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap584.md（長度：6621 字元）
+[2026-10-28 13:11:04] 開始生成 第 585 章（卷 7）：鄂州易手
+[2026-10-28 13:13:21] 完成第 585 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap585.md（長度：7200 字元）
+[2026-10-28 13:13:31] 開始生成 第 586 章（卷 7）：度宗暴崩
+[2026-10-28 13:15:40] 完成第 586 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap586.md（長度：6365 字元）
+[2026-10-28 13:15:50] 開始生成 第 587 章（卷 7）：告急連夜
+[2026-10-28 13:18:20] 完成第 587 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap587.md（長度：8729 字元）
+[2026-10-28 13:18:30] 開始生成 第 588 章（卷 7）：哀痛求援
+[2026-10-28 13:20:25] 完成第 588 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap588.md（長度：6158 字元）
+[2026-10-28 13:20:35] 開始生成 第 589 章（卷 7）：贛州捧詔
+[2026-10-28 13:23:00] 完成第 589 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap589.md（長度：9299 字元）
+[2026-10-28 13:23:10] 開始生成 第 590 章（卷 7）：書生募兵
+[2026-10-28 13:26:03] 完成第 590 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap590.md（長度：9538 字元）
+[2026-10-28 13:26:13] 開始生成 第 591 章（卷 7）：朝堂相逼
+[2026-10-28 13:29:06] 完成第 591 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap591.md（長度：9549 字元）
+[2026-10-28 13:29:16] 開始生成 第 592 章（卷 7）：傾國北征
+[2026-10-28 13:31:43] 完成第 592 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap592.md（長度：8373 字元）
+[2026-10-28 13:31:53] 開始生成 第 593 章（卷 7）：蕪湖駐蹕
+[2026-10-28 13:34:15] 完成第 593 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap593.md（長度：7744 字元）
+[2026-10-28 13:34:25] 開始生成 第 594 章（卷 7）：密使乞和
+[2026-10-28 13:37:12] 完成第 594 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap594.md（長度：9541 字元）
+[2026-10-28 13:37:22] 開始生成 第 595 章（卷 7）：排舟二千
+[2026-10-28 13:40:01] 完成第 595 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap595.md（長度：7546 字元）
+[2026-10-28 13:40:11] 開始生成 第 596 章（卷 7）：丁家洲潰
+[2026-10-28 13:42:21] 完成第 596 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap596.md（長度：7002 字元）
+[2026-10-28 13:42:31] 開始生成 第 597 章（卷 7）：夏貴先逃
+[2026-10-28 13:44:53] 完成第 597 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap597.md（長度：7690 字元）
+[2026-10-28 13:45:03] 開始生成 第 598 章（卷 7）：賈相奔逃
+[2026-10-28 13:47:40] 完成第 598 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap598.md（長度：8750 字元）
+[2026-10-28 13:47:50] 開始生成 第 599 章（卷 7）：建康陷落
+[2026-10-28 13:50:46] 完成第 599 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap599.md（長度：8687 字元）
+[2026-10-28 13:50:56] 開始生成 第 600 章（卷 7）：焦山死戰
+[2026-10-28 13:53:08] 完成第 600 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap600.md（長度：7337 字元）
+[2026-10-28 13:53:18] 開始生成 第 601 章（卷 7）：漳州道上
+[2026-10-28 13:55:47] 完成第 601 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap601.md（長度：8595 字元）
+[2026-10-28 13:55:57] 開始生成 第 602 章（卷 7）：常州孤壘
+[2026-10-28 13:58:21] 完成第 602 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap602.md（長度：8202 字元）
+[2026-10-28 13:58:31] 開始生成 第 603 章（卷 7）：全城屠戮
+[2026-10-28 14:01:32] 完成第 603 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap603.md（長度：10723 字元）
+[2026-10-28 14:01:42] 開始生成 第 604 章（卷 7）：京華震恐
+[2026-10-28 14:04:13] 完成第 604 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap604.md（長度：7978 字元）
+[2026-10-28 14:04:23] 開始生成 第 605 章（卷 7）：百官宵遁
+[2026-10-28 14:07:03] 完成第 605 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap605.md（長度：8306 字元）
+[2026-10-28 14:07:13] 開始生成 第 606 章（卷 7）：太學伏闕
+[2026-10-28 14:09:56] 完成第 606 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap606.md（長度：9500 字元）
+[2026-10-28 14:10:06] 開始生成 第 607 章（卷 7）：贛軍入衛
+[2026-10-28 14:13:00] 完成第 607 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap607.md（長度：9253 字元）
+[2026-10-28 14:13:10] 開始生成 第 608 章（卷 7）：平江失守
+[2026-10-28 14:15:22] 完成第 608 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap608.md（長度：7543 字元）
+[2026-10-28 14:15:32] 開始生成 第 609 章（卷 7）：獨木難支
+[2026-10-28 14:17:58] 完成第 609 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap609.md（長度：7885 字元）
+[2026-10-28 14:18:08] 開始生成 第 610 章（卷 7）：江心古寺
+[2026-10-28 14:20:56] 完成第 610 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap610.md（長度：9357 字元）
+[2026-10-28 14:21:06] 開始生成 第 611 章（卷 7）：元旌臨平
+[2026-10-28 14:23:19] 完成第 611 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap611.md（長度：5886 字元）
+[2026-10-28 14:23:29] 開始生成 第 612 章（卷 7）：末路宰執
+[2026-10-28 14:26:34] 完成第 612 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap612.md（長度：9983 字元）
+[2026-10-28 14:26:44] 開始生成 第 613 章（卷 7）：皋亭軍帳
+[2026-10-28 14:28:55] 完成第 613 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap613.md（長度：6903 字元）
+[2026-10-28 14:29:05] 開始生成 第 614 章（卷 7）：泣奉降表
+[2026-10-28 14:31:24] 完成第 614 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap614.md（長度：7290 字元）
+[2026-10-28 14:31:34] 開始生成 第 615 章（卷 7）：文相臨危
+[2026-10-28 14:33:55] 完成第 615 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap615.md（長度：7085 字元）
+[2026-10-28 14:34:05] 開始生成 第 616 章（卷 7）：皋亭廷爭
+[2026-10-28 14:36:21] 完成第 616 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap616.md（長度：7422 字元）
+[2026-10-28 14:36:31] 開始生成 第 617 章（卷 7）：右相受拘
+[2026-10-28 14:39:41] 完成第 617 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap617.md（長度：10541 字元）
+[2026-10-28 14:39:51] 開始生成 第 618 章（卷 7）：退位哀詔
+[2026-10-28 14:42:22] 完成第 618 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap618.md（長度：7693 字元）
+[2026-10-28 14:42:32] 開始生成 第 619 章（卷 7）：封鎖府庫
+[2026-10-28 14:45:02] 完成第 619 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap619.md（長度：7924 字元）
+[2026-10-28 14:45:12] 開始生成 第 620 章（卷 7）：太學死義
+[2026-10-28 14:47:53] 完成第 620 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap620.md（長度：9279 字元）
+[2026-10-28 14:48:03] 開始生成 第 621 章（卷 7）：幼主北遷
+[2026-10-28 14:50:38] 完成第 621 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap621.md（長度：7236 字元）
+[2026-10-28 14:50:48] 開始生成 第 622 章（卷 7）：夜奪嘉會
+[2026-10-28 14:53:32] 完成第 622 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap622.md（長度：9585 字元）
+[2026-10-28 14:53:42] 開始生成 第 623 章（卷 7）：婺州驚魂
+[2026-10-28 14:56:22] 完成第 623 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap623.md（長度：9361 字元）
+[2026-10-28 14:56:32] 開始生成 第 624 章（卷 7）：江心相擁
+[2026-10-28 14:59:08] 完成第 624 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap624.md（長度：8075 字元）
+[2026-10-28 14:59:18] 開始生成 第 625 章（卷 7）：鎮江夜遁
+[2026-10-28 15:01:55] 完成第 625 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap625.md（長度：8457 字元）
+[2026-10-28 15:02:05] 開始生成 第 626 章（卷 7）：真州死生
+[2026-10-28 15:04:41] 完成第 626 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap626.md（長度：8847 字元）
+[2026-10-28 15:04:51] 開始生成 第 627 章（卷 7）：泛海浮槎
+[2026-10-28 15:07:28] 完成第 627 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap627.md（長度：8679 字元）
+[2026-10-28 15:07:38] 開始生成 第 628 章（卷 7）：海舶會集
+[2026-10-28 15:10:16] 完成第 628 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap628.md（長度：9055 字元）
+[2026-10-28 15:10:26] 開始生成 第 629 章（卷 7）：福安登極
+[2026-10-28 15:13:38] 完成第 629 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap629.md（長度：6627 字元）
+[2026-10-28 15:13:48] 開始生成 第 630 章（卷 7）：重開帥府
+[2026-10-28 15:16:19] 完成第 630 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume7/chap630.md（長度：8928 字元）
+[2026-10-28 15:16:29] 開始生成 第 631 章（卷 8）：孤王南奔
+[2026-10-28 15:19:01] 完成第 631 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap631.md（長度：8412 字元）
+[2026-10-28 15:19:11] 開始生成 第 632 章（卷 8）：江心痛哭
+[2026-10-28 15:22:24] 完成第 632 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap632.md（長度：11027 字元）
+[2026-10-28 15:22:34] 開始生成 第 633 章（卷 8）：滄海生還
+[2026-10-28 15:24:42] 完成第 633 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap633.md（長度：7345 字元）
+[2026-10-28 15:24:52] 開始生成 第 634 章（卷 8）：括蒼棧道
+[2026-10-28 15:27:50] 完成第 634 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap634.md（長度：9778 字元）
+[2026-10-28 15:28:00] 開始生成 第 635 章（卷 8）：福安改元
+[2026-10-28 15:30:34] 完成第 635 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap635.md（長度：7770 字元）
+[2026-10-28 15:30:44] 開始生成 第 636 章（卷 8）：廟堂相傾
+[2026-10-28 15:33:31] 完成第 636 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap636.md（長度：8540 字元）
+[2026-10-28 15:33:41] 開始生成 第 637 章（卷 8）：虛庫無泉
+[2026-10-28 15:36:15] 完成第 637 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap637.md（長度：8168 字元）
+[2026-10-28 15:36:25] 開始生成 第 638 章（卷 8）：延平開府
+[2026-10-28 15:39:24] 完成第 638 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap638.md（長度：10027 字元）
+[2026-10-28 15:39:34] 開始生成 第 639 章（卷 8）：仙霞破陣
+[2026-10-28 15:42:18] 完成第 639 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap639.md（長度：9016 字元）
+[2026-10-28 15:42:28] 開始生成 第 640 章（卷 8）：浮家泛海
+[2026-10-28 15:44:42] 完成第 640 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap640.md（長度：7505 字元）
+[2026-10-28 15:44:52] 開始生成 第 641 章（卷 8）：苦浪青鹽
+[2026-10-28 15:48:13] 完成第 641 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap641.md（長度：10493 字元）
+[2026-10-28 15:48:23] 開始生成 第 642 章（卷 8）：法石借舟
+[2026-10-28 15:52:03] 完成第 642 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap642.md（長度：9059 字元）
+[2026-10-28 15:52:13] 開始生成 第 643 章（卷 8）：怒沒海舶
+[2026-10-28 15:54:33] 完成第 643 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap643.md（長度：7906 字元）
+[2026-10-28 15:54:43] 開始生成 第 644 章（卷 8）：刺桐泣血
