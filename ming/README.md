@@ -52,14 +52,18 @@
 本專案建議維護以下文件：
 
 - `README.md`：專案定位、目錄及使用方式。
-- `project_outline.md`：九卷規劃與各卷敘事重點。
+- `outline.md`：九卷規劃與各卷敘事重點（原稿寫作 `project_outline.md`，實際檔名為 `outline.md`）。
 - `historical_evidence_review.md`：史實、疑點、異說與小說使用限制。
 - `source_bibliography.md`：核心史料、版本資訊及來源特性。
 - `chronology_and_fact_checks.md`：年代骨架與優先待核事項。
 - `research_workflow.md`：證據鏈、史料標籤及修訂驗收規範。
 - `characters.md`：歷史人物分級、行蹤、職位及人物關係。
-- `chapter_ledger.md`：章節事件、人物交互與史實校核記錄。
-- `source_notes/`：按南明、洪承疇、鄭氏政權、海疆及朱一貴事件分別建立的史料筆記。
+- `chapter_writer_rules.md`：逐章寫手規範（明末清初版，2026-10-28 改寫；原稿誤為元末明初專案）。
+- `relationships.md`、`social_geography.md`、`social_systems_and_daily_life.md`：人物關係、歷史地理、社會制度與生活設定。
+- `volume1.md`～`volume9.md`：九卷逐章章綱（共 810 章，第九卷章號為 721–810）。
+- `generate_novel.py`：依上列文件逐章生成小說的指令碼，輸出於 `chapters/`。
+- `chapter_ledger.md`（尚未建立）：章節事件、人物交互與史實校核記錄，由生成流程逐章累積。
+- `source_notes/`（尚未建立）：按南明、洪承疇、鄭氏政權、海疆及朱一貴事件分別建立的史料筆記。
 
 ## 六、目前的工作狀態
 
