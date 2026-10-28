@@ -1,5 +1,6 @@
 package com.novel.reader.service
 
+import android.app.KeyguardManager
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -18,6 +19,7 @@ import android.media.AudioTrack
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.speech.tts.Voice
@@ -76,6 +78,141 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
     lateinit var mediaSession: MediaSessionCompat
         private set
 
+    var isAppInForeground: Boolean = false
+        private set
+    var wasForegroundBeforeScreenOff: Boolean = false
+        private set
+    private var isDreamingState: Boolean = false
+    private var isMediaSessionReleased = false
+    private var isScreenReceiverRegistered = false
+
+    fun canHandleMediaButtons(): Boolean {
+        if (isMediaSessionReleased) return false
+        if (isAppInForeground) return true
+
+        val isPlaybackActive = playbackState != PlaybackState.IDLE
+        if (!isPlaybackActive || !wasForegroundBeforeScreenOff) return false
+
+        val powerManager = getSystemService(Context.POWER_SERVICE) as? PowerManager
+        val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+        val isScreenOffOrLocked = (powerManager?.isInteractive == false) ||
+                (keyguardManager?.isKeyguardLocked == true) ||
+                isDreamingState
+        return isScreenOffOrLocked
+    }
+
+    fun setAppInForeground(inForeground: Boolean) {
+        Log.d("NovelTts", "setAppInForeground: $inForeground")
+        isAppInForeground = inForeground
+        if (inForeground) {
+            wasForegroundBeforeScreenOff = false
+        } else {
+            val powerManager = getSystemService(Context.POWER_SERVICE) as? PowerManager
+            if (powerManager?.isInteractive == true) {
+                // 螢幕仍亮著時離開前景（切去其他 App 或回到桌面），非息屏
+                wasForegroundBeforeScreenOff = false
+            }
+        }
+        updateActiveState()
+    }
+
+    fun onScreenOffFromForeground() {
+        Log.d("NovelTts", "onScreenOffFromForeground: screen turned off or dream while in foreground")
+        isAppInForeground = false
+        wasForegroundBeforeScreenOff = true
+        updateActiveState()
+    }
+
+    fun updateActiveState() {
+        updateMediaSessionActiveState()
+        updateVolumeReceiverState()
+    }
+
+    private fun updateMediaSessionActiveState() {
+        if (!::mediaSession.isInitialized || isMediaSessionReleased) return
+        val shouldBeActive = canHandleMediaButtons()
+        if (mediaSession.isActive != shouldBeActive) {
+            mediaSession.isActive = shouldBeActive
+            Log.d("NovelTts", "mediaSession.isActive set to: $shouldBeActive (fg=$isAppInForeground, screenOffListening=$wasForegroundBeforeScreenOff)")
+        }
+    }
+
+    private fun updateVolumeReceiverState() {
+        val shouldBeActive = canHandleMediaButtons()
+        if (shouldBeActive) {
+            if (!isVolumeReceiverRegistered) {
+                try {
+                    val volumeFilter = IntentFilter("android.media.VOLUME_CHANGED_ACTION")
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        registerReceiver(volumeChangeReceiver, volumeFilter, Context.RECEIVER_EXPORTED)
+                    } else {
+                        registerReceiver(volumeChangeReceiver, volumeFilter)
+                    }
+                    isVolumeReceiverRegistered = true
+                    Log.d("NovelTts", "volumeChangeReceiver registered (control active)")
+                } catch (e: Exception) {
+                    Log.e("NovelTts", "Failed to register volumeChangeReceiver", e)
+                }
+            }
+        } else {
+            if (isVolumeReceiverRegistered) {
+                try {
+                    unregisterReceiver(volumeChangeReceiver)
+                    Log.d("NovelTts", "volumeChangeReceiver unregistered (control inactive)")
+                } catch (e: Exception) {
+                    Log.e("NovelTts", "Failed to unregister volumeChangeReceiver", e)
+                }
+                isVolumeReceiverRegistered = false
+            }
+            volumeBurstCount = 0
+            lastVolumeChangeTime = 0L
+        }
+    }
+
+    private fun releaseMediaSession() {
+        if (::mediaSession.isInitialized && !isMediaSessionReleased) {
+            try {
+                mediaSession.isActive = false
+                mediaSession.release()
+                Log.d("NovelTts", "mediaSession released")
+            } catch (e: Exception) {
+                Log.e("NovelTts", "Error releasing mediaSession", e)
+            }
+            isMediaSessionReleased = true
+        }
+    }
+
+    private val screenStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val action = intent?.action ?: return
+            Log.d("NovelTts", "screenStateReceiver: action=$action")
+            when (action) {
+                Intent.ACTION_SCREEN_OFF -> {
+                    isDreamingState = false
+                    updateActiveState()
+                }
+                Intent.ACTION_SCREEN_ON -> {
+                    updateActiveState()
+                }
+                Intent.ACTION_USER_PRESENT -> {
+                    isDreamingState = false
+                    if (!isAppInForeground) {
+                        wasForegroundBeforeScreenOff = false
+                    }
+                    updateActiveState()
+                }
+                "android.intent.action.DREAMING_STARTED" -> {
+                    isDreamingState = true
+                    updateActiveState()
+                }
+                "android.intent.action.DREAMING_STOPPED" -> {
+                    isDreamingState = false
+                    updateActiveState()
+                }
+            }
+        }
+    }
+
     private var audioFocusRequest: AudioFocusRequest? = null
     private var isNoisyReceiverRegistered = false
 
@@ -117,6 +254,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
 
     private val volumeChangeReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            if (!canHandleMediaButtons()) return
             if (intent?.action == "android.media.VOLUME_CHANGED_ACTION") {
                 val streamType = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1)
                 if (streamType == AudioManager.STREAM_MUSIC) {
@@ -220,9 +358,23 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         setupMediaSession()
         tts = TextToSpeech(applicationContext, this)
 
-        val volumeFilter = IntentFilter("android.media.VOLUME_CHANGED_ACTION")
-        registerReceiver(volumeChangeReceiver, volumeFilter)
-        isVolumeReceiverRegistered = true
+        val screenFilter = IntentFilter().apply {
+            addAction(Intent.ACTION_SCREEN_OFF)
+            addAction(Intent.ACTION_SCREEN_ON)
+            addAction(Intent.ACTION_USER_PRESENT)
+            addAction("android.intent.action.DREAMING_STARTED")
+            addAction("android.intent.action.DREAMING_STOPPED")
+        }
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(screenStateReceiver, screenFilter, Context.RECEIVER_EXPORTED)
+            } else {
+                registerReceiver(screenStateReceiver, screenFilter)
+            }
+            isScreenReceiverRegistered = true
+        } catch (e: Exception) {
+            Log.e("NovelTts", "Failed to register screenStateReceiver", e)
+        }
     }
 
     private var silentAudioTrack: AudioTrack? = null
@@ -294,65 +446,80 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
     }
 
     private fun setupMediaSession() {
-        val mediaButtonReceiverComponent = ComponentName(applicationContext, MediaButtonReceiver::class.java)
-        val mediaButtonIntent = Intent(Intent.ACTION_MEDIA_BUTTON).apply {
-            component = mediaButtonReceiverComponent
-        }
-        val mediaButtonPendingIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            0,
-            mediaButtonIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        mediaSession = MediaSessionCompat(
-            this,
-            "NovelReaderMediaSession",
-            mediaButtonReceiverComponent,
-            mediaButtonPendingIntent
-        ).apply {
+        mediaSession = MediaSessionCompat(this, "NovelReaderMediaSession").apply {
             setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
                 MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
             )
-            setMediaButtonReceiver(mediaButtonPendingIntent)
             setCallback(object : MediaSessionCompat.Callback() {
                 override fun onPlay() {
+                    if (!canHandleMediaButtons()) {
+                        Log.d("NovelTts", "MediaSession: onPlay() ignored (control not active)")
+                        return
+                    }
                     Log.d("NovelTts", "MediaSession: onPlay() called")
                     this@TtsReadingService.play()
                 }
 
                 override fun onPause() {
+                    if (!canHandleMediaButtons()) {
+                        Log.d("NovelTts", "MediaSession: onPause() ignored (control not active)")
+                        return
+                    }
                     Log.d("NovelTts", "MediaSession: onPause() called")
                     this@TtsReadingService.pause()
                 }
 
                 override fun onSkipToNext() {
+                    if (!canHandleMediaButtons()) {
+                        Log.d("NovelTts", "MediaSession: onSkipToNext() ignored (control not active)")
+                        return
+                    }
                     Log.d("NovelTts", "MediaSession: onSkipToNext() called")
                     this@TtsReadingService.playNextChapter()
                 }
 
                 override fun onSkipToPrevious() {
+                    if (!canHandleMediaButtons()) {
+                        Log.d("NovelTts", "MediaSession: onSkipToPrevious() ignored (control not active)")
+                        return
+                    }
                     Log.d("NovelTts", "MediaSession: onSkipToPrevious() called")
                     this@TtsReadingService.playPreviousChapter()
                 }
 
                 override fun onFastForward() {
+                    if (!canHandleMediaButtons()) {
+                        Log.d("NovelTts", "MediaSession: onFastForward() ignored (control not active)")
+                        return
+                    }
                     Log.d("NovelTts", "MediaSession: onFastForward() called")
                     this@TtsReadingService.playNextChapter()
                 }
 
                 override fun onRewind() {
+                    if (!canHandleMediaButtons()) {
+                        Log.d("NovelTts", "MediaSession: onRewind() ignored (control not active)")
+                        return
+                    }
                     Log.d("NovelTts", "MediaSession: onRewind() called")
                     this@TtsReadingService.playPreviousChapter()
                 }
 
                 override fun onStop() {
+                    if (!canHandleMediaButtons()) {
+                        Log.d("NovelTts", "MediaSession: onStop() ignored (control not active)")
+                        return
+                    }
                     Log.d("NovelTts", "MediaSession: onStop() called")
                     this@TtsReadingService.stop()
                 }
 
                 override fun onMediaButtonEvent(mediaButtonEvent: Intent?): Boolean {
+                    if (!canHandleMediaButtons()) {
+                        Log.d("NovelTts", "MediaSession: onMediaButtonEvent ignored (control not active)")
+                        return false
+                    }
                     val keyEvent = mediaButtonEvent?.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
                     Log.d("NovelTts", "MediaSession: onMediaButtonEvent keyEvent=$keyEvent")
                     if (keyEvent != null && keyEvent.action == KeyEvent.ACTION_DOWN) {
@@ -411,13 +578,13 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
                     return super.onMediaButtonEvent(mediaButtonEvent)
                 }
             })
-            isActive = true
+            isActive = false
         }
         updateMediaSessionPlaybackState()
     }
 
     fun updateMediaSessionPlaybackState() {
-        if (!::mediaSession.isInitialized) return
+        if (!::mediaSession.isInitialized || isMediaSessionReleased) return
         val state = when (playbackState) {
             PlaybackState.PLAYING -> PlaybackStateCompat.STATE_PLAYING
             PlaybackState.PAUSED -> PlaybackStateCompat.STATE_PAUSED
@@ -537,11 +704,21 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("NovelTts", "onStartCommand: action=${intent?.action}, intent=$intent")
         if (intent != null) {
-            val keyEvent = intent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
-            if (keyEvent != null) {
-                Log.d("NovelTts", "onStartCommand: MediaButton KeyEvent=$keyEvent")
+            val isMediaButton = intent.action == Intent.ACTION_MEDIA_BUTTON || intent.hasExtra(Intent.EXTRA_KEY_EVENT)
+            if (isMediaButton) {
+                if (!canHandleMediaButtons()) {
+                    Log.d("NovelTts", "onStartCommand: Media button ignored because control is not active")
+                    return START_NOT_STICKY
+                }
+                val keyEvent = intent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
+                if (keyEvent != null) {
+                    Log.d("NovelTts", "onStartCommand: MediaButton KeyEvent=$keyEvent")
+                }
+                if (::mediaSession.isInitialized && !isMediaSessionReleased) {
+                    MediaButtonReceiver.handleIntent(mediaSession, intent)
+                }
+                return START_NOT_STICKY
             }
-            MediaButtonReceiver.handleIntent(mediaSession, intent)
         }
         when (intent?.action) {
             ACTION_PLAY -> play()
@@ -616,11 +793,9 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         requestAudioFocus()
         startSilentAudio()
         registerNoisyReceiver()
-        if (::mediaSession.isInitialized) {
-            mediaSession.isActive = true
-        }
-
         playbackState = PlaybackState.PLAYING
+        updateActiveState()
+
         startForeground(NOTIFICATION_ID, buildNotification())
         notifyPlaybackState(playbackState)
         updateMediaSessionPlaybackState()
@@ -632,6 +807,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
      */
     fun pause() {
         playbackState = PlaybackState.PAUSED
+        updateActiveState()
         tts?.stop()
         pauseSilentAudio()
         saveCurrentProgress()
@@ -646,6 +822,7 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
      */
     fun stop() {
         playbackState = PlaybackState.IDLE
+        updateActiveState()
         tts?.stop()
         stopSilentAudio()
         saveCurrentProgress()
@@ -668,10 +845,8 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
                 requestAudioFocus()
                 startSilentAudio()
                 registerNoisyReceiver()
-                if (::mediaSession.isInitialized) {
-                    mediaSession.isActive = true
-                }
                 playbackState = PlaybackState.PLAYING
+                updateActiveState()
                 startForeground(NOTIFICATION_ID, buildNotification())
                 notifyPlaybackState(playbackState)
                 updateMediaSessionPlaybackState()
@@ -1011,6 +1186,31 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         listeners.forEach { it.onTtsReady(voices) }
     }
 
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        Log.d("NovelTts", "onTaskRemoved: app swiped away/closed, stopping and releasing")
+        stopAndRelease()
+    }
+
+    /**
+     * 當 App 關閉（MainActivity 銷毀或工作清單滑掉）時徹底清理資源並結束 Service
+     */
+    fun stopAndRelease() {
+        Log.d("NovelTts", "stopAndRelease: cleaning up media resources and stopping service")
+        isAppInForeground = false
+        wasForegroundBeforeScreenOff = false
+        if (isScreenReceiverRegistered) {
+            try {
+                unregisterReceiver(screenStateReceiver)
+            } catch (_: Exception) {}
+            isScreenReceiverRegistered = false
+        }
+        updateActiveState()
+        stop()
+        releaseMediaSession()
+        stopSelf()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         saveCurrentProgress()
@@ -1020,15 +1220,18 @@ class TtsReadingService : Service(), TextToSpeech.OnInitListener {
         stopSilentAudio()
         abandonAudioFocus()
         unregisterNoisyReceiver()
+        if (isScreenReceiverRegistered) {
+            try {
+                unregisterReceiver(screenStateReceiver)
+            } catch (_: Exception) {}
+            isScreenReceiverRegistered = false
+        }
         if (isVolumeReceiverRegistered) {
             try {
                 unregisterReceiver(volumeChangeReceiver)
             } catch (_: Exception) {}
             isVolumeReceiverRegistered = false
         }
-        if (::mediaSession.isInitialized) {
-            mediaSession.isActive = false
-            mediaSession.release()
-        }
+        releaseMediaSession()
     }
 }

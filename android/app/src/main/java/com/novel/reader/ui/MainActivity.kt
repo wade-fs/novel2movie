@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.OpenableColumns
@@ -75,6 +76,9 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
             val binder = service as TtsReadingService.LocalBinder
             ttsService = binder.getService()
             isBound = true
+            if (lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) {
+                ttsService?.setAppInForeground(true)
+            }
             ttsService?.addListener(this@MainActivity)
 
             if (ttsService?.chapters.isNullOrEmpty()) {
@@ -165,6 +169,33 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus && isImmersiveFullScreen) {
             applyImmersiveSystemBars(hide = true)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ttsService?.setAppInForeground(true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val powerManager = getSystemService(Context.POWER_SERVICE) as? PowerManager
+        val isInteractive = powerManager?.isInteractive ?: true
+        if (isInteractive) {
+            // 螢幕仍亮著：代表使用者切換到其他 App 或回到桌面
+            ttsService?.setAppInForeground(false)
+        } else {
+            // 螢幕已暗下 / 進入休眠 / 螢幕保護：記錄是從前景進入息屏模式
+            ttsService?.onScreenOffFromForeground()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val powerManager = getSystemService(Context.POWER_SERVICE) as? PowerManager
+        val isInteractive = powerManager?.isInteractive ?: true
+        if (isInteractive) {
+            ttsService?.setAppInForeground(false)
         }
     }
 
@@ -576,6 +607,10 @@ class MainActivity : AppCompatActivity(), TtsReadingService.PlaybackListener {
         super.onDestroy()
         keyHandler.removeCallbacks(volumeUpLongPressRunnable)
         keyHandler.removeCallbacks(volumeDownLongPressRunnable)
+        if (isFinishing) {
+            ttsService?.setAppInForeground(false)
+            ttsService?.stopAndRelease()
+        }
         if (isBound) {
             ttsService?.removeListener(this)
             unbindService(serviceConnection)
