@@ -744,3 +744,441 @@
 [2026-10-27 13:47:13] 開始生成 第 346 章（卷 4）：盡忠報國
 [2026-10-27 13:49:28] 完成第 346 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap346.md（長度：7776 字元）
 [2026-10-27 13:49:30] 開始生成 第 347 章（卷 4）：此上意也
+[2026-10-27 13:51:57] 完成第 347 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap347.md（長度：7908 字元）
+[2026-10-27 13:51:59] 開始生成 第 348 章（卷 4）：掛冠而去
+[2026-10-27 13:54:08] 完成第 348 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap348.md（長度：7704 字元）
+[2026-10-27 13:54:10] 開始生成 第 349 章（卷 4）：天日昭昭
+[2026-10-27 13:56:29] 完成第 349 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap349.md（長度：9954 字元）
+[2026-10-27 13:56:31] 開始生成 第 350 章（卷 4）：莫須有辯
+[2026-10-27 13:58:53] 完成第 350 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap350.md（長度：7757 字元）
+[2026-10-27 13:58:55] 開始生成 第 351 章（卷 4）：除夕之殤
+[2026-10-27 13:59:00] agy 返回非零或字數過短 (code 3, 長度 0) 第 1 次嘗試
+[2026-10-27 13:59:11] agy 返回非零或字數過短 (code 3, 長度 0) 第 2 次嘗試
+[2026-10-27 13:59:18] agy 返回非零或字數過短 (code 3, 長度 0) 第 3 次嘗試
+[2026-10-27 13:59:28] agy 返回非零或字數過短 (code 3, 長度 0) 第 4 次嘗試
+[2026-10-27 13:59:37] agy 返回非零或字數過短 (code 3, 長度 0) 第 5 次嘗試
+[2026-10-27 13:59:45] agy 返回非零或字數過短 (code 3, 長度 0) 第 6 次嘗試
+[2026-10-27 14:39:29] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-27 14:39:29] 成功解析全書章綱共 720 章。
+[2026-10-27 14:39:29] 目前已存在完整章節數：350 / 720，缺失章節數：370
+[2026-10-27 14:39:29] 自動偵測首個缺失章節：從第 351 章開始執行補寫。
+[2026-10-27 14:39:29] 開始生成 第 351 章（卷 4）：除夕之殤
+[2026-10-27 14:40:20] agy 返回非零或字數過短 (code 3, 長度 0) 第 1 次嘗試
+[2026-10-27 14:40:29] agy 返回非零或字數過短 (code 3, 長度 0) 第 2 次嘗試
+[2026-10-27 14:40:37] agy 返回非零或字數過短 (code 3, 長度 0) 第 3 次嘗試
+[2026-10-27 14:40:48] agy 返回非零或字數過短 (code 3, 長度 0) 第 4 次嘗試
+[2026-10-27 14:40:56] agy 返回非零或字數過短 (code 3, 長度 0) 第 5 次嘗試
+[2026-10-27 14:41:04] agy 返回非零或字數過短 (code 3, 長度 0) 第 6 次嘗試
+[2026-10-27 14:42:06] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-27 14:42:06] 成功解析全書章綱共 720 章。
+[2026-10-27 14:42:06] 目前已存在完整章節數：350 / 720，缺失章節數：370
+[2026-10-27 14:42:06] 自動偵測首個缺失章節：從第 351 章開始執行補寫。
+[2026-10-27 14:42:06] 開始生成 第 351 章（卷 4）：除夕之殤
+[2026-10-27 14:42:10] agy 返回非零或字數過短 (code 3, 長度 0) 第 1 次嘗試
+[2026-10-27 14:42:20] agy 返回非零或字數過短 (code 3, 長度 0) 第 2 次嘗試
+[2026-10-27 14:42:29] agy 返回非零或字數過短 (code 3, 長度 0) 第 3 次嘗試
+[2026-10-27 16:41:46] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-27 16:41:46] 成功解析全書章綱共 720 章。
+[2026-10-27 16:41:46] 目前已存在完整章節數：350 / 720，缺失章節數：370
+[2026-10-27 16:41:46] 自動偵測首個缺失章節：從第 351 章開始執行補寫。
+[2026-10-27 16:41:46] 開始生成 第 351 章（卷 4）：除夕之殤
+[2026-10-27 16:44:09] 完成第 351 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap351.md（長度：8259 字元）
+[2026-10-27 16:44:11] 開始生成 第 352 章（卷 4）：負屍夜遁
+[2026-10-27 16:46:45] 完成第 352 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap352.md（長度：8062 字元）
+[2026-10-27 16:46:47] 開始生成 第 353 章（卷 4）：嶺南萬里
+[2026-10-27 16:49:36] 完成第 353 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap353.md（長度：9764 字元）
+[2026-10-27 16:49:38] 開始生成 第 354 章（卷 4）：鄂渚星散
+[2026-10-27 16:49:45] agy 返回非零或字數過短 (code 3, 長度 0) 第 1 次嘗試
+[2026-10-27 16:49:53] agy 返回非零或字數過短 (code 3, 長度 0) 第 2 次嘗試
+[2026-10-27 16:50:02] agy 返回非零或字數過短 (code 3, 長度 0) 第 3 次嘗試
+[2026-10-27 16:50:10] agy 返回非零或字數過短 (code 3, 長度 0) 第 4 次嘗試
+[2026-10-27 16:50:17] agy 返回非零或字數過短 (code 3, 長度 0) 第 5 次嘗試
+[2026-10-27 16:50:26] agy 返回非零或字數過短 (code 3, 長度 0) 第 6 次嘗試
+[2026-10-27 17:37:32] 成功解析全書章綱共 720 章。
+[2026-10-27 17:42:13] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-27 17:42:13] 成功解析全書章綱共 720 章。
+[2026-10-27 17:42:13] 目前已存在完整章節數：353 / 720，缺失章節數：367
+[2026-10-27 17:42:13] 自動偵測首個缺失章節：從第 354 章開始執行補寫。
+[2026-10-27 17:42:13] --- [Dry Run 模式] ---
+[2026-10-27 17:42:13] 執行範圍: 第 354 章 ～ 第 720 章 (force=False)
+[2026-10-27 17:42:13] 缺失章節前 15 項: [354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368]...
+[2026-10-27 17:42:13] Dry run 結束。
+[2026-10-27 17:59:05] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-27 17:59:05] 成功解析全書章綱共 720 章。
+[2026-10-27 17:59:05] 目前已存在完整章節數：353 / 720，缺失章節數：367
+[2026-10-27 17:59:05] 自動偵測首個缺失章節：從第 354 章開始執行補寫。
+[2026-10-27 17:59:05] 開始生成 第 354 章（卷 4）：鄂渚星散
+[2026-10-27 17:59:08] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 1/8 次嘗試
+[2026-10-27 17:59:08]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 74h51m37s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 74h51m37s.","status":"RESOURCE_EXHAU
+[2026-10-27 17:59:08]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 30 秒後重試...
+[2026-10-27 18:12:55] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-27 18:12:55] 成功解析全書章綱共 720 章。
+[2026-10-27 18:12:55] 目前已存在完整章節數：353 / 720，缺失章節數：367
+[2026-10-27 18:12:55] 自動偵測首個缺失章節：從第 354 章開始執行補寫。
+[2026-10-27 18:12:55] 開始生成 第 354 章（卷 4）：鄂渚星散
+[2026-10-27 18:12:58] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 1/8 次嘗試
+[2026-10-27 18:12:58]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 74h37m47s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 74h37m47s.","status":"RESOURCE_EXHAU
+[2026-10-27 18:12:58]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 30 秒後重試...
+[2026-10-27 18:27:13] === 查詢已配置之帳號與即時配額 ===
+[2026-10-27 18:27:13] 
+[帳號別名: chen] -> 綁定 Email: 已授權
+[2026-10-27 18:27:18]    Gemini Models	Weekly Limit Remaining	72%	2026-11-01T12:34:33Z
+[2026-10-27 18:27:18]    Gemini Models	Five Hour Limit Remaining	98%	2026-10-27T15:13:47Z
+[2026-10-27 18:27:18]    Claude and GPT models	Weekly Limit Remaining	41%	2026-10-30T06:25:27Z
+[2026-10-27 18:27:18]    Claude and GPT models	Five Hour Limit Remaining	98%	2026-10-27T15:22:59Z
+[2026-10-27 18:27:18]    Gemini 4 Argon	Gemini 4 Argon Weekly Limit	0%	2026-11-01T02:40:44Z
+[2026-10-27 18:27:18] 
+[帳號別名: wade] -> 綁定 Email: wade.fs@gmail.com
+[2026-10-27 18:27:21]    Gemini Models	Weekly Limit Remaining	87%	2026-11-03T00:11:49Z
+[2026-10-27 18:27:21]    Gemini Models	Five Hour Limit Remaining	65%	2026-10-27T10:30:01Z
+[2026-10-27 18:27:21]    Claude and GPT models	Weekly Limit Remaining	100%	2026-11-03T09:04:38Z
+[2026-10-27 18:27:21]    Claude and GPT models	Five Hour Limit Remaining	100%	2026-10-27T15:27:21Z
+[2026-10-27 18:27:21]    Gemini 4 Argon	Gemini 4 Argon Weekly Limit	78%	2026-11-03T01:09:18Z
+[2026-10-27 18:27:27] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-27 18:27:27] 執行帳號: 預設隔離帳號（wade.fs@gmail.com 優先）
+[2026-10-27 18:27:27] 成功解析全書章綱共 720 章。
+[2026-10-27 18:27:27] 目前已存在完整章節數：353 / 720，缺失章節數：367
+[2026-10-27 18:27:27] 自動偵測首個缺失章節：從第 354 章開始執行補寫。
+[2026-10-27 18:27:27] --- [Dry Run 模式] ---
+[2026-10-27 18:27:27] 執行範圍: 第 354 章 ～ 第 720 章 (force=False)
+[2026-10-27 18:27:27] 缺失章節前 15 項: [354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368]...
+[2026-10-27 18:27:27] Dry run 結束。
+[2026-10-27 18:30:33] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-27 18:30:33] 執行帳號: 預設隔離帳號（wade.fs@gmail.com 優先）
+[2026-10-27 18:30:33] 成功解析全書章綱共 720 章。
+[2026-10-27 18:30:33] 目前已存在完整章節數：353 / 720，缺失章節數：367
+[2026-10-27 18:30:33] 自動偵測首個缺失章節：從第 354 章開始執行補寫。
+[2026-10-27 18:30:33] 開始生成 第 354 章（卷 4）：鄂渚星散
+[2026-10-27 18:33:41] 完成第 354 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap354.md（長度：9829 字元）
+[2026-10-27 18:33:51] 開始生成 第 355 章（卷 4）：散關泣血
+[2026-10-27 18:36:55] 完成第 355 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap355.md（長度：9436 字元）
+[2026-10-27 18:37:05] 開始生成 第 356 章（卷 4）：太后南還
+[2026-10-27 18:41:17] 完成第 356 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap356.md（長度：12976 字元）
+[2026-10-27 18:41:27] 開始生成 第 357 章（卷 4）：暖風薰醉
+[2026-10-27 18:44:15] 完成第 357 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap357.md（長度：8604 字元）
+[2026-10-27 18:44:25] 開始生成 第 358 章（卷 4）：道路以目
+[2026-10-27 18:47:37] 完成第 358 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap358.md（長度：10595 字元）
+[2026-10-27 18:47:47] 開始生成 第 359 章（卷 4）：川口長城
+[2026-10-27 18:51:11] 完成第 359 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap359.md（長度：10395 字元）
+[2026-10-27 18:51:21] 開始生成 第 360 章（卷 4）：長河微瀾
+[2026-10-27 18:55:29] 完成第 360 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume4/chap360.md（長度：12180 字元）
+[2026-10-27 18:55:39] 開始生成 第 361 章（卷 5）：〈盟約落地〉
+[2026-10-27 18:58:49] 完成第 361 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap361.md（長度：9939 字元）
+[2026-10-27 18:58:59] 開始生成 第 362 章（卷 5）：〈散關折戟〉
+[2026-10-27 19:03:37] 完成第 362 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap362.md（長度：14028 字元）
+[2026-10-27 19:03:47] 開始生成 第 363 章（卷 5）：〈楚州解甲〉
+[2026-10-27 19:07:00] 完成第 363 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap363.md（長度：10658 字元）
+[2026-10-27 19:07:10] 開始生成 第 364 章（卷 5）：〈鄂渚悲風〉
+[2026-10-27 19:10:04] 完成第 364 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap364.md（長度：9449 字元）
+[2026-10-27 19:10:14] 開始生成 第 365 章（卷 5）：〈淮津引渡〉
+[2026-10-27 19:13:59] 完成第 365 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap365.md（長度：12528 字元）
+[2026-10-27 19:14:09] 開始生成 第 366 章（卷 5）：〈梓宮南還〉
+[2026-10-27 19:17:20] 完成第 366 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap366.md（長度：10106 字元）
+[2026-10-27 19:17:30] 開始生成 第 367 章（卷 5）：〈經總割肉〉
+[2026-10-27 19:20:33] 完成第 367 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap367.md（長度：9502 字元）
+[2026-10-27 19:20:43] 開始生成 第 368 章（卷 5）：〈三衙新卒〉
+[2026-10-27 19:23:33] 完成第 368 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap368.md（長度：9267 字元）
+[2026-10-27 19:23:43] 開始生成 第 369 章（卷 5）：〈天下清平〉
+[2026-10-27 19:26:38] 完成第 369 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap369.md（長度：9463 字元）
+[2026-10-27 19:26:48] 開始生成 第 370 章（卷 5）：〈圍湖奪水〉
+[2026-10-27 19:30:23] 完成第 370 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap370.md（長度：10920 字元）
+[2026-10-27 19:30:33] 開始生成 第 371 章（卷 5）：〈菱湖春繭〉
+[2026-10-27 19:33:41] 完成第 371 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap371.md（長度：9532 字元）
+[2026-10-27 19:33:51] 開始生成 第 372 章（卷 5）：〈青鹽暗渡〉
+[2026-10-27 19:37:08] 完成第 372 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap372.md（長度：9931 字元）
+[2026-10-27 19:37:18] 開始生成 第 373 章（卷 5）：〈瓦舍舌鋒〉
+[2026-10-27 19:39:59] 完成第 373 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap373.md（長度：8096 字元）
+[2026-10-27 19:40:09] 開始生成 第 374 章（卷 5）：〈清河甲第〉
+[2026-10-27 19:43:48] 完成第 374 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap374.md（長度：11363 字元）
+[2026-10-27 19:43:58] 開始生成 第 375 章（卷 5）：〈荒堰殘車〉
+[2026-10-27 19:47:23] 完成第 375 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap375.md（長度：11064 字元）
+[2026-10-27 19:47:33] 開始生成 第 376 章（卷 5）：〈北關米湧〉
+[2026-10-27 19:50:20] 完成第 376 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap376.md（長度：8338 字元）
+[2026-10-27 19:50:30] 開始生成 第 377 章（卷 5）：〈茶山榷血〉
+[2026-10-27 19:54:01] 完成第 377 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap377.md（長度：10934 字元）
+[2026-10-27 19:54:11] 開始生成 第 378 章（卷 5）：〈白冊詭寄〉
+[2026-10-27 19:57:13] 完成第 378 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap378.md（長度：9895 字元）
+[2026-10-27 19:57:23] 開始生成 第 379 章（卷 5）：〈太學幽壁〉
+[2026-10-27 20:00:20] 完成第 379 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap379.md（長度：9465 字元）
+[2026-10-27 20:00:30] 開始生成 第 380 章（卷 5）：〈箕尾歸天〉
+[2026-10-27 20:04:06] 完成第 380 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap380.md（長度：11791 字元）
+[2026-10-27 20:04:16] 開始生成 第 381 章（卷 5）：〈焚卷滅影〉
+[2026-10-27 20:07:42] 完成第 381 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap381.md（長度：10548 字元）
+[2026-10-27 20:07:52] 開始生成 第 382 章（卷 5）：〈九曲夜埋〉
+[2026-10-27 20:10:39] 完成第 382 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap382.md（長度：8386 字元）
+[2026-10-27 20:10:49] 開始生成 第 383 章（卷 5）：〈新州孤燈〉
+[2026-10-27 20:13:59] 完成第 383 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap383.md（長度：10018 字元）
+[2026-10-27 20:14:09] 開始生成 第 384 章（卷 5）：〈伊川禁聲〉
+[2026-10-27 20:17:18] 完成第 384 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap384.md（長度：9717 字元）
+[2026-10-27 20:17:28] 開始生成 第 385 章（卷 5）：〈春闈黜落〉
+[2026-10-27 20:21:13] 完成第 385 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap385.md（長度：11900 字元）
+[2026-10-27 20:21:23] 開始生成 第 386 章（卷 5）：〈相府驚刺〉
+[2026-10-27 20:24:10] 完成第 386 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap386.md（長度：9014 字元）
+[2026-10-27 20:24:20] 開始生成 第 387 章（卷 5）：〈相權落日〉
+[2026-10-27 20:27:33] 完成第 387 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap387.md（長度：10566 字元）
+[2026-10-27 20:27:43] 開始生成 第 388 章（卷 5）：〈盱眙互市〉
+[2026-10-27 20:30:23] 完成第 388 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap388.md（長度：8219 字元）
+[2026-10-27 20:30:33] 開始生成 第 389 章（卷 5）：〈界河漏銅〉
+[2026-10-27 20:34:05] 完成第 389 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap389.md（長度：10645 字元）
+[2026-10-27 20:34:15] 開始生成 第 390 章（卷 5）：〈北使行程〉
+[2026-10-27 20:36:54] 完成第 390 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap390.md（長度：8020 字元）
+[2026-10-27 20:37:04] 開始生成 第 391 章（卷 5）：〈中都狂焰〉
+[2026-10-27 20:40:25] 完成第 391 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap391.md（長度：10250 字元）
+[2026-10-27 20:40:35] 開始生成 第 392 章（卷 5）：〈歲貢盤剝〉
+[2026-10-27 20:44:04] 完成第 392 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap392.md（長度：10940 字元）
+[2026-10-27 20:44:14] 開始生成 第 393 章（卷 5）：〈棗陽草釁〉
+[2026-10-27 20:47:28] 完成第 393 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap393.md（長度：10151 字元）
+[2026-10-27 20:47:38] 開始生成 第 394 章（卷 5）：〈北風甚勁〉
+[2026-10-27 20:51:17] 完成第 394 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap394.md（長度：11060 字元）
+[2026-10-27 20:51:27] 開始生成 第 395 章（卷 5）：〈淮東急章〉
+[2026-10-27 20:54:26] 完成第 395 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap395.md（長度：8739 字元）
+[2026-10-27 20:54:36] 開始生成 第 396 章（卷 5）：〈殿陛索土〉
+[2026-10-27 20:57:54] 完成第 396 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap396.md（長度：9674 字元）
+[2026-10-27 20:58:04] 開始生成 第 397 章（卷 5）：〈采石飛火〉
+[2026-10-27 21:02:43] 完成第 397 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap397.md（長度：10605 字元）
+[2026-10-27 21:02:53] 開始生成 第 398 章（卷 5）：〈內禪御筆〉
+[2026-10-27 21:06:14] 完成第 398 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap398.md（長度：10274 字元）
+[2026-10-27 21:06:24] 開始生成 第 399 章（卷 5）：〈昭雪棲霞〉
+[2026-10-27 21:09:18] 完成第 399 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap399.md（長度：8652 字元）
+[2026-10-27 21:09:28] 開始生成 第 400 章（卷 5）：〈帶刀來歸〉
+[2026-10-27 21:12:55] 完成第 400 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap400.md（長度：9819 字元）
+[2026-10-27 21:13:05] 開始生成 第 401 章（卷 5）：〈雄師出淮〉
+[2026-10-27 21:17:24] 完成第 401 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap401.md（長度：13592 字元）
+[2026-10-27 21:17:34] 開始生成 第 402 章（卷 5）：〈宿州裂隙〉
+[2026-10-27 21:20:47] 完成第 402 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap402.md（長度：9678 字元）
+[2026-10-27 21:20:57] 開始生成 第 403 章（卷 5）：〈符離之潰〉
+[2026-10-27 21:28:44] 完成第 403 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap403.md（長度：8772 字元）
+[2026-10-27 21:28:54] 開始生成 第 404 章（卷 5）：〈揚州奪印〉
+[2026-10-27 21:32:23] 完成第 404 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap404.md（長度：10573 字元）
+[2026-10-27 21:32:33] 開始生成 第 405 章（卷 5）：〈叔姪之邦〉
+[2026-10-27 21:35:33] 完成第 405 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap405.md（長度：8874 字元）
+[2026-10-27 21:35:43] 開始生成 第 406 章（卷 5）：〈義莊規矩〉
+[2026-10-27 21:38:56] 完成第 406 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap406.md（長度：10198 字元）
+[2026-10-27 21:39:06] 開始生成 第 407 章（卷 5）：〈建陽立約〉
+[2026-10-27 21:41:55] 完成第 407 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap407.md（長度：8671 字元）
+[2026-10-27 21:42:05] 開始生成 第 408 章（卷 5）：〈鵝湖鋒芒〉
+[2026-10-27 21:45:24] 完成第 408 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap408.md（長度：10885 字元）
+[2026-10-27 21:45:34] 開始生成 第 409 章（卷 5）：〈鏡湖襤褸〉
+[2026-10-27 21:48:53] 完成第 409 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap409.md（長度：10078 字元）
+[2026-10-27 21:49:03] 開始生成 第 410 章（卷 5）：〈鳴鐘抗役〉
+[2026-10-27 21:52:42] 完成第 410 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap410.md（長度：11488 字元）
+[2026-10-27 21:52:52] 開始生成 第 411 章（卷 5）：〈宗祠斷產〉
+[2026-10-27 21:55:20] 完成第 411 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap411.md（長度：7419 字元）
+[2026-10-27 21:55:30] 開始生成 第 412 章（卷 5）：〈徽嶺排木〉
+[2026-10-27 21:59:29] 完成第 412 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap412.md（長度：12730 字元）
+[2026-10-27 21:59:39] 開始生成 第 413 章（卷 5）：〈鎖廳試雲〉
+[2026-10-27 22:02:24] 完成第 413 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap413.md（長度：8494 字元）
+[2026-10-27 22:02:34] 開始生成 第 414 章（卷 5）：〈道學功利〉
+[2026-10-27 22:06:10] 完成第 414 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap414.md（長度：10912 字元）
+[2026-10-27 22:06:20] 開始生成 第 415 章（卷 5）：〈黃泛泥漚〉
+[2026-10-27 22:09:49] 完成第 415 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap415.md（長度：11144 字元）
+[2026-10-27 22:09:59] 開始生成 第 416 章（卷 5）：〈滁陽截流〉
+[2026-10-27 22:14:15] 完成第 416 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap416.md（長度：13269 字元）
+[2026-10-27 22:14:25] 開始生成 第 417 章（卷 5）：〈楮幣飛雪〉
+[2026-10-27 22:17:38] 完成第 417 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap417.md（長度：10155 字元）
+[2026-10-27 22:17:48] 開始生成 第 418 章（卷 5）：〈稱提暗盤〉
+[2026-10-27 22:21:01] 完成第 418 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap418.md（長度：9889 字元）
+[2026-10-27 22:21:11] 開始生成 第 419 章（卷 5）：〈浙東旱道〉
+[2026-10-27 22:25:28] 完成第 419 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap419.md（長度：12341 字元）
+[2026-10-27 22:25:38] 開始生成 第 420 章（卷 5）：〈常平空囷〉
+[2026-10-27 22:29:31] 完成第 420 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap420.md（長度：12281 字元）
+[2026-10-27 22:29:41] 開始生成 第 421 章（卷 5）：〈震澤破圍〉
+[2026-10-27 22:33:07] 完成第 421 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap421.md（長度：10651 字元）
+[2026-10-27 22:33:17] 開始生成 第 422 章（卷 5）：〈關子暗網〉
+[2026-10-27 22:37:00] 完成第 422 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap422.md（長度：10668 字元）
+[2026-10-27 22:37:10] 開始生成 第 423 章（卷 5）：〈山陵大匱〉
+[2026-10-27 22:40:34] 完成第 423 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap423.md（長度：9788 字元）
+[2026-10-27 22:40:44] 開始生成 第 424 章（卷 5）：〈法石祈風〉
+[2026-10-27 22:44:11] 完成第 424 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap424.md（長度：10594 字元）
+[2026-10-27 22:44:21] 開始生成 第 425 章（卷 5）：〈蕃坊合本〉
+[2026-10-27 22:49:06] 完成第 425 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap425.md（長度：11823 字元）
+[2026-10-27 22:49:16] 開始生成 第 426 章（卷 5）：〈湖田龍窯〉
+[2026-10-27 22:52:55] 完成第 426 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap426.md（長度：11305 字元）
+[2026-10-27 22:53:05] 開始生成 第 427 章（卷 5）：〈水密福舟〉
+[2026-10-27 22:56:35] 完成第 427 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap427.md（長度：10559 字元）
+[2026-10-27 22:56:45] 開始生成 第 428 章（卷 5）：〈正針渡海〉
+[2026-10-27 22:59:59] 完成第 428 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap428.md（長度：10299 字元）
+[2026-10-27 23:00:09] 開始生成 第 429 章（卷 5）：〈火藥提純〉
+[2026-10-27 23:03:57] 完成第 429 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap429.md（長度：11574 字元）
+[2026-10-27 23:04:07] 開始生成 第 430 章（卷 5）：〈荊江飛輪〉
+[2026-10-27 23:06:50] 完成第 430 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap430.md（長度：7956 字元）
+[2026-10-27 23:07:00] 開始生成 第 431 章（卷 5）：〈香藥折俸〉
+[2026-10-27 23:10:31] 完成第 431 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap431.md（長度：9995 字元）
+[2026-10-27 23:10:41] 開始生成 第 432 章（卷 5）：〈白浪天妃〉
+[2026-10-27 23:14:05] 完成第 432 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap432.md（長度：10896 字元）
+[2026-10-27 23:14:15] 開始生成 第 433 章（卷 5）：〈白山故壘〉
+[2026-10-27 23:18:06] 完成第 433 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap433.md（長度：11789 字元）
+[2026-10-27 23:18:16] 開始生成 第 434 章（卷 5）：〈猛安破產〉
+[2026-10-27 23:20:55] 完成第 434 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap434.md（長度：7711 字元）
+[2026-10-27 23:21:05] 開始生成 第 435 章（卷 5）：〈東平白蓮〉
+[2026-10-27 23:24:16] 完成第 435 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap435.md（長度：9689 字元）
+[2026-10-27 23:24:26] 開始生成 第 436 章（卷 5）：〈平泉弛弓〉
+[2026-10-27 23:28:24] 完成第 436 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap436.md（長度：11049 字元）
+[2026-10-27 23:28:34] 開始生成 第 437 章（卷 5）：〈章宗崇雅〉
+[2026-10-27 23:32:01] 完成第 437 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap437.md（長度：8216 字元）
+[2026-10-27 23:32:11] 開始生成 第 438 章（卷 5）：〈塹壘千里〉
+[2026-10-27 23:34:45] 完成第 438 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap438.md（長度：7933 字元）
+[2026-10-27 23:34:55] 開始生成 第 439 章（卷 5）：〈陽武崩瀾〉
+[2026-10-27 23:38:50] 完成第 439 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap439.md（長度：11592 字元）
+[2026-10-27 23:39:00] 開始生成 第 440 章（卷 5）：〈交鈔萬貫〉
+[2026-10-27 23:42:22] 完成第 440 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap440.md（長度：10159 字元）
+[2026-10-27 23:42:32] 開始生成 第 441 章（卷 5）：〈沂蒙暗火〉
+[2026-10-27 23:47:36] 完成第 441 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap441.md（長度：10119 字元）
+[2026-10-27 23:47:46] 開始生成 第 442 章（卷 5）：〈十三翼風〉
+[2026-10-27 23:51:46] 完成第 442 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap442.md（長度：12996 字元）
+[2026-10-27 23:51:56] 開始生成 第 443 章（卷 5）：〈西域駝鈴〉
+[2026-10-27 23:55:26] 完成第 443 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap443.md（長度：10110 字元）
+[2026-10-27 23:55:36] 開始生成 第 444 章（卷 5）：〈引狼入室〉
+[2026-10-27 23:58:24] 完成第 444 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap444.md（長度：9898 字元）
+[2026-10-27 23:58:34] 開始生成 第 445 章（卷 5）：〈蜀道邊報〉
+[2026-10-28 00:01:25] 完成第 445 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap445.md（長度：10019 字元）
+[2026-10-28 00:01:35] 開始生成 第 446 章（卷 5）：〈偽學逆榜〉
+[2026-10-28 00:05:00] 完成第 446 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap446.md（長度：10684 字元）
+[2026-10-28 00:05:10] 開始生成 第 447 章（卷 5）：〈千戶鐵騎〉
+[2026-10-28 00:08:22] 完成第 447 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap447.md（長度：10457 字元）
+[2026-10-28 00:08:32] 開始生成 第 448 章（卷 5）：〈追封鄂王〉
+[2026-10-28 00:12:09] 完成第 448 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap448.md（長度：10922 字元）
+[2026-10-28 00:12:19] 開始生成 第 449 章（卷 5）：〈襄樊空營〉
+[2026-10-28 00:15:23] 完成第 449 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap449.md（長度：9592 字元）
+[2026-10-28 00:15:33] 開始生成 第 450 章（卷 5）：〈覆頂暗影〉
+[2026-10-28 00:18:07] 完成第 450 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume5/chap450.md（長度：7905 字元）
+[2026-10-28 00:18:17] 開始生成 第 451 章（卷 6）：斡難風雲
+[2026-10-28 00:21:33] 完成第 451 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap451.md（長度：10501 字元）
+[2026-10-28 00:21:43] 開始生成 第 452 章（卷 6）：臨安籌兵
+[2026-10-28 00:25:24] 完成第 452 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap452.md（長度：10772 字元）
+[2026-10-28 00:25:34] 開始生成 第 453 章（卷 6）：泗州首捷
+[2026-10-28 00:28:38] 完成第 453 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap453.md（長度：9406 字元）
+[2026-10-28 00:28:48] 開始生成 第 454 章（卷 6）：蜀口變色
+[2026-10-28 00:31:18] 完成第 454 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap454.md（長度：7975 字元）
+[2026-10-28 00:31:28] 開始生成 第 455 章（卷 6）：興州斬逆
+[2026-10-28 00:34:38] 完成第 455 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap455.md（長度：9000 字元）
+[2026-10-28 00:34:48] 開始生成 第 456 章（卷 6）：玉津血案
+[2026-10-28 00:38:12] 完成第 456 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap456.md（長度：10556 字元）
+[2026-10-28 00:38:22] 開始生成 第 457 章（卷 6）：函首之約
+[2026-10-28 00:41:58] 完成第 457 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap457.md（長度：10744 字元）
+[2026-10-28 00:42:08] 開始生成 第 458 章（卷 6）：野狐嶺下
+[2026-10-28 00:45:01] 完成第 458 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap458.md（長度：8432 字元）
+[2026-10-28 00:45:11] 開始生成 第 459 章（卷 6）：關山烽火
+[2026-10-28 00:48:34] 完成第 459 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap459.md（長度：10339 字元）
+[2026-10-28 00:48:44] 開始生成 第 460 章（卷 6）：貞祐南渡
+[2026-10-28 00:51:42] 完成第 460 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap460.md（長度：8578 字元）
+[2026-10-28 00:51:52] 開始生成 第 461 章（卷 6）：歲幣中絕
+[2026-10-28 00:55:16] 完成第 461 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap461.md（長度：11603 字元）
+[2026-10-28 00:55:26] 開始生成 第 462 章（卷 6）：燕京煙滅
+[2026-10-28 00:58:40] 完成第 462 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap462.md（長度：9900 字元）
+[2026-10-28 00:58:50] 開始生成 第 463 章（卷 6）：以宋補金
+[2026-10-28 01:02:18] 完成第 463 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap463.md（長度：10390 字元）
+[2026-10-28 01:02:28] 開始生成 第 464 章（卷 6）：棗陽鐵壁
+[2026-10-28 01:05:52] 完成第 464 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap464.md（長度：11005 字元）
+[2026-10-28 01:06:02] 開始生成 第 465 章（卷 6）：紅襖風暴
+[2026-10-28 01:08:57] 完成第 465 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap465.md（長度：8741 字元）
+[2026-10-28 01:09:07] 開始生成 第 466 章（卷 6）：兩線煎熬
+[2026-10-28 01:09:12] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 1/8 次嘗試
+[2026-10-28 01:09:12]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 152h0m6s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 152h0m6s.","status":"RESOURCE_EXHAUST
+[2026-10-28 01:09:12]   [本機配額狀態]: gemini-5h 剩餘配額: 98.0%, 預計重設剩餘: 17182 秒
+[2026-10-28 01:09:12]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 30 秒後重試...
+[2026-10-28 01:09:45] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 2/8 次嘗試
+[2026-10-28 01:09:45]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h59m33s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h59m33s.","status":"RESOURCE_EXH
+[2026-10-28 01:09:45]   [本機配額狀態]: gemini-5h 剩餘配額: 98.0%, 預計重設剩餘: 17182 秒
+[2026-10-28 01:09:45]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 60 秒後重試...
+[2026-10-28 01:10:48] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 3/8 次嘗試
+[2026-10-28 01:10:48]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h58m30s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h58m30s.","status":"RESOURCE_EXH
+[2026-10-28 01:10:48]   [本機配額狀態]: gemini-5h 剩餘配額: 98.0%, 預計重設剩餘: 17182 秒
+[2026-10-28 01:10:48]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 90 秒後重試...
+[2026-10-28 01:12:22] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 4/8 次嘗試
+[2026-10-28 01:12:22]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h56m55s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h56m55s.","status":"RESOURCE_EXH
+[2026-10-28 01:12:22]   [本機配額狀態]: gemini-5h 剩餘配額: 98.0%, 預計重設剩餘: 17182 秒
+[2026-10-28 01:12:22]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 120 秒後重試...
+[2026-10-28 01:14:27] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 5/8 次嘗試
+[2026-10-28 01:14:27]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h54m50s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h54m50s.","status":"RESOURCE_EXH
+[2026-10-28 01:14:27]   [本機配額狀態]: gemini-5h 剩餘配額: 98.0%, 預計重設剩餘: 17182 秒
+[2026-10-28 01:14:27]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 150 秒後重試...
+[2026-10-28 01:17:00] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 6/8 次嘗試
+[2026-10-28 01:17:00]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h52m17s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h52m17s.","status":"RESOURCE_EXH
+[2026-10-28 01:17:00]   [本機配額狀態]: gemini-5h 剩餘配額: 98.0%, 預計重設剩餘: 17182 秒
+[2026-10-28 01:17:00]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 180 秒後重試...
+[2026-10-28 01:20:06] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 7/8 次嘗試
+[2026-10-28 01:20:06]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h49m12s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h49m12s.","status":"RESOURCE_EXH
+[2026-10-28 01:20:06]   [本機配額狀態]: gemini-5h 剩餘配額: 98.0%, 預計重設剩餘: 17182 秒
+[2026-10-28 01:20:06]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 180 秒後重試...
+[2026-10-28 01:23:10] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 8/8 次嘗試
+[2026-10-28 01:23:10]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h46m8s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 151h46m8s.","status":"RESOURCE_EXHAU
+[2026-10-28 01:23:10]   [本機配額狀態]: gemini-5h 剩餘配額: 98.0%, 預計重設剩餘: 17182 秒
+[2026-10-28 01:23:10]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 180 秒後重試...
+[2026-10-28 08:06:44] === 查詢已配置之帳號與即時配額 ===
+[2026-10-28 08:06:44] 
+[帳號別名: chen] -> 綁定 Google 帳號: chen.family.fs@gmail.com
+[2026-10-28 08:06:46]   模型群組                     配額週期 / 類型                    剩餘比例       重設時間
+[2026-10-28 08:06:46]   ---------------------------------------------------------------------------
+[2026-10-28 08:06:46]   Gemini Models            Weekly Limit Remaining       72%        2026-11-01T12:34:33Z
+[2026-10-28 08:06:46]   Gemini Models            Five Hour Limit Remaining    100%       2026-10-28T05:06:46Z
+[2026-10-28 08:06:46]   Claude and GPT models    Weekly Limit Remaining       42%        2026-10-30T06:25:27Z
+[2026-10-28 08:06:46]   Claude and GPT models    Five Hour Limit Remaining    100%       2026-10-28T05:06:46Z
+[2026-10-28 08:06:46]   Gemini 4 Argon           Gemini 4 Argon Weekly Limit  0%         2026-11-01T02:40:44Z
+[2026-10-28 08:06:46] 
+[帳號別名: wade] (預設執行帳號) -> 綁定 Google 帳號: wade.fs@gmail.com
+[2026-10-28 08:06:49]   模型群組                     配額週期 / 類型                    剩餘比例       重設時間
+[2026-10-28 08:06:49]   ---------------------------------------------------------------------------
+[2026-10-28 08:06:49]   Gemini Models            Weekly Limit Remaining       86%        2026-11-03T00:11:49Z
+[2026-10-28 08:06:49]   Gemini Models            Five Hour Limit Remaining    98%        2026-10-28T05:04:57Z
+[2026-10-28 08:06:49]   Claude and GPT models    Weekly Limit Remaining       100%       2026-11-03T09:04:38Z
+[2026-10-28 08:06:49]   Claude and GPT models    Five Hour Limit Remaining    100%       2026-10-28T05:06:48Z
+[2026-10-28 08:06:49]   Gemini 4 Argon           Gemini 4 Argon Weekly Limit  0%         2026-11-03T01:09:18Z
+[2026-10-28 08:07:22] === 查詢已配置之帳號與即時配額 ===
+[2026-10-28 08:07:22] 
+[帳號別名: chen] -> 綁定 Google 帳號: chen.family.fs@gmail.com
+[2026-10-28 08:07:25]   模型群組                     配額週期 / 類型                    剩餘比例       重設時間
+[2026-10-28 08:07:25]   ---------------------------------------------------------------------------
+[2026-10-28 08:07:25]   Gemini Models            Weekly Limit Remaining       72%        2026-11-01T12:34:33Z
+[2026-10-28 08:07:25]   Gemini Models            Five Hour Limit Remaining    100%       2026-10-28T05:07:24Z
+[2026-10-28 08:07:25]   Claude and GPT models    Weekly Limit Remaining       42%        2026-10-30T06:25:27Z
+[2026-10-28 08:07:25]   Claude and GPT models    Five Hour Limit Remaining    100%       2026-10-28T05:07:24Z
+[2026-10-28 08:07:25]   Gemini 4 Argon           Gemini 4 Argon Weekly Limit  0%         2026-11-01T02:40:44Z
+[2026-10-28 08:07:25] 
+[帳號別名: wade] (預設執行帳號) -> 綁定 Google 帳號: wade.fs@gmail.com
+[2026-10-28 08:07:28]   模型群組                     配額週期 / 類型                    剩餘比例       重設時間
+[2026-10-28 08:07:28]   ---------------------------------------------------------------------------
+[2026-10-28 08:07:28]   Gemini Models            Weekly Limit Remaining       86%        2026-11-03T00:11:49Z
+[2026-10-28 08:07:28]   Gemini Models            Five Hour Limit Remaining    98%        2026-10-28T05:04:57Z
+[2026-10-28 08:07:28]   Claude and GPT models    Weekly Limit Remaining       100%       2026-11-03T09:04:38Z
+[2026-10-28 08:07:28]   Claude and GPT models    Five Hour Limit Remaining    100%       2026-10-28T05:07:28Z
+[2026-10-28 08:07:28]   Gemini 4 Argon           Gemini 4 Argon Weekly Limit  0%         2026-11-03T01:09:18Z
+[2026-10-28 08:07:59] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-28 08:07:59] 執行帳號: 預設隔離帳號（wade.fs@gmail.com 優先）
+[2026-10-28 08:07:59] 成功解析全書章綱共 720 章。
+[2026-10-28 08:07:59] 目前已存在完整章節數：465 / 720，缺失章節數：255
+[2026-10-28 08:07:59] 自動偵測首個缺失章節：從第 466 章開始執行補寫。
+[2026-10-28 08:07:59] 開始生成 第 466 章（卷 6）：兩線煎熬
+[2026-10-28 08:08:02] agy 返回非零或字數過短 (code 3, 輸出長度 0) 第 1/8 次嘗試
+[2026-10-28 08:08:02]   [agy stderr 提示]: error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 145h1m16s.
+AGY_ERROR: {"short_error":"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 145h1m16s.","status":"RESOURCE_EXHAU
+[2026-10-28 08:08:02]   偵測到配額/速率限制 (code 3 / 429)，啟動保護性冷卻：等待 30 秒後重試...
+[2026-10-28 08:10:58] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-28 08:10:58] 執行帳號: 預設隔離帳號（wade.fs@gmail.com 優先）
+[2026-10-28 08:10:58] 指定呼叫模型: gemini-3.8-flash-high
+[2026-10-28 08:10:58] 成功解析全書章綱共 720 章。
+[2026-10-28 08:10:58] 目前已存在完整章節數：465 / 720，缺失章節數：255
+[2026-10-28 08:10:58] 自動偵測首個缺失章節：從第 466 章開始執行補寫。
+[2026-10-28 08:10:58] --- [Dry Run 模式] ---
+[2026-10-28 08:10:58] 執行範圍: 第 466 章 ～ 第 720 章 (force=False)
+[2026-10-28 08:10:58] 缺失章節前 15 項: [466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480]...
+[2026-10-28 08:10:58] Dry run 結束。
+[2026-10-28 08:11:03] === 《宋末》antigravity-cli 原生寫書守護進程啟動（完全免 API KEY） ===
+[2026-10-28 08:11:03] 執行帳號: 預設隔離帳號（wade.fs@gmail.com 優先）
+[2026-10-28 08:11:03] 指定呼叫模型: gemini-3.8-flash-high
+[2026-10-28 08:11:03] 成功解析全書章綱共 720 章。
+[2026-10-28 08:11:03] 目前已存在完整章節數：465 / 720，缺失章節數：255
+[2026-10-28 08:11:03] 自動偵測首個缺失章節：從第 466 章開始執行補寫。
+[2026-10-28 08:11:03] 開始生成 第 466 章（卷 6）：兩線煎熬
+[2026-10-28 08:14:10] 完成第 466 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume6/chap466.md（長度：8370 字元）
+[2026-10-28 08:14:20] 目前執行至第 466 章（全書完成 466/720），進程結束。
