@@ -1707,3 +1707,5 @@ AGY_ERROR: {"short_error":"INVALID_ARGUMENT (code 400): Request contains an inva
 [2026-10-28 19:23:40] 開始生成 第 720 章（卷 8）：尾聲·海潮有淚，日月重開
 [2026-10-28 19:26:07] 完成第 720 章寫入：/home/wade/src/github/novel2movie/song/chapters/volume8/chap720.md（長度：8031 字元）
 [2026-10-28 19:26:17] === 狂賀！全書 720 章已全部撰寫完成！進行一次性 Git 提交與推播 ===
+[2026-10-28 19:26:21] 全書 720 章 Git 提交與推播成功！
+[2026-10-28 19:26:21] 最後執行磁碟休眠命令: echo disk | sudo tee /sys/power/state
