@@ -3,6 +3,7 @@
 """
 《明末清初》全書群像長篇歷史小說（九卷規劃）全自動循序撰寫指令碼
 使用本機 antigravity-cli (agy -p) 原生模型生成，完全不使用任何外部 GEMINI_API_KEY。
+每章 prompt 會附上 chapter_writer_rules.md 全文、outline.md 節錄、前一章結尾與下一章章綱，並在產出後依規範驗收（標題、六項工作紀錄、字數、時代錯置警告），未通過者退稿重寫。
 支援指定起始章節、缺章自動偵測與回補（Gap Detection）、智慧略過已存在章節、Dry Run 預覽，
 待全書完成後，一次性執行 git commit & git push，並可選磁碟休眠。
 """
@@ -342,7 +343,7 @@ def call_agy_cli(prompt, max_retries=8, model=None, account=None):
                 cmd.extend(["--model", model])
             cmd.extend(["-p", prompt])
 
-            res = subprocess.run(cmd, capture_output=True, text=True, env=env)
+            res = subprocess.run(cmd, capture_output=True, text=True, env=env, cwd=REPO_DIR)
             output = res.stdout.strip()
             stderr_msg = res.stderr.strip()
 
@@ -383,56 +384,252 @@ def call_agy_cli(prompt, max_retries=8, model=None, account=None):
 
     raise RuntimeError(f"在 {max_retries} 次重試後 agy 調用依然失敗。建議檢查配額或稍後重試。")
 
-def generate_chapter(chap_num, volume_num, title, outline, model=None, account=None):
-    """
-    依據《明末清初逐章寫手規範》將章綱擴寫成正式小說章節。
-    """
-    cn_title = f"第{to_cn(chap_num)}章　{title}"
-    log(f"開始生成 第 {chap_num} 章（卷 {volume_num}）：{title}")
+# ---------------------------------------------------------------------------
+# 規範載入、上下文銜接與產出驗收
+# ---------------------------------------------------------------------------
+RULES_FILE = os.path.join(BASE_DIR, "chapter_writer_rules.md")
+OUTLINE_FILE = os.path.join(BASE_DIR, "outline.md")
+MAX_PROMPT_BYTES = 110000  # Linux 單一 argv 上限 131072 bytes，保留餘裕
 
+# 章後工作紀錄必備六項（chapter_writer_rules.md 第 16.5 節）
+RECORD_TAGS = ["【史實骨架】", "【待核事項】", "【合理推演】", "【小說虛構】", "【連續性變更】", "【後續銜接】"]
+
+# 僅發出警告、不退稿的時代錯置/待核檢查（見 chapter_writer_rules.md 第 5.2、5.5 節）
+WARN_PATTERNS = [
+    (r"莊妃.{0,60}洪承疇|洪承疇.{0,60}莊妃", "莊妃勸降洪承疇屬【後世傳聞】，不得寫成事實"),
+    (r"軍機處", "軍機處設於雍正朝（1729–1732），須確認是否時代錯置"),
+    (r"鄭克[𡒉臧].{0,12}(非|不是).{0,6}親生", "血統指控屬【政治指控／待核】，須寫成政敵主張而非事實"),
+    (r"(明朝|大明|明室).{0,8}(必亡|注定滅亡|氣數已盡)", "避免把明亡寫成當時人眼中的必然（規範 4.2、16.3）"),
+]
+
+_spec_cache = {}
+
+
+def read_text(path):
+    if path not in _spec_cache:
+        with open(path, "r", encoding="utf-8") as f:
+            _spec_cache[path] = f.read()
+    return _spec_cache[path]
+
+
+def load_rules():
+    """逐章寫手規範全文（chapter_writer_rules.md）。缺檔即中止，避免無規範寫作。"""
+    if not os.path.exists(RULES_FILE):
+        raise FileNotFoundError(f"找不到寫作規範 {RULES_FILE}，無法在無規範狀態下寫作。")
+    return read_text(RULES_FILE)
+
+
+def load_outline_context(volume_num):
+    """自 outline.md 取出：一、全書敘事定位；二、基本寫作原則；本卷段落；十二、九卷銜接。"""
+    if not os.path.exists(OUTLINE_FILE):
+        return ""
+    text = read_text(OUTLINE_FILE)
+    # 以「## 」二級標題切段
+    parts = re.split(r"(?m)^(?=## )", text)
+    picked = []
+    cn_vol = to_cn(volume_num)
+    for part in parts:
+        head = part.splitlines()[0] if part.strip() else ""
+        if head.startswith("## 一、") or head.startswith("## 二、") or head.startswith("## 十二、"):
+            picked.append(part.strip())
+        elif re.search(r"第" + cn_vol + r"卷", head):
+            picked.append(part.strip())
+    return "\n\n".join(picked)
+
+
+def split_body_and_record(content):
+    """切出正文與章後工作紀錄。"""
+    m = re.search(r"(?m)^#{1,3}\s*章後工作紀錄", content)
+    if not m:
+        return content, ""
+    return content[:m.start()], content[m.start():]
+
+
+def read_chapter_file(chap_num, outlines):
+    if chap_num not in outlines:
+        return None
+    vol = outlines[chap_num][0]
+    path = os.path.join(CHAPTERS_DIR, f"volume{vol}", f"chap{chap_num:03d}.md")
+    if os.path.exists(path) and os.path.getsize(path) > 1000:
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read()
+    return None
+
+
+def build_continuity(chap_num, outlines):
+    """前一章結尾與後續銜接、下一章章綱，供本章銜接使用。"""
+    chunks = []
+    prev = read_chapter_file(chap_num - 1, outlines)
+    if prev:
+        body, record = split_body_and_record(prev)
+        tail = body.rstrip().rstrip("-").rstrip()[-500:]
+        chunks.append(f"【前一章（第 {chap_num - 1} 章）正文結尾（最後約 500 字）】\n{tail}")
+        m = re.search(r"【後續銜接】[：:\s*]*(.+?)(?:\n\n|\Z)", record, re.S)
+        if m:
+            chunks.append("【前一章工作紀錄中的【後續銜接】（本章必須承接）】\n" + m.group(1).strip()[:400])
+        m = re.search(r"【連續性變更】[：:\s*]*(.+?)(?:\n\s*[-*]*\s*\*{0,2}【|\Z)", record, re.S)
+        if m:
+            chunks.append("【前一章【連續性變更】】\n" + m.group(1).strip()[:400])
+    elif chap_num == 1 or (chap_num - 1) not in outlines:
+        chunks.append("【前一章】本章為全書（或本卷銜接點）首章，無前章承接；依章綱開篇。")
+    else:
+        chunks.append(f"【前一章】第 {chap_num - 1} 章尚未生成，依章綱開篇。")
+
+    if (chap_num + 1) in outlines:
+        _, ntitle, nout = outlines[chap_num + 1]
+        chunks.append(f"【下一章（第 {chap_num + 1} 章）章綱摘要（本章末提供銜接，不可提前劇透）】\n"
+                      f"章名：{ntitle}\n{nout.strip()[:400]}")
+    return "\n\n".join(chunks)
+
+
+def validate_chapter(content, chap_num, cn_title):
+    """
+    驗收（chapter_writer_rules.md 第十三、十四章的可程式化部分）。
+    回傳 (errors, warnings)。errors 非空則退稿重寫。
+    """
+    errors, warnings = [], []
+    lines = [ln for ln in content.splitlines() if ln.strip()]
+    first = lines[0].strip() if lines else ""
+    expected_prefix = f"# 第{to_cn(chap_num)}章"
+    if not first.startswith(expected_prefix):
+        errors.append(f"第一行標題必須以「{expected_prefix}」開頭（目前為：{first[:30]}）")
+
+    body, record = split_body_and_record(content)
+    if not record:
+        errors.append("缺少「## 章後工作紀錄」")
+    else:
+        pos = -1
+        for tag in RECORD_TAGS:
+            i = record.find(tag, pos + 1)
+            if i == -1:
+                errors.append(f"章後工作紀錄缺少或順序錯誤：{tag}")
+            else:
+                pos = i
+
+    body_len = len(re.sub(r"\s+", "", body))
+    if body_len < 2500:
+        errors.append(f"正文過短（約 {body_len} 字，規範為 3,000–5,000 字）")
+    elif body_len > 9000:
+        warnings.append(f"正文偏長（約 {body_len} 字，規範為 3,000–5,000 字，重要轉折章可適度延長）")
+
+    # 正文不得混入編輯註記或評分（規範第十四章）
+    for bad in ("品質評分", "硬性條件檢查", "驗收結果", "工作卡"):
+        if bad in body:
+            errors.append(f"正文混入編輯內容：「{bad}」")
+            break
+    for tag in ("**保住：**", "**失去：**", "**入日常：**", "保住——", "入日常——"):
+        if tag in body:
+            errors.append("正文把「四問」逐項標題式寫出（規範 3.3 禁止）")
+            break
+
+    for pat, msg in WARN_PATTERNS:
+        if re.search(pat, body):
+            warnings.append(msg)
+    return errors, warnings
+
+
+def strip_code_fence(text):
+    """模型偶爾把全文包在 ``` 中，去除外層圍欄。"""
+    t = text.strip()
+    m = re.match(r"^```[a-zA-Z]*\n(.*)\n```$", t, re.S)
+    return m.group(1).strip() if m else t
+
+
+def build_prompt(chap_num, volume_num, title, outline, outlines, feedback=None):
+    cn_title = f"第{to_cn(chap_num)}章　{title}"
     clean_outline = (
         outline.replace("姦淫", "殘害逼迫")
                .replace("強姦", "殘害")
                .replace("屠戮俘虜", "嚴酷處置俘虜")
     )
+    continuity = build_continuity(chap_num, outlines)
 
-    prompt = f"""你是一名嚴謹宏大的歷史小說家與明代、清初史、南明史及台灣早期史學者，正在創作史詩群像長篇歷史小說《明末清初》（九卷規劃，1624–1722）。
-請嚴格依據《逐章寫手規範》與明末清初歷史制度背景，將指定章綱擴寫成具有沉浸敘事、厚重歷史感、鮮活人物行動與生活質感的小說章節。
+    fb = ""
+    if feedback:
+        fb = "\n【上一次產出被退稿的原因，本次必須全部修正】\n" + "\n".join(f"- {e}" for e in feedback) + "\n"
 
-【寫作核心定位】：
-1. 不以單純戰術推演或戰場殺戮為主要內容，而是透過人物的政治選擇、官職升降、徵糧籌餉、三餉加派、物價波動、書信往來、戶籍路引、漕運海運、家族離散、移民開墾、地方治理與文化延續，展現王朝興亡與歷史大勢如何滲透並主宰日常生活。
-2. 拒絕預設忠奸臉譜：將歷史人物放回當時的資訊條件、政治制度、家族責任、經濟壓力與可行選項中，展現人物在時代局限下的兩難抉擇與命運代價。
-3. 嚴謹區分【史實骨架】、【合理推演】與【小說虛構】：不得擅改已確認的重大歷史事件與人物行蹤，虛構情節須嚴格服從生活常理與歷史邏輯。
-4. 台灣海疆獨立敘事主體：若本章涉及海疆、東寧或台灣，須呈現原住民族社會、荷蘭/西班牙殖民網絡、福建海商、鄭氏政權與地方開墾之自身歷史脈絡，拒絕將台灣僅寫成中原政權的附屬背景。
+    prompt = f"""你是一名嚴謹宏大的歷史小說家與明末清初歷史學者，正在創作史詩群像長篇歷史小說《明末清初》（全書共九卷，810章，1624–1722）。
+請嚴格依據《逐章寫手規範》將章綱擴寫成具有沉浸敘事、厚重歷史感、鮮活人物行動的小說章節。
 
 【寫作強制規範】：
 1. 標題格式必須為第一行：`# {cn_title}`
-2. 正文篇幅：必須達到 3,000 ～ 5,000 字（絕不可摘要、速寫或跳過細節，務求飽滿詳實，描摹具體生動）。
+2. 正文篇幅：約 3,000 ～ 5,000 字（絕不可摘要、速寫或跳過細節，務求場面詳實、微觀飽滿）。
 3. 敘事原則：
-   - 嚴格鎖定指定視角人物，去神化、拒絕上帝視角與現代術語（嚴禁現代學術名詞與心理學詞彙）。
-   - 沉浸式感官細節：聲音、氣味、光線、風霜雨雪、服飾材質、泥濘道路、市井叫賣、海潮鹹澀、火銃硝煙、兵刃甲冑質感。
-   - 制度與名物嚴謹：
-     * 明廷/南明：內閣、六部、司禮監、錦衣衛、東廠、督撫、兵備道、知府、知縣、胥吏、巡檢；公文程式（奏摺、題本、奏本、檄文、牌票、路引、照會、信劄）。
-     * 清初/後金：內三院、議政王大臣會議、六部、旗制（八旗滿洲/蒙古/漢軍、牛錄、甲喇、固山）、綠營、總督、巡撫、提督、總兵。
-     * 鄭氏東寧：承天府、安平鎮、天興縣、萬年縣、六官體系；荷蘭熱蘭遮城長官、大員評議會。
-     * 經濟與民生：白銀成色（紋銀、碎銀、火耗、銀錠）、制錢成色與錢價比價、糧價（石、斗、升）、三餉（遼餉、剿餉、練餉）、鹽引、茶引、遷界令下流亡生計。
-   - 將「四問」（保住、失去、入日常、章末變化）自然融入情節與人物行動，不可生硬列點。
-4. 正文結束後空行，使用 `---` 分隔線。
-5. 必須完整附帶 `## 章後工作紀錄`，包含以下六項（每項皆需詳細展開）：
-   - **【史實骨架】：** 結合文獻（《明史》、《清史稿》、《明季北略》、《明季南略》、《小腆紀年》、《南明史》、《臺灣通史》、《海紀輯要》等）標註本章事件、人物行蹤與制度背景。
-   - **【待核事項】：** 列出本章涉及的細節考證與時間、官制、地名、銀錢、文書疑點。
-   - **【合理推演】：** 解釋本章如何依據歷史邏輯推導未載於史冊的人事互動、基層資訊傳播、物資流動與心理動機。
-   - **【小說虛構】：** 標記本章虛構人物、微觀衝突、家族生活與戲劇細節。
-   - **【連續性變更】：** 說明本章人物狀態、物資、關係、職位相較前文之變化。
-   - **【後續銜接】：** 說明本章結尾如何與後續歷史事件及下一章自然銜接。
+   - 嚴格鎖定指定視角人物，去神化、拒絕上帝視角、嚴禁現代術語及「明朝必亡」歷史宿命論俯瞰。
+   - 沉浸式感官與名物：聲音、氣味、光線、風霜、服飾材質、宮闕官署、兵刃火器、泥濘街道與器物磨損。
+   - 制度與基層日常：明清官制公文程式（司禮監票擬批紅、通政司疏奏、諭旨廷推、綠營與八旗牛錄、海關餉道）、貨幣成色（紋銀、雜色銀、銅錢、火耗）、糧草轉運與民生苦難。
+   - 貫徹「四問」（自然融入情節與行動，嚴禁在正文中寫出「四問」標題）：
+     * 保住：視角人物在本章竭力想守住什麼利益、身分或權力？
+     * 失去：角色面臨失去什麼庇護、退路或代價？
+     * 入日常：日常微觀事物（燈燭、飲食、傷藥、文牒、馬料、薪炭）如何反映大局震盪？
+     * 章末：結尾定格具象畫面，留下張力。
+   - 待核與爭議史實約束（《逐章寫手規範》5.2 節）：
+     * 嚴禁將待核項目（如莊妃勸降、弘光/鄭成功死期爭議、康熙朝軍機處等時代錯置）寫成確定史實；正文一律保持模糊客觀或呈現多方揣測。
+4. 正文結束後空一行，寫 `---` 分隔線。
+5. 必須完整附帶 `## 章後工作紀錄`，依序包含以下六項（每項皆需詳細展開）：
+   - **【史實骨架】：** 標註本章涉及之真實歷史事件、人物行蹤與制度背景。
+   - **【待核事項】：** 列出本章涉及之爭議考證、官職日期疑點。
+   - **【合理推演】：** 說明如何依歷史邏輯補足未載於史冊的人事互動與基層傳播。
+   - **【小說虛構】：** 標註本章虛構人物、微觀衝突、對話與道具細節。
+   - **【連續性變更】：** 說明本章角色狀態、關係、物資相較前文之重大變化。
+   - **【後續銜接】：** 說明本章結尾如何承先啟後，為下一章鋪墊登場條件。
 
 【本章所屬卷別】：第 {volume_num} 卷
 【本章章綱資料】：
 {clean_outline}
 
-請直接輸出完整 markdown 文本，不可省略，不要任何無關開場白或結束語。
+【前後文銜接】：
+{continuity}
+{fb}
+請直接輸出完整 markdown 文本，不要任何開場白、結語，也不要用程式碼區塊包住全文。
 """
-    content = call_agy_cli(prompt, model=model, account=account)
+    return prompt
+
+
+def generate_chapter(chap_num, volume_num, title, outline, model=None, account=None,
+                     outlines=None, lenient=False, max_quality_retries=3):
+    """
+    依據 ming/chapter_writer_rules.md 與 outline.md，將章綱擴寫成正式小說章節。
+    產出須通過 validate_chapter；未通過者附回饋重寫，最多 max_quality_retries 次。
+    """
+    outlines = outlines or {}
+    cn_title = f"第{to_cn(chap_num)}章　{title}"
+    log(f"開始生成 第 {chap_num} 章（卷 {volume_num}）：{title}")
+
+    feedback = None
+    content = ""
+    for attempt in range(1, max_quality_retries + 1):
+        prompt = build_prompt(chap_num, volume_num, title, outline, outlines, feedback)
+        size = len(prompt.encode("utf-8"))
+        if size > MAX_PROMPT_BYTES:
+            log(f"  提示詞 {size} bytes 超過上限 {MAX_PROMPT_BYTES}，改用精簡版（略去總綱節錄）。")
+            prompt = prompt.replace(load_outline_context(volume_num), "（因長度限制略，請自行讀取 ming/outline.md）")
+            size = len(prompt.encode("utf-8"))
+            if size > 125000:
+                raise RuntimeError(f"提示詞仍達 {size} bytes，超過 argv 上限，請縮減規範或章綱。")
+        log(f"  提示詞 {size} bytes，第 {attempt}/{max_quality_retries} 次品質嘗試")
+
+        content = strip_code_fence(call_agy_cli(prompt, model=model, account=account))
+        errors, warnings = validate_chapter(content, chap_num, cn_title)
+        for w in warnings:
+            log(f"  [警告] 第 {chap_num} 章：{w}")
+        if not errors:
+            break
+        for e in errors:
+            log(f"  [退稿原因] 第 {chap_num} 章：{e}")
+        feedback = errors
+    else:
+        rej_dir = os.path.join(CHAPTERS_DIR, "_rejected")
+        os.makedirs(rej_dir, exist_ok=True)
+        rej_path = os.path.join(rej_dir, f"chap{chap_num:03d}.md")
+        with open(rej_path, "w", encoding="utf-8") as f:
+            f.write(content + "\n")
+        if not lenient:
+            raise RuntimeError(
+                f"第 {chap_num} 章連續 {max_quality_retries} 次未通過驗收，已存至 {rej_path}。"
+                f"請檢查後以 --lenient 接受草稿，或調整規範後重跑。"
+            )
+        log(f"  [lenient] 第 {chap_num} 章未通過驗收，仍依 --lenient 寫入。草稿副本：{rej_path}")
 
     vol_dir = os.path.join(CHAPTERS_DIR, f"volume{volume_num}")
     os.makedirs(vol_dir, exist_ok=True)
@@ -469,6 +666,7 @@ def parse_args():
     parser.add_argument("--force", "-f", action="store_true", help="強制重新生成已存在且完整（>1000位元組）的章節")
     parser.add_argument("--dry-run", action="store_true", help="僅檢查當前各卷章節與缺失狀況，不執行生成")
     parser.add_argument("--no-hibernate", action="store_true", help="全書完成後不執行休眠")
+    parser.add_argument("--lenient", action="store_true", help="章節連續未通過驗收時仍寫入（預設為停止並存入 chapters/_rejected/）")
     return parser.parse_args()
 
 def scan_chapters(outlines):
@@ -516,6 +714,8 @@ def main():
     else:
         log("執行帳號: 預設隔離帳號（wade.fs@gmail.com 優先）")
     log(f"指定呼叫模型: {args.model}")
+    rules_text = load_rules()
+    log(f"已載入寫作規範：{os.path.basename(RULES_FILE)}（{len(rules_text)} 字元）；每章將附上規範全文、總綱節錄、前一章結尾與下一章章綱。")
     outlines = load_outlines()
 
     total_outlined = len(outlines)
@@ -564,7 +764,8 @@ def main():
             log(f"第 {chap_num} 章已存在且完整（{os.path.getsize(expected_path)} bytes），略過。")
             continue
 
-        generate_chapter(chap_num, vol_num, title, outline, model=args.model, account=args.account)
+        generate_chapter(chap_num, vol_num, title, outline, model=args.model, account=args.account,
+                         outlines=outlines, lenient=args.lenient)
         existing_chapters.add(chap_num)
         update_progress(chap_num, status="running")
 
