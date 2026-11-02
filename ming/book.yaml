@@ -1,0 +1,83 @@
+project:
+  id: ming
+  name: 明末清初歷史小說
+  subtitle: 海上悲歌・故國潮聲
+  series: 千載風雲
+  type: historical_fiction
+  domain_agent: writing
+  language: zh-TW
+  era: 明末清初 (1624–1722 年)
+  status: in_progress
+  tags:
+    - 南明
+    - 清初
+    - 鄭氏海疆
+    - 孤臣遺民
+    - 歷史群像
+
+scale:
+  total_volumes: 9
+  total_chapters: 810
+  chapters_per_volume: 90
+  volume_structure: files
+
+structure:
+  outline: outline.md
+  volumes: .
+  chapters: chapters/
+  timeline: chronology_and_fact_checks.md
+  characters: characters.md
+  character_network: relationships.md
+  evidence_review: historical_evidence_review.md
+  bibliography: source_bibliography.md
+  geography: social_geography.md
+  social_systems: social_systems_and_daily_life.md
+  research_qa: research_workflow.md
+  rules: chapter_writer_rules.md
+  scripts:
+    - generate_novel.py
+
+writing_policy:
+  historical_accuracy: strict
+  battle_tactics_focus: false
+  narrative_dimensions:
+    - 政權與制度（皇帝、官僚、軍政體系、財政法令）
+    - 人物與利益（忠誠、仕途、生存家族、交易妥協）
+    - 社會與生活（糧價、徵發、交通遷徙、海疆生活）
+  classifications:
+    - historical_fact
+    - reasonable_inference
+    - fictional_content
+  preserve_historical_figures: true
+  require_consistency_check: true
+  anti_anachronism: true
+  anti_teleportation: true
+  information_boundary: true
+
+authority:
+  confirmed_settings: author_adjudication
+  historical_facts: multi_source_verified
+  unresolved_questions: never_assume_verified
+  adjudications:
+    - 全九卷810章史實考證以29項主編裁決為準
+    - 卷題年代與歷史進程精確對齊
+
+storage:
+  type: filesystem
+  root: /opt/src/github/novel2movie/ming
+
+version_control:
+  type: git
+  enabled: true
+  default_branch: main
+
+governance:
+  direct_main_write: false
+  require_diff_review: true
+  require_human_approval_for_major_changes: true
+
+continuity:
+  enabled: true
+
+memory:
+  enabled: true

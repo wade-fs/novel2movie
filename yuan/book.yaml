@@ -1,0 +1,81 @@
+project:
+  id: yuan
+  name: 元末明初歷史群像小說
+  subtitle: 志在山河・山河易旌
+  series: 千載風雲
+  type: dual_world_historical
+  domain_agent: writing
+  language: zh-TW
+  era: 元末明初 (1328–1368 年)
+  status: in_progress
+  tags:
+    - 元末
+    - 群雄逐鹿
+    - 雙世界
+    - 民俗神秘
+    - 歷史群像
+
+scale:
+  total_volumes: 6
+  total_chapters: 540
+  chapters_per_volume: 90
+  volume_structure: files
+
+structure:
+  outline: outline.md
+  volumes: .
+  chapters: chapters/
+  characters: characters.md
+  rules: chapter_writer_rules.md
+  guidelines: laboratory_writing_guidelines.md
+
+laboratory:
+  enabled: true
+  perspective: 外星文明人類觀測實驗室
+  specification: laboratory.md
+  guidelines: laboratory_writing_guidelines.md
+  non_interference: true
+
+writing_policy:
+  historical_accuracy: high
+  battle_tactics_focus: false
+  narrative_dimensions:
+    - 舊秩序瓦解與帝國續命
+    - 群雄煽動與紅塵求存
+    - 新秩序建立與吞噬重塑
+    - 民俗神秘與方外穿線
+  classifications:
+    - historical_fact
+    - reasonable_inference
+    - fictional_content
+  preserve_historical_figures: true
+  require_consistency_check: true
+  anti_anachronism: true
+  anti_teleportation: true
+
+authority:
+  confirmed_settings: user_approved
+  historical_facts: evidence_required
+  unresolved_questions: never_assume_verified
+  adjudications:
+    - 非戰場中心，以民生糧價、徵發官文、難民流動與民間信仰呈現天下大勢
+
+storage:
+  type: filesystem
+  root: /opt/src/github/novel2movie/yuan
+
+version_control:
+  type: git
+  enabled: true
+  default_branch: main
+
+governance:
+  direct_main_write: false
+  require_diff_review: true
+  require_human_approval_for_major_changes: true
+
+continuity:
+  enabled: true
+
+memory:
+  enabled: true

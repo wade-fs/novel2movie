@@ -1,0 +1,85 @@
+project:
+  id: tang
+  name: 唐末
+  subtitle: 上冊｜長安秋暮，下冊｜中原風雲
+  series: 千載風雲
+  type: dual_world_historical
+  domain_agent: writing
+  language: zh-TW
+  era: 唐末五代至宋初 (875–979 年)
+  status: in_progress
+  tags:
+    - 晚唐
+    - 五代十國
+    - 雙世界
+    - 歷史群像
+
+scale:
+  total_volumes: 16
+  total_chapters: 1440
+  chapters_per_volume: 90
+  volume_structure: files
+
+structure:
+  outline: outline.md
+  volumes_plan: volumes.md
+  timeline_audit: timeline_audit.md
+  chapter_ledger: chapter_ledger.md
+  characters: character_lifecycle.md
+  character_lifecycle: character_lifecycle.md
+  character_network: character_network.md
+  geography: historical_geography.md
+  social_systems: institutions_and_daily_life.md
+
+laboratory:
+  enabled: true
+  perspective: 外星文明人類觀測實驗室（雙世界交錯，人類不知實驗室存在，外星研究者不干預歷史）
+  specification: laboratory.md
+  volume_map: laboratory_volume_map.md
+  integration: volumes_lab_integration.md
+  non_interference: true
+
+writing_policy:
+  historical_accuracy: high
+  battle_tactics_focus: false
+  narrative_dimensions:
+    - 中原主線（唐廷、藩鎮、五代政權、宋初）
+    - 河東與北方線（沙陀勢力、契丹、北漢）
+    - 南方諸國線（吳、南唐、吳越、前後蜀、閩楚南漢）
+  classifications:
+    - historical_fact
+    - reasonable_inference
+    - fictional_content
+  preserve_historical_figures: true
+  require_consistency_check: true
+  anti_anachronism: true
+  anti_teleportation: true
+  information_boundary: true
+
+authority:
+  confirmed_settings: user_approved
+  historical_facts: multi_source_verified
+  unresolved_questions: never_assume_verified
+  adjudications:
+    - 歷史為正文，外星實驗室為導讀與觀測視角
+    - 人物僅能根據當時掌握資訊做決策，嚴禁作者全知視角干預
+
+storage:
+  type: filesystem
+  root: /opt/src/github/novel2movie/tang
+
+version_control:
+  type: git
+  enabled: true
+  default_branch: main
+
+governance:
+  direct_main_write: false
+  require_diff_review: true
+  require_human_approval_for_major_changes: true
+
+continuity:
+  enabled: true
+
+memory:
+  enabled: true

@@ -1,0 +1,72 @@
+project:
+  id: xiu-xian
+  name: 求理與歷劫
+  subtitle: 修真小說世界觀規劃書
+  type: xianxia_worldbuilding
+  domain_agent: writing
+  language: zh-TW
+  status: planning
+  tags:
+    - 修真世界觀
+    - 六大境界
+    - 以失換得
+    - 求理歷劫
+
+structure:
+  outline: outline.md
+  master_bible: README.md
+
+worldview:
+  system_type: loss_exchange_tribulation
+  entry_stages:
+    - 煉骨（鍛煉身體、改善健康）
+    - 煉氣（吸納天地之氣，滋養自身不賴穀物）
+  formal_realms:
+    - 知身（換掉對身體的依賴，換得氣；歷四劫，失敗必身死道消）
+    - 離欲（換掉貪與懼，換得真正的感知）
+    - 無我（換掉我是唯一，換得化身）
+    - 斷緣（換掉人與人的牽繫，換得無跡與推算過去未來）
+    - 超時（換掉壽元，換得時間操控）
+    - 入道（換掉人本身，換得與一法則同步）
+  cultivation_principles:
+    - "強大是缺了些什麼的結果（以自身存在為代價換取新存在形式）"
+    - "應對問怎麼活下去，求理問為什麼會這樣"
+    - "動機不決定是否歷劫，劫會長成問題的形狀"
+    - "捷徑不能取代求理，沒有真正求索便無相應歷劫"
+    - "只有實踐的才是真理，沒實踐的都叫空談"
+
+writing_policy:
+  historical_accuracy: relaxed
+  battle_tactics_focus: false
+  classifications:
+    - fictional_content
+  preserve_historical_figures: false
+  require_consistency_check: true
+
+authority:
+  confirmed_settings: user_approved
+  historical_facts: internal_consistency_required
+  unresolved_questions: flag_as_inference
+  adjudications:
+    - 境界與劫數遵循內在邏輯，拒絕數值化套皮等級表
+    - 入門不歷劫，正式六境方承擔存在轉換之代價
+
+storage:
+  type: filesystem
+  root: /opt/src/github/novel2movie/xiu-xian
+
+version_control:
+  type: git
+  enabled: true
+  default_branch: main
+
+governance:
+  direct_main_write: false
+  require_diff_review: true
+  require_human_approval_for_major_changes: true
+
+continuity:
+  enabled: true
+
+memory:
+  enabled: true

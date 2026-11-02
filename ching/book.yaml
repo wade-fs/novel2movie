@@ -1,0 +1,82 @@
+project:
+  id: ching
+  name: 天下易主
+  subtitle: 故國潮聲（上冊｜舊國新生，下冊｜分途之後）
+  series: 千載風雲
+  type: historical_fiction
+  domain_agent: writing
+  language: zh-TW
+  era: 清末至現代 (1840–2020 年)
+  status: in_progress
+  tags:
+    - 晚清
+    - 民國建立
+    - 國共分途
+    - 當代回望
+    - 歷史群像
+
+scale:
+  total_volumes: 16
+  total_chapters: 1440
+  chapters_per_volume: 90
+  volume_structure: directories
+
+structure:
+  outline: outline.md
+  volumes: .
+  timeline: timeline.md
+  timeline_audit: timeline_audit.md
+  chapter_ledger: chapter_ledger.md
+  narrative_validation: narrative_validation.md
+  research_qa: research_qa.md
+  characters: characters.md
+  character_network: character_network.md
+  geography: historical_geography.md
+  social_systems: social_life.md
+
+writing_policy:
+  historical_accuracy: high
+  battle_tactics_focus: false
+  narrative_dimensions:
+    - 舊秩序走向終結與新秩序想像（上冊八卷 1840–1912）
+    - 共和走向分裂與當代延續（下冊八卷 1912–2020）
+    - 一級/二級/三級人物多層人物弧線
+    - 日常生活生活史（物價、租稅、教育、家庭、地方秩序）
+  classifications:
+    - historical_fact
+    - reasonable_inference
+    - fictional_content
+  preserve_historical_figures: true
+  require_consistency_check: true
+  anti_anachronism: true
+  anti_teleportation: true
+  information_boundary: true
+
+authority:
+  confirmed_settings: user_approved
+  historical_facts: multi_source_verified
+  unresolved_questions: never_assume_verified
+  adjudications:
+    - 史實不能被情節任意改寫
+    - 虛構情節必須服從已確認的歷史條件
+    - 人物不得知道當時不可能知道的消息
+
+storage:
+  type: filesystem
+  root: /opt/src/github/novel2movie/ching
+
+version_control:
+  type: git
+  enabled: true
+  default_branch: main
+
+governance:
+  direct_main_write: false
+  require_diff_review: true
+  require_human_approval_for_major_changes: true
+
+continuity:
+  enabled: true
+
+memory:
+  enabled: true
